@@ -247,6 +247,7 @@ export default class LoginContainer extends Component
                         updateMasterState={this.props.updateMasterState}
                         login={this.login}
                         key={'google-login-btn-container'}
+                        showAlert={this.props.showAlert}
                       /> );
                   case 'instagram':
                     return (

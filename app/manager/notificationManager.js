@@ -173,6 +173,17 @@ export default class NotificationManager
     }
   }
 
+  removeObserver(id)
+  {
+    for(let i = 0; i < this.#observers.length; i++)
+    {
+      if(this.#observers[i].id === id)
+      {
+        this.#observers.splice(i, 1);
+        break;
+      }
+    }
+  }
 
 
 

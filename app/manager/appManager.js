@@ -584,6 +584,7 @@ export default class AppManager
               formInputInComponent={formInputInComponent}
               login={login}
               segue={segue}
+              showAlert={showAlert}
               onPress={() => this.btnOnSubmit(
               {
                 segue: segue,
