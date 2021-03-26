@@ -1,0 +1,19 @@
+export default
+{
+  image:
+  [
+    'jpeg',
+    'jpg',
+    'png',
+    'gif'
+  ],
+  video:
+  [
+    'mp4',
+    'mov',
+    'wmv',
+    'flv',
+    'avi',
+    'mkv'
+  ]
+};

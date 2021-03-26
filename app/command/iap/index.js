@@ -1,0 +1,1 @@
+export {VerifyReceiptCommand} from './verifyReceiptCommand';

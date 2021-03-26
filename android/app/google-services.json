@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "936513732404",
+    "project_id": "alert-walker",
+    "storage_bucket": "alert-walker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936513732404:android:d828232c03e32bc226af61",
+        "android_client_info": {
+          "package_name": "software.bitbybit.alertwalker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvF2vg0s-RRwn07CEkbjW6oLGiIcUs21g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

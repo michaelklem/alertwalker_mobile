@@ -1,0 +1,6 @@
+{
+  "backendUrl": "https://bitbybit-core-backend.herokuapp.com/",
+  "description": "Alert Walker",
+  "displayName": "Alert Walker",
+  "name": "CoreMobile"
+}
