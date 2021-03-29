@@ -40,7 +40,7 @@ export default class Notifications extends Component
       notifications: this._notificationMgr.getNotifications()
     };
 
-    console.log(this.state.notifications);
+    //console.log(this.state.notifications);
   }
 
   async componentDidMount()
@@ -72,10 +72,10 @@ export default class Notifications extends Component
   newNotification = ({ notification, message }) =>
   {
     console.log('Notifications.newNotification()');
-    console.log(notification);
-    console.log(message);
+    //console.log(notification);
+    //console.log(message);
 
-    console.log(this.state.chat);
+    //console.log(this.state.chat);
     // If chat already open check if it's for this conversation
     if(this.state.chat.conversation &&
       this.state.chat.conversation._id.toString() === message.conversation._id.toString())
@@ -130,7 +130,7 @@ export default class Notifications extends Component
 
   renderNotification = (item, index) =>
   {
-    console.log(item);
+    //console.log(item);
     let titleText = item.title + ' - ' + item.body;
     return (
         <TouchableOpacity

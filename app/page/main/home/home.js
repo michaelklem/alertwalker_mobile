@@ -28,7 +28,7 @@ import {extractValueFromPointer} from '../../../helper/coreModel';
 export default class Home extends Component
 {
   _manager = null;
-  _oauthManager = null;
+  _oauthMgr = null;
   _isMounted = false;
   _componentRef = null;
 
@@ -43,7 +43,7 @@ export default class Home extends Component
     const components = this._manager.getComponentsForPage('home');
 
     // OAuth manager
-    this._oauthManager = OauthManager.GetInstance();
+    this._oauthMgr = OauthManager.GetInstance();
 
     this.state =
     {
@@ -336,7 +336,7 @@ export default class Home extends Component
           {
             return (
               <View style={styles.mapContainer} key={`component-${i}-map-container`}>
-                <Text key={`component-${i}-widgets-no-text`} style={styles.noWidgets}>{`Welcome ${this._oauthManager.getOauthTokens().googleToken.createdBy.email}`}</Text>
+                <Text key={`component-${i}-widgets-no-text`} style={styles.noWidgets}>{`Welcome ${this._oauthMgr.getOauthTokens().googleToken.createdBy.email}`}</Text>
                 <Map
                   ref={this._componentRef}
                   updateMasterState={(state) => this.setState(state)}

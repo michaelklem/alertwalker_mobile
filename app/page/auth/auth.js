@@ -14,6 +14,7 @@ import {  AppManager,
           DataManager,
           IapManager,
           LocationManager,
+          NotificationManager,
           OauthManager,
           PushManager } from '../../manager';
 import {Styles} from '../../constant';
@@ -258,6 +259,8 @@ export default class Auth extends Component
 
     // Initialize location manager
     await LocationManager.GetInstanceA(response.data.token);
+
+    await NotificationManager.GetInstance().init(response.data.token);
 
     // TODO: Anything site manager.init is passing over needs to update as well
     // TODO: Widgets not updating

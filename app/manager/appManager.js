@@ -11,7 +11,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Qs from 'query-string';
 
 import AppJson from '../../app.json';
-import { IapManager, OauthManager } from '.';
+import IapManager from './iapManager';
+import OauthManager from './oauthManager';
+//import { IapManager, OauthManager } from '.';
 import ApiRequest    from '../helper/ApiRequest.js';
 import { AppText, Colors, Images, Styles } from '../constant';
 import { PushManager } from '.';
@@ -103,11 +105,11 @@ export default class AppManager
   			var response = await ApiRequest.sendRequest("post", {}, "site/init");
   			if(response.data.error !== null)
   			{
-  				console.error('AppManager.init error: ' + response.data.error);
+  				console.error('AppManager.init error1: ' + response.data.error);
           return false;
   			}
 
-        console.log(response.data);
+        //console.log(response.data);
 
   			var componentMap = new Map();
         var fields = null;
@@ -166,7 +168,8 @@ export default class AppManager
       }
       catch(err)
       {
-        console.error('AppManager.init error: ' + err + '\nStack:\n' + err.stack);
+        console.error('AppManager.init error2: ' + err + '\nStack:\n' + err.stack);
+        console.log(OauthManager);
         return false;
       }
     }

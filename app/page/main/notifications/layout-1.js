@@ -39,7 +39,8 @@ const Layout1 = ({  isLoading,
           style={Styles.loading}
         />}
 
-        {notifications.length > 0 &&
+        {notifications &&
+        notifications.length > 0 &&
         <FlatList
           data={notifications}
           numColumns={1}
@@ -48,7 +49,7 @@ const Layout1 = ({  isLoading,
           renderItem={(item, index) => renderNotification(item.item, index)}
         />}
 
-        {notifications.length === 0 &&
+        {(!notifications || notifications.length === 0) &&
         <Text style={styles.noNotes}>{AppText.notificationsPage.layout1.noNotifications.text}</Text>}
 
       </KeyboardAwareScrollView>

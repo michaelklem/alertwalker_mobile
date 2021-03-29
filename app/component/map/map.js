@@ -21,7 +21,8 @@ import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { DataManager } from '../../manager';
-import { RadiusField, SubmitField } from '.';
+import RadiusField from './radiusField';
+import SubmitField from './submitField';
 import { hasLocationPermission } from '../../helper/location';
 import { Colors } from '../../constant';
 import {  AddGeofenceAreaCommand,
@@ -134,8 +135,8 @@ export default class Map extends Component
     const data = this._dataMgr.getData('geofenceAreas');
     //console.log(data);
 
-    console.log(this.state);
-    console.log(this.props);
+    //console.log(this.state);
+    //console.log(this.props);
     return (
       <View
         style={styles.container}
@@ -195,6 +196,8 @@ export default class Map extends Component
             {/* Show all markers */
             !this.props.createMode &&
             !this.props.geofenceArea &&
+            data &&
+            data.geofenceAreas &&
             data.geofenceAreas.map( (geofenceArea, i) =>
             {
               return (

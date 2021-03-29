@@ -134,6 +134,16 @@ export default
       }
     }
   },
+  notificationsPage:
+  {
+    layout1:
+    {
+      noNotifications:
+      {
+        text: 'No notifications to display'
+      }
+    }
+  },
 
   groups:
   {

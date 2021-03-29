@@ -65,10 +65,10 @@ export default class LocationManager
         debug: false,
         startOnBoot: false,
         stopOnTerminate: false,
-        locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-        interval: 10000,
-        fastestInterval: 5000,
-        activitiesInterval: 10000,
+        locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
+        interval: 15000,
+        fastestInterval: 10000,
+        activitiesInterval: 15000,
         stopOnStillActivity: false,
         url: AppJson.backendUrl + 'location/geofence',
         httpHeaders: httpHeaders,
@@ -84,7 +84,7 @@ export default class LocationManager
 
       BackgroundGeolocation.on('location', (location) =>
       {
-        console.log(location);
+        //console.log(location);
         // handle your locations here
         // to perform long running operation on iOS
         // you need to create background task

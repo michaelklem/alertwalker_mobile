@@ -1,5 +1,5 @@
 {
-  "backendUrl": "https://alertwalker-backend.herokuapp.com/",
+  "backendUrl": "https://backend.alertwalker.com/",
   "description": "Alert Walker",
   "displayName": "Alert Walker",
   "name": "CoreMobile"
