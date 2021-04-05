@@ -17,7 +17,6 @@ import OauthManager from './oauthManager';
 import ApiRequest    from '../helper/ApiRequest.js';
 import { AppText, Colors, Images, Styles } from '../constant';
 import { PushManager } from '.';
-import { AdBanner } from '../component/ad';
 import { FormInput } from '../component/formInput';
 import { Chat } from '../component/chat';
 import { Conversations } from '../component/conversations';

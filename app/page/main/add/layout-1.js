@@ -28,8 +28,8 @@ const Layout1 = ({  isLoading,
                   }) =>
 {
   return (
-  <KeyboardAwareScrollView
-    contentContainerStyle={styles.container}
+  <View
+    style={styles.container}
   >
     {isLoading &&
     <ActivityIndicator
@@ -46,7 +46,7 @@ const Layout1 = ({  isLoading,
       navigation={navigation}
     />
 
-  </KeyboardAwareScrollView>
+  </View>
   );
 };
 
@@ -61,8 +61,7 @@ const width36 = Math.round(Dimensions.get('window').width * 0.096);
 
 const styles = StyleSheet.create({
   container: {
-    width: Math.round(Dimensions.get('window').width),
-    height: '100%',
+    flex: 1,
   },
 });
 

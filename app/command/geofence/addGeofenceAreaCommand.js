@@ -7,7 +7,7 @@ export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, dat
   {
     console.log('\t\tAddGeofenceAreaCommand.execute()');
 
-    if(data.note.length === 0)
+    if(data.note.trim().length === 0)
     {
       showAlert('Error', 'A note is required');
       return;
@@ -31,7 +31,7 @@ export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, dat
       {
         updateMasterState ? updateMasterState({ isLoading: false }) : '';
         showAlert('Error', response.data.error);
-        return dataSet;
+        return null;
       }
 
       let found = false;
@@ -65,9 +65,7 @@ export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, dat
       console.log(err);
       updateMasterState ? updateMasterState({ isLoading: false }) : '';
       showAlert('Error', 'An error has occurred, please try again or contact support.\nError: 10 ' + err);
+      return null;
     }
-
-    dataStore.set('fitness', data);
-    return data;
   });
 }

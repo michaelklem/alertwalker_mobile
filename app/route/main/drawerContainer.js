@@ -12,6 +12,7 @@ import { ImageButton } from '../../component/imageButton';
 import { HomePage } from '../../page/main/home';
 
 import { Colors, Styles } from '../../constant';
+import AppJson from '../../../app.json';
 
 // Container for home screen using drawer for navigation
 const Drawer = createDrawerNavigator();
@@ -44,6 +45,9 @@ function CustomDrawerContent({  updateGlobalState,
             await AsyncStorage.removeItem('user');
             updateStack('auth');
           }}
+        />
+        <DrawerItem
+          label={`version ${AppJson.version}`}
         />
       </Animated.View>
     </DrawerContentScrollView>
@@ -86,7 +90,7 @@ export default class DrawerContainer extends Component
                       />}
         </Drawer.Screen>
         <Drawer.Screen
-          name='notifications'
+          name='previously received alerts'
           drawerLabel='Notifications'
         >
           {(props) => <NotificationsPage {...props}

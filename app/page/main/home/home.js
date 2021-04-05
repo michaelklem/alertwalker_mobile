@@ -17,7 +17,6 @@ import { AppText, Colors, Styles } from '../../../constant';
 import { AppManager, OauthManager } from '../../../manager';
 import ApiRequest from '../../../helper/ApiRequest';
 
-import { AdBanner } from '../../../component/ad';
 import { Groups } from '../../../component/groups';
 import { Feed } from '../../../component/feed';
 import { FacebookWidget, InstagramWidget } from '../../../component/widget';
@@ -239,22 +238,7 @@ export default class Home extends Component
         {this.state.components &&
         this.state.components.map( (component, i) =>
         {
-          if(component.type === 'admob')
-          {
-            return (
-              component.isEnabled &&
-              <View style={component.isShowing ? '' : {height: 0}} key={`component-${i}-container`}>
-                <AdBanner
-                  adUnitID={Platform.select({ios: component.iosUnitId, android: component.androidUnitId, default: component.androidUnitId })}
-                  toggleIsShowing={() =>
-                  {
-                    this.updateComponent(i, 'isShowing', !component.isShowing);
-                  }}
-                />
-              </View>
-              );
-          }
-          else if(component.type === 'feed')
+          if(component.type === 'feed')
           {
             return (
             <Feed

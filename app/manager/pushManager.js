@@ -52,13 +52,16 @@ export default class PushManager
 
 
     // Clear badge number at start
-    PushNotification.getApplicationIconBadgeNumber((number) =>
+    PushNotification.setApplicationIconBadgeNumber(0);
+
+    // Only works for iOS 
+    /*PushNotification.getApplicationIconBadgeNumber((number) =>
     {
       if(number > 0)
       {
         PushNotification.setApplicationIconBadgeNumber(0);
       }
-    });
+    });*/
   }
 
   abandonPermissions()

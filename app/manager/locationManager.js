@@ -2,11 +2,13 @@ import { Alert, Platform } from 'react-native';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import { getUniqueId } from 'react-native-device-info';
 import AppJson from '../../app.json';
+import DataManager from './dataManager';
 
 export default class LocationManager
 {
   static singleton = null;
   #listeners = [];
+  #dataMgr = null;
 
   // Singleton
   /**
@@ -18,6 +20,7 @@ export default class LocationManager
     if(LocationManager.singleton == null)
     {
       LocationManager.singleton = new LocationManager();
+      LocationManager.singleton.#dataMgr = DataManager.GetInstance();
     }
     return LocationManager.singleton;
   }
@@ -32,6 +35,7 @@ export default class LocationManager
     if(LocationManager.singleton == null)
     {
       LocationManager.singleton = new LocationManager();
+      LocationManager.singleton.#dataMgr = DataManager.GetInstance();
       await LocationManager.singleton.init(token);
     }
     return LocationManager.singleton;
@@ -82,8 +86,14 @@ export default class LocationManager
         }
       });
 
-      BackgroundGeolocation.on('location', (location) =>
+      BackgroundGeolocation.on('location', async(location) =>
       {
+        const locationData = this.#dataMgr.getData('location');
+        if( location.latitude !== locationData.userLocation.latitude ||
+            location.longitude !== locationData.userLocation.longitude)
+        {
+
+        }
         //console.log(location);
         // handle your locations here
         // to perform long running operation on iOS
@@ -114,16 +124,20 @@ export default class LocationManager
         console.log('[INFO] BackgroundGeolocation service has been stopped');
       });
 
-      BackgroundGeolocation.on('authorization', (status) => {
+      BackgroundGeolocation.on('authorization', (status) =>
+      {
         console.log('[INFO] BackgroundGeolocation authorization status: ' + status);
         if (status !== BackgroundGeolocation.AUTHORIZED)
         {
           // we need to set delay or otherwise alert may not be shown
           setTimeout(() =>
-            Alert.alert('App requires location tracking permission', 'Would you like to open app settings?', [
-              { text: 'Yes', onPress: () => BackgroundGeolocation.showAppSettings() },
-              { text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel' }
-            ]), 1000);
+            Alert.alert('App requires background location tracking permission',
+                        'Would you like to open app settings to allow this permission now?',
+                        [
+                          { text: 'Yes', onPress: () => BackgroundGeolocation.showAppSettings() },
+                          { text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel' }
+                        ]),
+            1000);
         }
       });
 
@@ -186,12 +200,12 @@ export default class LocationManager
     }
   }
 
-  notifyListeners(receipt)
+  notifyListeners(newLocation)
   {
     for(let i = 0; i < this.#listeners.length; i++)
     {
       console.log('LocationManager.notifyListeners(' + this.#listeners[i].id + ')');
-      this.#listeners[i].cb(receipt);
+      this.#listeners[i].cb(newLocation);
     }
   }
 }

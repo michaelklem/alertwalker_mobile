@@ -1,6 +1,6 @@
 Backend Server
 ====
-- Update app.json with backend URL (currently in app/constant/config)
+- Update app.json with backend URL
 
 Push Notifications
 ====
@@ -9,13 +9,6 @@ Push Notifications
     - https://console.firebase.google.com/
       - Download google-services.json and place in ./android/app/
   - Update environment variable on backend for AWS_PIN_POINT_PROJECT_ID
-
-Admob Setup  
-====
-- iOS
-  - Replace GADApplicationIdentifier in Info.plist
-- Android
-  - https://developers.google.com/admob/android/quick-start#update_your_androidmanifestxml
 
 Google Maps
 ====

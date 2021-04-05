@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
@@ -30,6 +32,7 @@ const SubmitField = ({  note,
       placeholder={'Note...'}
       multiline={true}
       autoCorrect={true}
+      blurOnSubmit={true}
       onSubmitEditing={Keyboard.dismiss}
     />
     <SafeAreaView style={styles.buttonContainer}>

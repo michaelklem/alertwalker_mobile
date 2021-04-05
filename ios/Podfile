@@ -13,16 +13,6 @@ target 'CoreMobile' do
   config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"])
 
-  # Pods for CoreMobile
-  pod 'Google-Mobile-Ads-SDK'
-  pod 'react-native-admob', :path => '../node_modules/react-native-admob'
-
-
-  target 'CoreMobileTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
   use_native_modules!
 end
 

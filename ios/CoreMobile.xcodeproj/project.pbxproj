@@ -719,7 +719,7 @@
 				INFOPLIST_FILE = CoreMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -748,7 +748,7 @@
 				INFOPLIST_FILE = CoreMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-admob/ios/RNAdMobRewarded.h

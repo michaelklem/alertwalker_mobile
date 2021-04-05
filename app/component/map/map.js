@@ -16,21 +16,24 @@ import {
 } from 'react-native';
 
 import { StackActions } from '@react-navigation/native';
-import Geolocation from 'react-native-geolocation-service';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { DataManager } from '../../manager';
+import { DataManager, LocationManager } from '../../manager';
 import RadiusField from './radiusField';
 import SubmitField from './submitField';
-import { hasLocationPermission } from '../../helper/location';
 import { Colors } from '../../constant';
 import {  AddGeofenceAreaCommand,
           LoadGeofenceAreasCommand } from '../../command/geofence';
+import { GetLocationCommand, SetLocationCommand } from '../../command/location';
 
 export default class Map extends Component
 {
   _dataMgr = null;
+  _mapViewRef = null;
+  _keyboardIsShowing = false;
+  _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+  _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
 
   constructor(props)
   {
@@ -39,18 +42,24 @@ export default class Map extends Component
     this._dataMgr = DataManager.GetInstance();
     this.state =
     {
-      location: null,
       radius: 500,
       note: '',
-      initialMapCoordinate: null,
       hideRadiusOption: true,
       dataVersion: 0
     };
+
+    this._mapViewRef = React.createRef();
+  }
+
+  async componentWillUnmount()
+  {
+    LocationManager.GetInstance().removeListener('map')
   }
 
   async componentDidMount()
   {
     console.log('\tMap.componentDidMount()');
+    LocationManager.GetInstance().addListener('map', this.onLocation);
     try
     {
       this._isMounted = true;
@@ -58,7 +67,12 @@ export default class Map extends Component
       // If location not supplied load user's location and set map to that
       if(!this.props.geofenceArea)
       {
-        await this.getLocation();
+        const locationData = this._dataMgr.getData('location');
+        console.log(locationData);
+        if(!locationData || !locationData.mapLocation)
+        {
+          await this.getLocation();
+        }
       }
 
       if(!this.props.createMode && !this.props.geofenceArea)
@@ -70,6 +84,18 @@ export default class Map extends Component
     {
       console.log(err);
     }
+  }
+
+  _keyboardDidShow = () =>
+  {
+    this._keyboardIsShowing = true;
+    console.log("Showing");
+  }
+
+  _keyboardDidHide = () =>
+  {
+    this._keyboardIsShowing = false;
+    console.log("Hiding");
   }
 
   loadData = async(isRefreshing) =>
@@ -84,112 +110,163 @@ export default class Map extends Component
 
   getLocation = async() =>
   {
-    const hasPermission = await hasLocationPermission(this.props.showAlert);
-    if(hasPermission)
+    await this._dataMgr.execute(await new GetLocationCommand(
     {
-      this.props.updateMasterState({ isLoading: true });
-      Geolocation.getCurrentPosition((position) =>
-      {
-        this.setState(
-        {
-          initialMapCoordinate:
-          {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          },
-          location:
-          {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }
-        });
-        this.props.updateMasterState({ isLoading: false });
-      },
-      (error) =>
-      {
-        this.props.updateMasterState({ isLoading: false });
-        this.props.showAlert('Error', `Code ${error.code} ${error.message}`);
-        console.log(error);
-      },
-      {
-        accuracy:
-        {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 10000,
-        distanceFilter: 0,
-        forceRequestLocation: true,
-        showLocationDialog: true,
-      });
-    }
+      updateMasterState: (state) => this.setState(state),
+      setLoading: (isLoading) => this.props.updateMasterState({ isLoading: isLoading }),
+      dataVersion: this.state.dataVersion
+    }));
+  }
+
+  onLocation = async() =>
+  {
+    /*const locationData = this.#dataMgr.getData('location');
+    if( location.latitude !== locationData.userLocation.latitude ||
+        location.longitude !== locationData.userLocation.longitude)
+    {
+      await this._dataMgr.execute(await new SetLocationCommand({
+        newLocation: region,
+        updateMasterState: (state) => this.setState(state),
+        dataVersion: this.state.dataVersion,
+        type: 'user',
+      }));
+    }*/
   }
 
   render()
   {
     console.log('\tMap.render()');
     const data = this._dataMgr.getData('geofenceAreas');
-    //console.log(data);
+    const locationData = this._dataMgr.getData('location');
+    console.log(locationData);
 
     //console.log(this.state);
-    //console.log(this.props);
+    console.log(this.props);
     return (
-      <View
-        style={styles.container}
+    <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        keyboardShouldPersistTaps={'always'}
       >
-        <View style={[styles.mapContainer, {flex: !this.props.createMode ? 1.0 : (this.state.hideRadiusOption ? 0.9 : 0.8)}]}>
-          {(this.state.initialMapCoordinate || this.props.geofenceArea) &&
+        {/* Show actions for create mode */}
+        {this.props.createMode &&
+        <View style={[styles.actionsContainer, {height: h10}]}>
+          {!this.state.hideRadiusOption &&
+          <RadiusField
+            radius={this.state.radius}
+            updateMasterState={(state) => this.setState(state)}
+          />}
+          <SubmitField
+            messageText={this.state.note}
+            updateMasterState={(id, val) =>
+            {
+              this.setState({ note: val });
+            }}
+            submit={async() =>
+            {
+              const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
+                updateMasterState: (state) => this.setState(state),
+                showAlert: this.props.showAlert,
+                data:
+                {
+                  location: locationData.mapLocation,
+                  note: this.state.note,
+                  radius: this.state.radius
+                },
+                dataVersion: this.state.dataVersion
+              }));
+              if(dataSet)
+              {
+                this.setState({ note: '', radius: 500 });
+                this.props.navigation.dispatch(StackActions.pop(1));
+              }
+            }}
+          />
+        </View>}
+
+        <View style={[styles.mapContainer, {height: !this.props.createMode ? h100 : h80}]}>
+          {((locationData && locationData.mapLocation) || this.props.geofenceArea) &&
           <MapView
+            ref={this._mapViewRef}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
-            initialRegion={this.state.initialMapCoordinate ? this.state.initialMapCoordinate :
+            onPress={(e) =>
+            {
+              if(this._keyboardIsShowing)
+              {
+                Keyboard.dismiss();
+              }
+            }}
+            onRegionChangeComplete={async(region, isGesture) =>
+            {
+              console.log('Map.onRegionChangeComplete()');
+              if( region.latitude !== locationData.mapLocation.latitude ||
+                  region.longitude !== locationData.mapLocation.longitude ||
+                  region.latitudeDelta !== locationData.mapLocation.latitudeDelta ||
+                  region.longitudeDelta !== locationData.mapLocation.longitudeDelta)
+              {
+                await this._dataMgr.execute(await new SetLocationCommand({
+                  newLocation: region,
+                  updateMasterState: (state) => this.setState(state),
+                  dataVersion: this.state.dataVersion,
+                  type: 'map',
+                }));
+              }
+            }}
+            region={(locationData && locationData.mapLocation) ? locationData.mapLocation :
             {
               latitude: this.props.geofenceArea.location.coordinates[1],
               longitude: this.props.geofenceArea.location.coordinates[0],
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
+            showsUserLocation={true}
           >
 
             {/* Show marker that can be manipulated */
             this.props.createMode &&
-            this.state.location &&
+            (locationData && locationData.alertLocation) &&
             <Circle
-              center={this.state.location}
+              center={locationData.alertLocation}
               radius={this.state.radius}
-              onRegionChangeComplete={(e) =>
+              onRegionChangeComplete={async(e) =>
               {
-                this.setState(
-                {
-                  location:
+                console.log('Circle.onRegionChangeComplete()');
+                await this._dataMgr.execute(await new SetLocationCommand({
+                  newLocation:
                   {
                     latitude: e.nativeEvent.coordinate.latitude,
                     longitude: e.nativeEvent.coordinate.longitude
-                  }
-                });
+                  },
+                  updateMasterState: (state) => this.setState(state),
+                  dataVersion: this.state.dataVersion,
+                  type: 'alert',
+                }));
+                return true;
               }}
               strokeWidth = { 5 }
               strokeColor = { '#1a66ff' }
               fillColor = { 'rgba(230,238,255,0.5)' }
             />}
             {this.props.createMode &&
-            this.state.location &&
-            <Marker draggable
-              coordinate={this.state.location}
-              onDragEnd={(e) =>
+            (locationData && locationData.alertLocation) &&
+            <Marker
+              draggable
+              coordinate={locationData.alertLocation}
+              onDragEnd={async(e) =>
               {
-                this.setState(
-                {
-                  location:
+                console.log('OnMarkerDragEnd()');
+                await this._dataMgr.execute(await new SetLocationCommand({
+                  newLocation:
                   {
                     latitude: e.nativeEvent.coordinate.latitude,
                     longitude: e.nativeEvent.coordinate.longitude
-                  }
-                });
+                  },
+                  updateMasterState: (state) => this.setState(state),
+                  dataVersion: this.state.dataVersion,
+                  type: 'alert',
+                }));
+                return true;
               }}
             />}
 
@@ -219,9 +296,15 @@ export default class Map extends Component
                     latitude: geofenceArea.location.coordinates[1],
                     longitude: geofenceArea.location.coordinates[0]
                   }}
-                  description={geofenceArea.note}
                   pinColor={"blue"}
-                />
+                >
+                  <Callout
+                    tooltip={true}
+                    style={styles.callout}
+                  >
+                    <Text style={styles.description}>{geofenceArea.note}</Text>
+                  </Callout>
+                </Marker>
               </View>
               );
             })}
@@ -248,48 +331,28 @@ export default class Map extends Component
                 }}
                 description={this.props.geofenceArea.note}
                 pinColor={"blue"}
-              />
+              >
+                <Callout
+                  tooltip={true}
+                  style={styles.callout}
+                >
+                  <Text style={styles.description}>{this.props.geofenceArea.note}</Text>
+                </Callout>
+              </Marker>
             </View>}
           </MapView>}
         </View>
 
-        {/* Show actions for create mode */}
-        {this.props.createMode &&
-        <View style={[styles.actionsContainer, {flex: this.state.hideRadiusOption ? 0.1 : 0.2}]}>
-          {!this.state.hideRadiusOption &&
-          <RadiusField
-            radius={this.state.radius}
-            updateMasterState={(state) => this.setState(state)}
-          />}
-          <SubmitField
-            messageText={this.state.note}
-            updateMasterState={(id, val) =>
-            {
-              this.setState({ note: val });
-            }}
-            submit={async() =>
-            {
-              const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
-                updateMasterState: (state) => this.setState(state),
-                showAlert: this.props.showAlert,
-                data:
-                {
-                  location: this.state.location,
-                  note: this.state.note,
-                  radius: this.state.radius
-                },
-                dataVersion: this.state.dataVersion
-              }));
-              this.setState({ note: '', radius: 500 });
-              this.props.navigation.dispatch(StackActions.pop(1));
-            }}
-          />
-        </View>}
-
-      </View>
+      </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
     );
   }
 }
+
+const h100 = Math.round(Dimensions.get('window').height);
+const h90 = Math.round(Dimensions.get('window').height * 0.9);
+const h80 = Math.round(Dimensions.get('window').height * 0.8);
+const h10 = Math.round(Dimensions.get('window').height * 0.1);
 
 const styles = StyleSheet.create({
   container: {
@@ -299,9 +362,30 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
   },
   actionsContainer: {
     width: '100%',
   },
+  callout: {
+    backgroundColor: "white",
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 4
+  },
+  title: {
+    color: "black",
+    fontSize: 14,
+    lineHeight: 18,
+    flex: 1,
+  },
+  description: {
+    color: "#707070",
+    fontSize: 12,
+    lineHeight: 16,
+    flex: 1,
+  }
 });
