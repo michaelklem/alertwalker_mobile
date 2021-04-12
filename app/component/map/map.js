@@ -15,11 +15,12 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { isPointWithinRadius } from 'geolib';
 import { StackActions } from '@react-navigation/native';
 import MapView, { Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { DataManager, LocationManager } from '../../manager';
+import { AppManager, DataManager, LocationManager } from '../../manager';
 import RadiusField from './radiusField';
 import SubmitField from './submitField';
 import { Colors } from '../../constant';
@@ -31,9 +32,11 @@ export default class Map extends Component
 {
   _dataMgr = null;
   _mapViewRef = null;
+  _createMarkerRef = null;
   _keyboardIsShowing = false;
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
   _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+  _mapCreateLastGoodPosition = null;
 
   constructor(props)
   {
@@ -45,21 +48,35 @@ export default class Map extends Component
       radius: 500,
       note: '',
       hideRadiusOption: true,
+      mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
       dataVersion: 0
     };
 
     this._mapViewRef = React.createRef();
+    this._createMarkerRef = React.createRef();
   }
 
   async componentWillUnmount()
   {
-    LocationManager.GetInstance().removeListener('map')
+    // Remove observers
+    LocationManager.GetInstance().removeListener('map');
+    this._dataMgr.removeObserver('map');
   }
 
   async componentDidMount()
   {
     console.log('\tMap.componentDidMount()');
+
+    // Setup observers
     LocationManager.GetInstance().addListener('map', this.onLocation);
+
+    this._dataMgr.addObserver(() =>
+    {
+      this.refresh();
+    },
+    'map',
+    'geofenceAreas');
+
     try
     {
       this._isMounted = true;
@@ -70,6 +87,11 @@ export default class Map extends Component
         const locationData = this._dataMgr.getData('location');
         console.log(locationData);
         if(!locationData || !locationData.mapLocation)
+        {
+          await this.getLocation();
+        }
+        // Load current location when adding new alert
+        else if(this.props.createMode)
         {
           await this.getLocation();
         }
@@ -118,6 +140,11 @@ export default class Map extends Component
     }));
   }
 
+  refresh = () =>
+  {
+    this.setState({ dataVersion: this.state.dataVersion + 1 });
+  }
+
   onLocation = async() =>
   {
     /*const locationData = this.#dataMgr.getData('location');
@@ -138,10 +165,7 @@ export default class Map extends Component
     console.log('\tMap.render()');
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
-    console.log(locationData);
 
-    //console.log(this.state);
-    console.log(this.props);
     return (
     <KeyboardAvoidingView style={styles.container}>
       <KeyboardAwareScrollView
@@ -169,7 +193,7 @@ export default class Map extends Component
                 showAlert: this.props.showAlert,
                 data:
                 {
-                  location: locationData.mapLocation,
+                  location: locationData.alertLocation,
                   note: this.state.note,
                   radius: this.state.radius
                 },
@@ -184,6 +208,7 @@ export default class Map extends Component
           />
         </View>}
 
+        {/* Main map */}
         <View style={[styles.mapContainer, {height: !this.props.createMode ? h100 : h80}]}>
           {((locationData && locationData.mapLocation) || this.props.geofenceArea) &&
           <MapView
@@ -200,6 +225,7 @@ export default class Map extends Component
             onRegionChangeComplete={async(region, isGesture) =>
             {
               console.log('Map.onRegionChangeComplete()');
+              console.log(region);
               if( region.latitude !== locationData.mapLocation.latitude ||
                   region.longitude !== locationData.mapLocation.longitude ||
                   region.latitudeDelta !== locationData.mapLocation.latitudeDelta ||
@@ -223,8 +249,19 @@ export default class Map extends Component
             showsUserLocation={true}
           >
 
-            {/* Show marker that can be manipulated */
-            this.props.createMode &&
+            { /* Create marker bounds */}
+            {this.props.createMode &&
+            (locationData && locationData.userLocation) &&
+            <Circle
+              center={locationData.userLocation}
+              radius={this.state.mapCreateRadius}
+              strokeWidth={5}
+              strokeColor={'#E74C3C'}
+              fillColor={'rgba(231, 76, 60,0.5)'}
+            />}
+
+            {/* Create marker moveable circle */}
+            {this.props.createMode &&
             (locationData && locationData.alertLocation) &&
             <Circle
               center={locationData.alertLocation}
@@ -248,26 +285,61 @@ export default class Map extends Component
               strokeColor = { '#1a66ff' }
               fillColor = { 'rgba(230,238,255,0.5)' }
             />}
+
+            {/* Movable create marker */}
             {this.props.createMode &&
             (locationData && locationData.alertLocation) &&
             <Marker
+              ref={this._createMarkerRef}
               draggable
               coordinate={locationData.alertLocation}
               onDragEnd={async(e) =>
               {
                 console.log('OnMarkerDragEnd()');
-                await this._dataMgr.execute(await new SetLocationCommand({
-                  newLocation:
-                  {
-                    latitude: e.nativeEvent.coordinate.latitude,
-                    longitude: e.nativeEvent.coordinate.longitude
-                  },
-                  updateMasterState: (state) => this.setState(state),
-                  dataVersion: this.state.dataVersion,
-                  type: 'alert',
-                }));
-                return true;
+                if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
+                {
+                  console.log('Resetting marker');
+                  await this._dataMgr.execute(await new SetLocationCommand({
+                    newLocation:
+                    {
+                      latitude: this._mapCreateLastGoodPosition.latitude,
+                      longitude: this._mapCreateLastGoodPosition.longitude
+                    },
+                    updateMasterState: (state) => this.setState(state),
+                    dataVersion: this.state.dataVersion,
+                    type: 'alert',
+                  }));
+                }
+                else
+                {
+                  console.log('Took the value change');
+                  await this._dataMgr.execute(await new SetLocationCommand({
+                    newLocation:
+                    {
+                      latitude: e.nativeEvent.coordinate.latitude,
+                      longitude: e.nativeEvent.coordinate.longitude
+                    },
+                    updateMasterState: (state) => this.setState(state),
+                    dataVersion: this.state.dataVersion,
+                    type: 'alert',
+                  }));
+                }
               }}
+              onDrag={async(e) =>
+              {
+                console.log('onMarkerDrag()');
+
+                // If not in circle set back to good position
+                if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
+                {
+                  console.log('Not in circle');
+                }
+                else
+                {
+                  this._mapCreateLastGoodPosition = e.nativeEvent.coordinate;
+                }
+              }}
+              pinColor={"green"}
             />}
 
             {/* Show all markers */
@@ -296,7 +368,7 @@ export default class Map extends Component
                     latitude: geofenceArea.location.coordinates[1],
                     longitude: geofenceArea.location.coordinates[0]
                   }}
-                  pinColor={"blue"}
+                  pinColor={"red"}
                 >
                   <Callout
                     tooltip={true}
@@ -330,7 +402,7 @@ export default class Map extends Component
                   longitude: this.props.geofenceArea.location.coordinates[0]
                 }}
                 description={this.props.geofenceArea.note}
-                pinColor={"blue"}
+                pinColor={"red"}
               >
                 <Callout
                   tooltip={true}

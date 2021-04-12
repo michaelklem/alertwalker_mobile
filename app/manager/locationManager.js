@@ -3,6 +3,7 @@ import BackgroundGeolocation from '@mauron85/react-native-background-geolocation
 import { getUniqueId } from 'react-native-device-info';
 import AppJson from '../../app.json';
 import DataManager from './dataManager';
+import { SetLocationCommand } from '../command/location';
 
 export default class LocationManager
 {
@@ -92,7 +93,10 @@ export default class LocationManager
         if( location.latitude !== locationData.userLocation.latitude ||
             location.longitude !== locationData.userLocation.longitude)
         {
-
+          await this.#dataMgr.execute(await new SetLocationCommand({
+            newLocation: location,
+            type: 'user',
+          }));
         }
         //console.log(location);
         // handle your locations here

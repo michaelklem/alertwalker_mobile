@@ -11,9 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Qs from 'query-string';
 
 import AppJson from '../../app.json';
-import IapManager from './iapManager';
 import OauthManager from './oauthManager';
-//import { IapManager, OauthManager } from '.';
 import ApiRequest    from '../helper/ApiRequest.js';
 import { AppText, Colors, Images, Styles } from '../constant';
 import { PushManager } from '.';
@@ -23,7 +21,6 @@ import { Conversations } from '../component/conversations';
 import { TosButton } from '../component/tos';
 import { RememberMe } from '../component/rememberMe';
 import { VerifySms } from '../component/verifySms';
-import { FacebookLoginButton, InstagramLoginButton } from '../component/loginButton';
 import { LoginContainer } from '../component/loginContainer';
 import { MyButton }from '../component/myButton';
 import { ImageButton } from '../component/imageButton';
@@ -34,21 +31,20 @@ export default class AppManager
 {
     static singleton = null;
     #_components = null;
-    #_frontendTitle = "";
     #_pages = null;
     #_pageValuesCache = null;
     #_guestAccessAllowed = false;
     #_termsOfService = [];
     #_shareText = '';
     #_inviteText = '';
-    #_instagramAppId = '';
     #_frontendUrl = '';
-    #_iceServers = [];
     // OAuth manager should manage this but for now it is what it is
     #_thirdPartyAccounts = [];
 
     // Field types that are internal
     #_internalTypes = [];
+
+    #_mapCreateRadius = 1;
 
 
     // TODO: Move this to a component manager and move individual components out
@@ -147,7 +143,6 @@ export default class AppManager
         }
 
         this.#_components = componentMap;
-        this.#_frontendTitle  = response.data.frontendTitle;
         this.#_pages = pageMap;
         this.#_internalTypes = response.data.internalTypes;
         this.#_pageValuesCache = new Map();
@@ -155,12 +150,10 @@ export default class AppManager
         this.#_termsOfService = response.data.termsOfService;
         this.#_shareText = response.data.shareText;
         this.#_inviteText = response.data.inviteText;
-        this.#_instagramAppId = response.data.instagramAppId;
         this.#_frontendUrl = response.data.frontendUrl;
         this.#_thirdPartyAccounts = response.data.thirdPartyAccounts;
-        this.#_iceServers = response.data.iceServers;
+        this.#_mapCreateRadius = response.data.mapCreateRadius;
 
-        IapManager.GetInstance().setReceipt(response.data.receipt);
 
         OauthManager.GetInstance().setOauthTokens(response.data.oauthTokens);
         return true;
@@ -202,11 +195,6 @@ export default class AppManager
       return this.#_guestAccessAllowed;
     }
 
-    getFrontendTitle = () =>
-    {
-      return this.#_frontendTitle;
-    }
-
     getPage = (page) =>
     {
       return this.#_pages.get(page);
@@ -232,11 +220,10 @@ export default class AppManager
       return this.#_frontendUrl;
     }
 
-    getIceServers = () =>
+    getMapCreateRadius = () =>
     {
-      return this.#_iceServers;
+      return parseInt(this.#_mapCreateRadius);
     }
-
 
     processFormInputsForPage = (pageName) =>
     {
@@ -414,28 +401,7 @@ export default class AppManager
       this.#_pageValuesCache.set(pageName, values);
     }
 
-    instagramButton = ({formInput, updateMasterState, login}) =>
-    {
-      return (
-      <InstagramLoginButton
-        login={login}
-        formInput={formInput}
-        key={formInput.name}
-        updateMasterState={updateMasterState}
-        appId={this.#_instagramAppId}
-        redirectUrl={AppJson.backendUrl + 'oauth/settings'}
-      /> );
-    }
-    facebookButton = ({formInput, login}) =>
-    {
-      return (
-      <FacebookLoginButton
-        formInput={formInput}
-        login={login}
-        key={formInput.name}
-        customUI={true}
-      /> );
-    }
+
 
     /**
       Generate form input from JSON
@@ -522,18 +488,6 @@ export default class AppManager
             />);
         }
 
-        // Facebook login
-        else if(formInput.type === '_facebook_login_')
-        {
-          return this.facebookButton({formInput: formInput, updateMasterState: updateMasterState, login: login});
-        }
-
-        // Instagram login
-        else if(formInput.type === '_instagram_login_')
-        {
-          return this.instagramButton({formInput: formInput, updateMasterState: updateMasterState, login: login});
-        }
-
         // Instagram login
         else if(formInput.type === '_login_container_')
         {
@@ -600,7 +554,6 @@ export default class AppManager
                 updateGlobalState: updateGlobalState,
                 deepLink: deepLink
               })}
-              instagramParams={this.getInstagramParams()}
             />);
         }
 
@@ -660,14 +613,6 @@ export default class AppManager
       });
     }
 
-    getInstagramParams = () =>
-    {
-      return {
-        enabled: true,
-        appId: this.#_instagramAppId,
-        redirectUrl: AppJson.backendUrl + 'oauth/settings'
-      };
-    }
 
     /**
       Handle button submit action

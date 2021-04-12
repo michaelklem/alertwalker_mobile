@@ -1,6 +1,4 @@
 import { LoadNotesCommand } from '../command/notes';
-import { LoadCalendarEventsCommand } from '../command/calendar';
-import { LoadFacebookDataCommand, LoadInstagramDataCommand } from '../command/widget';
 import { AppManager, OauthManager } from '.';
 export default class DataManager
 {
@@ -9,6 +7,7 @@ export default class DataManager
   // { k: => 'pageName', v: => Object: {} }
   #dataStore = new Map();
   #showAlert = null;
+  #observers = [];
 
   /**
     Singleton accessor
@@ -55,36 +54,7 @@ export default class DataManager
       if(userToken)
       {
         // Notes (only if logged in)
-        promises.push(this.execute(await new LoadNotesCommand()));
-      }
-
-      // Check if we have any widgets
-      let tokens = OauthManager.GetInstance().getOauthTokens();
-
-      console.log('Oauth tokens');
-      console.log(tokens);
-
-      // Facebook
-      if(tokens.facebookToken)
-      {
-        let facebookAccount = AppManager.GetInstance().getThirdPartyAccount('facebook');
-        if(facebookAccount)
-        {
-          promises.push(this.execute(await new LoadFacebookDataCommand(
-            tokens.facebookToken.token,
-            facebookAccount.externalId,
-            null
-          )));
-        }
-      }
-
-      // Instagram
-      if(tokens.instagramToken)
-      {
-        promises.push(this.execute(await new LoadInstagramDataCommand(
-          tokens.instagramToken.token,
-          null
-        )));
+        //promises.push(this.execute(await new LoadNotesCommand()));
       }
 
       // Geofence areas
@@ -159,22 +129,39 @@ export default class DataManager
   /**
     Notify observers that data reloaded
   */
-/*  dataReloaded()
+  dataSetUpdated(dataSet)
   {
     console.log('\t\tDataManager.dataReloaded()');
+    console.log(this.#observers);
     for(let i = 0; i < this.#observers.length; i++)
     {
-      if(typeof this.#observers[i].dataReloaded === "function")
+      if(this.#observers[i].forDataSet === dataSet)
       {
-        this.#observers[i].observer.dataReloaded();
+        this.#observers[i].cb();
       }
     }
-  }*/
+  }
+
+  manualInsert(dataSetId, keyInDataSet, newEntry)
+  {
+    const dataSet = this.#dataStore.get(dataSetId);
+    if(dataSet[keyInDataSet] && dataSet[keyInDataSet].length > 0)
+    {
+      dataSet[keyInDataSet].push(newEntry);
+    }
+    else
+    {
+      dataSet[keyInDataSet] = [newEntry];
+    }
+    this.#dataStore.set(dataSetId, dataSet);
+
+    this.dataSetUpdated(dataSetId);
+  }
 
   /**
     Add new observer to list
   */
-/*  addObserver(observer, id)
+  addObserver(cb, id, forDataSet)
   {
     let found = false;
     for(let i = 0; i < this.#observers.length; i++)
@@ -188,7 +175,19 @@ export default class DataManager
 
     if(!found)
     {
-      this.#observers.push({ id: id, observer: observer });
+      this.#observers.push({ id: id, cb: cb, forDataSet: forDataSet });
     }
-  }*/
+  }
+
+  removeObserver(id)
+  {
+    for(let i = 0; i < this.#observers.length; i++)
+    {
+      if(this.#observers[i].id === id)
+      {
+        this.#observers.splice(i, 1);
+        break;
+      }
+    }
+  }
 }

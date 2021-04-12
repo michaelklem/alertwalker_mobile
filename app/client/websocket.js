@@ -1,7 +1,6 @@
 import AppJson from '../../app.json';
-import { NotificationManager } from '../manager';
+import { DataManager, NotificationManager } from '../manager';
 
-import { WebRtcClient } from '.';
 export default class WebsocketClient
 {
   static #instance = null;
@@ -113,38 +112,6 @@ export default class WebsocketClient
     }
   }
 
-  // MARK: - Call related (WebRTC)
-  /**
-    @param  {WebRTCOffer}   offer   The WebRTC offer
-    @param  {String}        otherUserId The user to call
-  */
-  createCall = (offer, otherUserId) =>
-  {
-    const msg = WebsocketClient.#instance.#idMsg;
-    msg.type = 'outgoingAudioCall';
-    msg.offer = offer;
-    msg.otherUserId = otherUserId;
-
-    WebsocketClient.LogMsg('outgoingAudioCall: ' + JSON.stringify(msg));
-
-    this.#client.send(JSON.stringify(msg));
-  }
-
-  /**
-    @param  {IceCandidate}   candidate   The WebRTC ICE candidate
-    @param  {String}        otherUserId The user to call
-  */
-  sendIceCandidate = (candidate, otherUserId) =>
-  {
-    const msg = WebsocketClient.#instance.#idMsg;
-    msg.type = 'iceCandidate';
-    msg.candidate = candidate;
-    msg.otherUserId = otherUserId;
-
-    WebsocketClient.LogMsg('iceCandidate: ' + JSON.stringify(msg));
-
-    this.#client.send(JSON.stringify(msg));
-  }
 
 
   // MARK: Message handlers
@@ -184,21 +151,10 @@ export default class WebsocketClient
     {
       NotificationManager.GetInstance().newNotification(msg.notification);
     }
-    // Answering call
-    else if(msg.type === 'answerAudioCall')
+    // Geofence area
+    else if(msg.type === 'geofenceArea')
     {
-      //console.log(msg);
-      NotificationManager.GetInstance().callAnswered(msg.answer);
-    }
-    // Declined call
-    else if(msg.type === 'declineAudioCall')
-    {
-      NotificationManager.GetInstance().callDeclined(msg.callId);
-    }
-    // ICE candidate
-    else if(msg.type === 'onIceCandidate')
-    {
-      WebRtcClient.GetInstance().setIceCandidate(msg.candidate);
+      DataManager.GetInstance().manualInsert('geofenceAreas', 'geofenceAreas', msg.geofenceArea);
     }
     //WebsocketClient.LogMsg('message: ' + message.data);
   }

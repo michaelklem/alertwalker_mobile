@@ -68,32 +68,6 @@ export default class NotificationManager
   }
 
   /**
-    Notify observers of answered call
-    @param  {Answer}  answer  WebRTC answer
-  */
-  callAnswered(answer)
-  {
-    for(let i = 0; i < this.#observers.length; i++)
-    {
-      if(typeof this.#observers[i].observer.callAnswered === "function")
-      {
-        this.#observers[i].observer.callAnswered(answer);
-      }
-    }
-  }
-
-  callDeclined(callId)
-  {
-    for(let i = 0; i < this.#observers.length; i++)
-    {
-      if(typeof this.#observers[i].observer.callDeclined === "function")
-      {
-        this.#observers[i].observer.callDeclined(callId);
-      }
-    }
-  }
-
-  /**
     Get notifications
   */
   getNotifications()

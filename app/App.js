@@ -404,13 +404,6 @@ export default class App extends Component
       <Toast
         ref={(ref) => Toast.setRef(ref)}
       />
-      {this._appMgr !== null && /* Don't render this until WebRTC can retrieve ICE servers from App Manager */
-      AudioCallsEnabled &&
-      <AudioCall
-        ref={(ref) => AudioCall.setRef(ref)}
-        showAlert={this.showAlert}
-        updateMasterState={(state) => this.setState(state)}
-      />}
     </>
     );
   }

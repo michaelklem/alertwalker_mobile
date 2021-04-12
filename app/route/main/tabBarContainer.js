@@ -10,9 +10,7 @@ import { EmailPage } from '../../page/main/email';
 import { NotesPage } from '../../page/main/notes';
 import { HomePage } from '../../page/main/home';
 import { GroupsPage } from '../../page/main/groups';
-import { SearchPage } from '../../page/main/search';
 import { PhonePage } from '../../page/main/phone';
-import AdditionalContainer from './additionalContainer';
 import { AppText, Colors, Images, Styles } from '../../constant';
 
 
@@ -50,10 +48,6 @@ export default class TabBarContainer extends Component
           tabBarLabel: ({ focused, tintColor }) =>
           {
             let name = route.name;
-            if(route.name === 'additional')
-            {
-              name = 'Addtl Feat';
-            }
             return <Text
                       adjustsFontSizeToFit={true}
                       style={focused ? Styles.activeTabBarBtn : Styles.inactiveTabBarBtn}
@@ -115,29 +109,6 @@ export default class TabBarContainer extends Component
         >
           {(props) => <NotesPage {...props}
                         ref={this.props.activeScreenRef}
-                        deepLink={this.props.deepLink}
-                        showAlert={this.props.showAlert}
-                        user={this.props.user}
-                      />}
-        </Tab.Screen>
-
-        <Tab.Screen
-          name='search'
-        >
-          {(props) => <SearchPage {...props}
-                        ref={this.props.activeScreenRef}
-                        deepLink={this.props.deepLink}
-                        showAlert={this.props.showAlert}
-                        user={this.props.user}
-                      />}
-        </Tab.Screen>
-
-        <Tab.Screen
-          name='additional'
-        >
-          {(props) => <AdditionalContainer {...props}
-                        ref={this.props.activeScreenRef}
-                        initialRouteName={'additional'}
                         deepLink={this.props.deepLink}
                         showAlert={this.props.showAlert}
                         user={this.props.user}

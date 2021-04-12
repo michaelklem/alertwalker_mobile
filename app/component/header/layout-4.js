@@ -1,11 +1,14 @@
 import React from 'react';
-import { Dimensions, Image, Platform, Text, TouchableOpacity, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Platform, Text, SafeAreaView, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { DrawerActions } from '@react-navigation/native';
+import {
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 
 import { AppManager, OauthManager } from '../../manager';
 import { ImageButton } from '../imageButton';
@@ -74,7 +77,6 @@ const Layout4 = ({  user,
     }
   }
 
-
   return (
     <View style={[styles.headerContainer]}>
 
@@ -121,10 +123,7 @@ const Layout4 = ({  user,
 
       {/* Right side space */}
       {(!rightBtnShowing || (rightBtnIcon === '' && rightBtnText === '')) &&
-      <View style={styles.barBtnContainer}>
-        <View style={styles.barBtnImage} />
-        <Text style={styles.hidden}>''</Text>
-      </View>}
+      <View style={styles.barBtnContainer} />}
 
     </View>
   );
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     borderBottomWidth: 1,
-    width: '100%',
+    width: Math.round(Dimensions.get('window').width),
     borderBottomColor: Colors.darkBlue1,
   },
   barBtnImage: {

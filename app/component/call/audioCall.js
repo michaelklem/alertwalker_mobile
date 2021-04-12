@@ -13,10 +13,8 @@ import {
 import { MyButton } from '../myButton';
 import { ImageButton } from '../imageButton';
 import { AppText, Colors, Images, Styles } from '../../constant';
-import { WebRtcClient } from '../../client';
 import ApiRequest from '../../helper/ApiRequest';
 
-import { RTCView } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 
 /**
@@ -29,7 +27,6 @@ const CallTimeoutMs = 30000;
 export default class AudioCall extends Component
 {
   static _ref = null;
-  _webRtcClient = null;
   _useInAppCall = false;
 
   constructor(props)
@@ -56,8 +53,6 @@ export default class AudioCall extends Component
 
   async componentDidMount()
   {
-    this._webRtcClient = await WebRtcClient.GetInstanceA(this.onConnectionStateChange, this.onCandidateStateChange, this.props.showAlert);
-
     const perm = await InCallManager.checkRecordPermission();
     console.log(perm);
   }
@@ -124,25 +119,6 @@ export default class AudioCall extends Component
     this.props.showAlert(title, msg);
   }
 
-  createCall = (userId) =>
-  {
-    return this._webRtcClient.createCall(userId);
-  }
-
-  acceptCall = (offer, userId) =>
-  {
-    return this._webRtcClient.acceptCall(offer, userId);
-  }
-
-  callAnswered = (answer) =>
-  {
-    this._webRtcClient.callAnswered(answer);
-  }
-
-  declineCall = () =>
-  {
-    this._webRtcClient.declineCall();
-  }
 
   onConnectionStateChange = (newState) =>
   {
@@ -458,18 +434,6 @@ export default class AudioCall extends Component
                     this.setState({ speakerOn: !this.state.speakerOn });
                   }}
                 />}
-                {this.state.call.status === 'active' &&
-                <ImageButton
-                  imgSrc={Images.callMuteIcon}
-                  imageStyle={styles.muteIcon}
-                  titleStyle={[styles.actionIcon, this.state.muted ? {backgroundColor: Colors.green1} : '']}
-                  onPress={async() =>
-                  {
-                    console.log('AudioCall.toggleMute: ' + !this.state.muted);
-                    this._webRtcClient.toggleMute();
-                    this.setState({ muted: !this.state.muted });
-                  }}
-                />}
 
                 {this.state.call.status === 'outgoingAudioCall' &&
                 <>
@@ -520,10 +484,6 @@ export default class AudioCall extends Component
                   </View>
                 </>}
               </View>
-
-              {this._webRtcClient &&
-              this.state.allowVideo &&
-              <RTCView streamURL={this._webRtcClient.audioStream().toURL()} style={styles.rtcView}/>}
 
               <Text style={[styles.statusText, { color: Colors.white } ]}>{`Connection state: ${this.state.connectionState}`}</Text>
               <Text style={[styles.statusText, { color: Colors.white } ]}>{`Candidate state: ${this.state.candidateState}`}</Text>
