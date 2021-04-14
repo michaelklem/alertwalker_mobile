@@ -77,31 +77,6 @@ export default {
       background: '#FFF'
     }
   },
-  layoverMenu:
-  {
-    containerBackground: '#001233',
-  },
-  calendarPage:
-  {
-    placeholder:
-    {
-      color: '#9EA4B1'
-    }
-  },
-  budget:
-  {
-    background: '#001233',
-  },
-  terms:
-  {
-    background: '#000A1D'
-  },
-  notesPage:
-  {
-    title: '#EF9A47',
-    noteTitle: '#001233',
-    editorIcon: '#0678EA',
-  },
   backgroundBlue: '#000E28',
   loginContainer:
   {
@@ -109,78 +84,9 @@ export default {
     backCheck: '#0480F8',
     emailLoginBtn: '#EF9A47',
   },
-  phonePage:
-  {
-    activeMode: '#EF9A47',
-    inactiveMode: '#000A1D'
-  },
-  welcomePage:
-  {
-    usernameText: '#F39D48',
-  },
-  editorToolbar:
-  {
-    background: '#001233'
-  },
   orange1: '#F39D48',
 
-  posts:
-  {
-    create:
-    {
-      title:
-      {
-        color: '#235373'
-      },
-      backgroundAccent:
-      {
-        color: '#E47725'
-      }
-    },
-    post:
-    {
-      actions:
-      {
-        background:
-        {
-          color: '#f1f1f2'
-        }
-      },
-      comments:
-      {
-        sendButton:
-        {
-          background:
-          {
-            color: '#225373'
-          },
-          text:
-          {
-            color: '#FFFFFF'
-          }
-        }
-      }
-    }
-  },
-  chat:
-  {
-    backgroundSelf:
-    {
-      color: '#012B6C',
-    },
-    backgroundOther:
-    {
-      color: '#000A1D'
-    }
-  },
 
-  widgets:
-  {
-    facebook:
-    {
-      background: '#0480F8'
-    }
-  },
 
   toast:
   {

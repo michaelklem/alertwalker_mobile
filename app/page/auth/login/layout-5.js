@@ -18,7 +18,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { AppManager } from '../../../manager';
 import { MyButton } from '../../../component/myButton';
 import { ImageButton } from '../../../component/imageButton';
-import { TosModal } from '../../../component/tos';
 import {AppText, Colors, Styles} from '../../../constant';
 
 const Layout5 = ({isLoading,
@@ -29,7 +28,6 @@ const Layout5 = ({isLoading,
                   getLoginContainerPropValue,
                   updateFormInput }) =>
 {
-  const [tosModalVisible, setTosModalVisible] = useState(false);
   const isEmailMethodActive = (getLoginContainerPropValue('source') === 'email');
   console.log('Email method is active: ' + isEmailMethodActive);
 
@@ -71,27 +69,6 @@ const Layout5 = ({isLoading,
         <View style={[{flex: 1}, {justifyContent: 'flex-end'}]}>
           {displayFormInputs()}
         </View>
-        {false &&
-        <View style={[Styles.pinToBottom]}>
-          <MyButton
-            buttonStyle={styles.termsBtn}
-            titleStyle={styles.termsBtnText}
-            title={AppText.loginPage.layout4.termsText}
-            onPress={async() =>
-            {
-              setTosModalVisible(true);
-            }}
-          />
-        </View>}
-
-        <TosModal
-          bottomBtnText={AppText.tosModal.bottomBtn.text}
-          close={() =>
-          {
-            setTosModalVisible(false);
-          }}
-          visible={tosModalVisible}
-        />
 
       </KeyboardAwareScrollView>
 
@@ -115,27 +92,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.lightBlue2,
     fontSize: h20,
-  },
-  termsBtn: {
-    height: Math.round(Dimensions.get('window').height * 0.04),
-    backgroundColor: Colors.terms.background,
-    justifyContent: 'center',
-  },
-  termsBtnText: {
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Roboto-Regular'
-      },
-      android: {
-        fontFamily: 'Roboto-Regular'
-      },
-      default: {
-        fontFamily: 'Arial'
-      }
-    }),
-    fontSize: font9,
-    textAlign: 'center',
-    color: Colors.white,
   },
   userPhotoImg: {
     width: Math.round(Dimensions.get('window').width * 0.43),

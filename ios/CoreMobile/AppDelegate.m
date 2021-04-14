@@ -19,8 +19,6 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-// MARK: - For Facebook login
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 // MARK: - For Google Maps
 #import <GoogleMaps/GoogleMaps.h>
@@ -53,10 +51,6 @@
     deepLink= [localNotification valueForKey:@"userInfo"];
     //deepLink = [NSString stringWithFormat:@"%@", data];
   }
-
-  // MARK: - For Facebook login
-  [[FBSDKApplicationDelegate sharedInstance] application:application
-                           didFinishLaunchingWithOptions:launchOptions];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -135,19 +129,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  //return [RCTLinkingManager application:application openURL:url options:options];
-  NSString *myUrl = url.absoluteString;
-  NSString *facebookAppId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"FacebookAppID"];
-  if ([myUrl containsString:facebookAppId])
-  {
-    return [[FBSDKApplicationDelegate sharedInstance]application:application
-                                                       openURL:url
-                                                       options:options];
-  }
-  else
-  {
-    return [RCTLinkingManager application:application openURL:url options:options];
-  }
+  return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 @end

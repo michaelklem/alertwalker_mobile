@@ -37,6 +37,7 @@ export default class Map extends Component
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
   _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   _mapCreateLastGoodPosition = null;
+  _threshold = 2;
 
   constructor(props)
   {
@@ -166,6 +167,9 @@ export default class Map extends Component
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
+    console.log(locationData.alertLocation);
+    console.log(this._mapCreateLastGoodPosition);
+
     return (
     <KeyboardAvoidingView style={styles.container}>
       <KeyboardAwareScrollView
@@ -225,11 +229,13 @@ export default class Map extends Component
             onRegionChangeComplete={async(region, isGesture) =>
             {
               console.log('Map.onRegionChangeComplete()');
-              console.log(region);
-              if( region.latitude !== locationData.mapLocation.latitude ||
-                  region.longitude !== locationData.mapLocation.longitude ||
-                  region.latitudeDelta !== locationData.mapLocation.latitudeDelta ||
-                  region.longitudeDelta !== locationData.mapLocation.longitudeDelta)
+              console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
+              console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
+              console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
+              if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+                  region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+                  region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+                  region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
               {
                 await this._dataMgr.execute(await new SetLocationCommand({
                   newLocation: region,
@@ -301,14 +307,15 @@ export default class Map extends Component
                   console.log('Resetting marker');
                   await this._dataMgr.execute(await new SetLocationCommand({
                     newLocation:
-                    {
-                      latitude: this._mapCreateLastGoodPosition.latitude,
-                      longitude: this._mapCreateLastGoodPosition.longitude
-                    },
+                    /*{
+                      latitude: this._mapCreateLastGoodPosition.latitude + .000000001, // Dumb workaround for marker not resetting if same coordinate passed in
+                      longitude: this._mapCreateLastGoodPosition.longitude + .00000001
+                    },*/locationData.mapLocation,
                     updateMasterState: (state) => this.setState(state),
                     dataVersion: this.state.dataVersion,
                     type: 'alert',
                   }));
+                  this._createMarkerRef.current.redraw();
                 }
                 else
                 {
@@ -332,6 +339,7 @@ export default class Map extends Component
                 // If not in circle set back to good position
                 if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
                 {
+                  e.nativeEvent.coordinate = this._mapCreateLastGoodPosition;
                   console.log('Not in circle');
                 }
                 else

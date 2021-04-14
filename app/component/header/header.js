@@ -3,19 +3,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import Layout4 from './layout-4';
 import { Images } from '../../constant';
-import { HeaderManager } from '../../manager';
 
 export default class Header extends Component
 {
-  _headerMgr = null;
-
   constructor(props)
   {
     super(props);
     console.log('\tHeader()');
-
-    this._headerMgr = HeaderManager.GetInstance();
-    this._headerMgr.setHeader(this);
 
     this.state =
     {

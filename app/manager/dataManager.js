@@ -1,4 +1,3 @@
-import { LoadNotesCommand } from '../command/notes';
 import { AppManager, OauthManager } from '.';
 export default class DataManager
 {
@@ -51,11 +50,6 @@ export default class DataManager
     try
     {
       let promises = [];
-      if(userToken)
-      {
-        // Notes (only if logged in)
-        //promises.push(this.execute(await new LoadNotesCommand()));
-      }
 
       // Geofence areas
       this.#dataStore.set('geofenceAreas', {geofenceAreas: []});

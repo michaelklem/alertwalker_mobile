@@ -16,15 +16,10 @@ import ApiRequest    from '../helper/ApiRequest.js';
 import { AppText, Colors, Images, Styles } from '../constant';
 import { PushManager } from '.';
 import { FormInput } from '../component/formInput';
-import { Chat } from '../component/chat';
-import { Conversations } from '../component/conversations';
-import { TosButton } from '../component/tos';
 import { RememberMe } from '../component/rememberMe';
-import { VerifySms } from '../component/verifySms';
 import { LoginContainer } from '../component/loginContainer';
 import { MyButton }from '../component/myButton';
 import { ImageButton } from '../component/imageButton';
-import { Groups } from '../component/groups';
 import { WebsocketClient } from '../client';
 
 export default class AppManager
@@ -319,75 +314,7 @@ export default class AppManager
                         segue,
                         updateGlobalState) =>
     {
-      if(!components)
-      {
-        return;
-      }
-      const componentKeys = Object.keys(components);
-      return componentKeys.map( (componentKey, i) =>
-      {
-        const component = components[componentKey];
-
-        // Groups
-        if(component.type === 'groups')
-        {
-          return (
-            <Groups
-              key={`component-${i}-container`}
-              component={component}
-              data={null}
-              dynamicData={true}
-              deepLink={deepLink}
-              updateMasterState={(state) => updateMasterState(state)}
-              navigation={navigation}
-              showAlert={showAlert}
-              user={user}
-            />
-          );
-        }
-        else if(component.type === 'chat')
-        {
-          return (
-            <Chat
-              key={`component-${i}-container`}
-              component={component}
-              deepLink={deepLink}
-              updateMasterState={(state) => updateMasterState(state)}
-              navigation={navigation}
-              showAlert={showAlert}
-              user={user}
-            />
-          );
-        }
-        else if(component.type === 'conversations')
-        {
-          return (
-            <Conversations
-              key={`component-${i}-container`}
-              component={component}
-              deepLink={deepLink}
-              updateMasterState={(state) => updateMasterState(state)}
-              navigation={navigation}
-              showAlert={showAlert}
-              user={user}
-            />
-          );
-        }
-        else if(component.type === 'verify-sms')
-        {
-          return (
-            <VerifySms
-              key={`component-${i}-container`}
-              component={component}
-              updateMasterState={(state) => updateMasterState(state)}
-              navigation={navigation}
-              showAlert={showAlert}
-              segue={segue}
-              updateGlobalState={updateGlobalState}
-            />
-          );
-        }
-      });
+      return;
     }
 
     getCachedPageValues = (pageName) =>
@@ -476,16 +403,6 @@ export default class AppManager
               title={AppText.pLoginForgotPasswordBtnText}
               onPress={() => segue('reset')}
           />);
-        }
-
-        // TOS Button
-        else if(formInput.type === '_tos_')
-        {
-          return (
-            <TosButton
-              key={formInput.name + i}
-              title={AppText.loginPage.layout4.termsText}
-            />);
         }
 
         // Instagram login

@@ -1,1 +1,0 @@
-export {VerifyReceiptCommand} from './verifyReceiptCommand';

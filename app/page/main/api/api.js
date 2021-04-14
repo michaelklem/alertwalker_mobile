@@ -69,7 +69,10 @@ export default class Api extends Component
     }
 
     // Pop back to where we were
-    this.props.route.params.onGoBack();
+    if(this.props.route.params.onGoBack)
+    {
+      this.props.route.params.onGoBack();
+    }
     this.props.navigation.goBack();
   }
 

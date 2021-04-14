@@ -1,4 +1,3 @@
-import { AudioCall } from '../component/call';
 import { Toast } from '../component/toast';
 import ApiRequest from '../helper/ApiRequest';
 import * as RootNavigation from '../component/rootNavigation.js';
@@ -337,32 +336,13 @@ export default class NotificationManager
       if(response.data.results.type === 'message')
       {
         let routeName = RootNavigation.getCurrentRoute();
-        // Navigate to phone screen if not on it
-        if(routeName !== 'phone')
+        for(let i = 0; i < this.#observers.length; i++)
         {
-          RootNavigation.navigate('phone', { message: response.data.results.document });
-        }
-        // Already on it, notify them
-        else
-        {
-          for(let i = 0; i < this.#observers.length; i++)
+          if(typeof this.#observers[i].observer.newNotification === "function")
           {
-            if(typeof this.#observers[i].observer.newNotification === "function")
-            {
-              this.#observers[i].observer.newNotification({ notification: notification, message: response.data.results.document });
-            }
+            this.#observers[i].observer.newNotification({ notification: notification, message: response.data.results.document });
           }
         }
-      }
-      else if(response.data.results.type === 'call')
-      {
-        await AudioCall.ShowCall({
-          _id: response.data.results.document._id,
-          status: 'incomingAudioCall',
-          contact: null,
-          user: response.data.results.document.createdBy,
-          offer: response.data.results.document.offer
-        });
       }
       else if(response.data.results.type === 'geofencearea')
       {

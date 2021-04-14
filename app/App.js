@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {  AppManager,
           DataManager,
-          IapManager,
           LocationManager,
           OauthManager,
           NotificationManager,
@@ -23,15 +22,11 @@ import { Images } from './constant';
 import { NavigationRef } from './component/rootNavigation';
 import * as RootNavigation from './component/rootNavigation.js';
 import { Toast } from './component/toast';
-import { AudioCall } from './component/call';
-
-import { LoadCalendarEventsCommand } from './command/calendar';
 
 import { getVariableValue } from './helper/querystring';
 
 const Stack = createStackNavigator();
 
-const AudioCallsEnabled = false;
 
 export default class App extends Component
 {
@@ -40,7 +35,6 @@ export default class App extends Component
   _notificationManager = null;
   _oauthManager = null;
   _dataManager = null;
-  _iapManager = null;
   _appMgr = null;
   _activeScreenRef = null;
   _websocketClient = null;
@@ -122,9 +116,6 @@ export default class App extends Component
   // Fetch the token from storage then navigate to our appropriate place
   init = async () =>
   {
-    // In app purchase manager
-    this._iapManager = await IapManager.GetInstanceA(this.showAlert);
-
     // Load session
     this._appMgr = await AppManager.GetInstanceAsync();
     const userToken = await AsyncStorage.getItem('token');
@@ -301,17 +292,6 @@ export default class App extends Component
     {
       this._notificationManager.readNotification(({_id: notification.data.data.pinpoint.deeplink }));
     }
-  }
-
-  // MARK: - Call related
-  callAnswered = async(answer) =>
-  {
-    await AudioCall.CallAnswered(answer);
-  }
-
-  callDeclined = async(callId) =>
-  {
-    await AudioCall.DeclineCall(callId);
   }
 
   // MARK: - Deep linking

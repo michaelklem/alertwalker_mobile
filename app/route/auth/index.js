@@ -1,7 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-//import ForgotPassword from '../../page/ForgotPassword';
 import {AuthPage} from '../../page/auth';
-import { Tos } from '../../page/main/tos';
 import { Api } from '../../page/main/api';
 import React from 'react';
 
@@ -25,19 +23,6 @@ export function AuthStack(props)
                     />}
       </Stack.Screen>
       <Stack.Screen
-        name="tos"
-        options={{
-            headerShown: false
-        }}
-      >
-        {(props) => <Tos {...props}
-                      showAlert={showAlert}
-                      updateGlobalState={updateGlobalState}
-                      updateStack={updateStack}
-                      stack={'auth'}
-                    />}
-      </Stack.Screen>
-      <Stack.Screen
         name="api"
         options={{
               headerShown: false
@@ -53,9 +38,3 @@ export function AuthStack(props)
     </Stack.Navigator>
   );
 }
-
-
-/*
-//    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-//    <Stack.Screen name="SmsVerification" component={SmsVerification} />
-*/

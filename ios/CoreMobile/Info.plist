@@ -72,8 +72,6 @@
 	<string>To display events in the in-app calendar</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to select profile photo and when adding photos to notes</string>
-	<key>NSContactsUsageDescription</key>
-	<string>To chat with other Aspire users</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Used when creating new alerts and choosing a location</string>
 	<key>NSLocationAlwaysUsageDescription</key>

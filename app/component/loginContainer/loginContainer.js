@@ -6,9 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { FormInput } from '../formInput';
 import {  AppleLoginButton,
           EmailLoginButton,
-          FacebookLoginButton,
           GoogleLoginButton,
-          InstagramLoginButton
       } from '../loginButton';
 import { MyButton } from '../myButton';
 import { ImageButton } from '../imageButton';
@@ -28,7 +26,6 @@ export default class LoginContainer extends Component
       firstName: '',
       lastName: '',
       password: '',
-      instagramModalVisible: false,
     };
   }
 
@@ -54,20 +51,7 @@ export default class LoginContainer extends Component
   {
     console.log(updateParams);
 
-    // Enter immediately if facebook
-    if(updateParams.source === 'facebook')
-    {
-      const params = {...updateParams};
-      params.source = 'facebook';
-      params.cb = () =>
-      {
-        // Clear source
-        this.props.updateFormInput('source', '');
-        this.setState({ source: '' });
-      };
-      await this.props.login(params);
-    }
-    else if(updateParams.source === 'google')
+    if(updateParams.source === 'google')
     {
       const params = {...updateParams};
       params.cb = () =>
@@ -196,7 +180,7 @@ export default class LoginContainer extends Component
                 size={20}
                 color={Colors.loginContainer.backCheck}
               />
-              <Text style={styles.backText}>{'Back to login with Facebook or Instagram'}</Text>
+              <Text style={styles.backText}>{'Back to login with Google'}</Text>
             </TouchableOpacity>}
 
             {this.props.formInput.methods.map( (method, i) =>
@@ -227,21 +211,9 @@ export default class LoginContainer extends Component
                           this.props.updateFormInput('source', 'email');
                         }}
                       />);
-                  case 'facebook':
-                    return (
-                      (this.props.formInputInComponent.source === 'facebook' ||
-                      this.props.formInputInComponent.source === '') &&
-                      <FacebookLoginButton
-                        formInput={{name: 'facebook-login-btn'}}
-                        updateMasterState={this.props.updateMasterState}
-                        login={this.login}
-                        key={'facebook-login-btn-container'}
-                        customUI={true}
-                      /> );
                   case 'google':
                     return (
-                      (this.props.formInputInComponent.source === 'facebook' ||
-                      this.props.formInputInComponent.source === '') &&
+                      (this.props.formInputInComponent.source === '') &&
                       <GoogleLoginButton
                         formInput={{name: 'google-login-btn'}}
                         updateMasterState={this.props.updateMasterState}
@@ -249,21 +221,6 @@ export default class LoginContainer extends Component
                         key={'google-login-btn-container'}
                         showAlert={this.props.showAlert}
                       /> );
-                  case 'instagram':
-                    return (
-                    (this.props.formInputInComponent.source === 'instagram' ||
-                    this.props.formInputInComponent.source === '') &&
-                    <InstagramLoginButton
-                      formInput={{name: 'instagram-login-btn'}}
-                      key={'instagram-login-btn-container'}
-                      updateMasterState={(state) => this.setState(state)}
-                      updateFormInput={() => this.props.updateFormInput('source', 'instagram') }
-                      appId={this.props.instagramParams.appId}
-                      redirectUrl={this.props.instagramParams.redirectUrl}
-                      modalVisible={this.state.instagramModalVisible}
-                      shouldLogin={true}
-                      login={this.login}
-                    />);
                   }
               }
             })}

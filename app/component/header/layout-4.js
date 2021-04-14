@@ -48,7 +48,7 @@ const Layout4 = ({  user,
     navigation.navigate('add', { });
   }
   let leftBtnText = 'Menu';
-  let rightBtnText = AppText.header.add.text;
+  let rightBtnText = 'Add Alert';
   let leftBtnIcon = '';
   let rightBtnIcon = '';
 

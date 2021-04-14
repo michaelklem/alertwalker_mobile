@@ -16,9 +16,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { AppText, Colors, Styles } from '../../../constant';
 import { AppManager, OauthManager } from '../../../manager';
 import ApiRequest from '../../../helper/ApiRequest';
-
-import { Groups } from '../../../component/groups';
-import { Feed } from '../../../component/feed';
 import { Map } from '../../../component/map';
 
 import {extractValueFromPointer} from '../../../helper/coreModel';
@@ -62,16 +59,6 @@ export default class Home extends Component
     });
 
     this._componentRef = React.createRef();
-  }
-
-  async componentDidMount()
-  {
-    const tosRequired = await AsyncStorage.getItem('tosRequired');
-    console.log('Tos required: ' + tosRequired);
-    if(tosRequired === 'true' || tosRequired === true)
-    {
-      this.props.navigation.navigate('tos', { });
-    }
   }
 
 
@@ -120,33 +107,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     justifyContent: 'flex-start',
   },
-  widgetContainer: {
-    paddingTop: Math.round(Dimensions.get('window').height * 0.065),
-    marginHorizontal: Math.round(Dimensions.get('window').width * 0.037),
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
   mapContainer: {
     flex: 1,
     flexDirection: 'column',
-  },
-  noWidgets: {
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Roboto-Regular'
-      },
-      android: {
-        fontFamily: 'Roboto-Regular'
-      },
-      default: {
-        fontFamily: 'Arial'
-      }
-    }),
-    fontSize: height18,
-    marginTop: 16,
-    textAlign: 'center',
-    color: Colors.black,
   },
 });
