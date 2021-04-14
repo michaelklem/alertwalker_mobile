@@ -307,10 +307,10 @@ export default class Map extends Component
                   console.log('Resetting marker');
                   await this._dataMgr.execute(await new SetLocationCommand({
                     newLocation:
-                    /*{
+                    {
                       latitude: this._mapCreateLastGoodPosition.latitude + .000000001, // Dumb workaround for marker not resetting if same coordinate passed in
                       longitude: this._mapCreateLastGoodPosition.longitude + .00000001
-                    },*/locationData.mapLocation,
+                    },
                     updateMasterState: (state) => this.setState(state),
                     dataVersion: this.state.dataVersion,
                     type: 'alert',

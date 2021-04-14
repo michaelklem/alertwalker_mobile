@@ -16,3 +16,32 @@ Google Maps
   - Replace GMSServices API key in ./ios/CoreMobile/AppDelegate.m
 - Android
   - Replace API key in Androidmanifest.xml
+
+
+Running on Android
+====
+- ./node_modules/@mauron85/react-native-background-geolocation/android/common/gradle.properties
+  - Set android.enableUnitTestBinaryResources to false
+
+
+- .node_modules/@mauron85/react-native-background-geolocation/android/common/VERSIONS.gradle
+  - Replace
+```
+if (findProject('..:app') != null) {
+    applicationId = project('..:app').android.defaultConfig.applicationId
+} else if (findProject(':app') != null) {
+    applicationId = project(':app').android.defaultConfig.applicationId
+}
+```
+  - With
+```
+if (findProject('..:app') != null && project('..:app').hasProperty('android')) {
+    applicationId = project('..:app').android.defaultConfig.applicationId
+} else if (findProject(':app') != null && project(':app').hasProperty('android')) {
+    applicationId = project(':app').android.defaultConfig.applicationId
+}
+  ```
+
+- Run the command: npx jetify && npm start
+
+- Then you should be able to build and run from Android Studio
