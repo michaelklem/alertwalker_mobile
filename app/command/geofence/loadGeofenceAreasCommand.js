@@ -9,7 +9,20 @@ export async function LoadGeofenceAreasCommand({ updateMasterState, dataVersion 
     updateMasterState ? updateMasterState({ isLoading: true }) : '';
     try
     {
-      let response = await ApiRequest.sendRequest("post", {model: 'geofencearea', params: {}}, 'data/query');
+      var d = new Date();
+      d.setHours(d.getHours() - 2);
+      let response = await ApiRequest.sendRequest("post",
+      {
+        model: 'geofencearea',
+        params:
+        {
+          createdOn:
+          {
+            $gte: d
+          }
+        }
+      },
+      'data/query');
       console.log(response.data);
 
       if(response.data.error !== null)

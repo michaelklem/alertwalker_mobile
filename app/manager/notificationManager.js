@@ -266,44 +266,25 @@ export default class NotificationManager
     let routeName = RootNavigation.getCurrentRoute();
 
 
-    // Display phone call differently
-    if(notification.entityType === 'call')
-    {
-      // Mark notification read and present call screen
-      this.readNotification(notification);
-    }
-    else
-    {
-      // If we're on the messages page we let that handle it's own notifications
-      // so we don't annoyingly spam an active conversation
-      if(routeName.indexOf('phone') === -1)
+    Toast.show({
+      type: 'info',
+      position: 'top',
+      text1: notification.title,
+      text2: this.parseNotificationBody(notification),
+      visibilityTime: 5000,
+      onPress: () =>
       {
-        Toast.show({
-          type: 'info',
-          position: 'top',
-          text1: notification.title,
-          text2: this.parseNotificationBody(notification),
-          visibilityTime: 5000,
-          onPress: () =>
-          {
-            this.readNotification(notification);
-          },
-          onLeadingIconPress: () =>
-          {
-            this.readNotification(notification);
-          },
-          onTrailingIconPress: () =>
-          {
-            this.readNotification(notification);
-          }
-        });
-      }
-      // Phone screen already active, notify them of notification
-      else
+        this.readNotification(notification);
+      },
+      onLeadingIconPress: () =>
+      {
+        this.readNotification(notification);
+      },
+      onTrailingIconPress: () =>
       {
         this.readNotification(notification);
       }
-    }
+    });
   }
 
   /**
@@ -332,6 +313,21 @@ export default class NotificationManager
 
       // Tell notification manager we read this
       this.markRead(response.data.results.document);
+
+      // Add to list if we need to
+      let needToAdd = true;
+      for(let i = 0; i < this.#notifications.length; i++)
+      {
+        if(this.#notifications[i]._id.toString() === notification._id.toString())
+        {
+          needToAdd = false;
+          break;
+        }
+      }
+      if(needToAdd)
+      {
+        this.#notifications.unshift(esponse.data.results.document);
+      }
 
       if(response.data.results.type === 'message')
       {

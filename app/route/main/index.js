@@ -89,7 +89,10 @@ export function MainStack(props)
       <Stack.Screen
         name="add"
         options={{
-          headerLeft: () => (<></>)
+          headerLeft: ()=> null,
+          headerStyle:
+          {
+          },
         }}
       >
         {(props) => <AddPage {...props}

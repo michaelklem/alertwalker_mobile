@@ -76,12 +76,13 @@ const Layout4 = ({  user,
       rightBtnText = 'Add Alert';
     }
   }
+  console.log( (!leftBtnShowing || (leftBtnIcon === '' && leftBtnText === '')));
 
   return (
     <View style={[styles.headerContainer]}>
 
       {/* Left side space */}
-      {!leftBtnShowing &&
+      {(!leftBtnShowing || (leftBtnIcon === '' && leftBtnText === '')) &&
       <View style={styles.barBtnContainer}>
         <View style={styles.barBtnImage} />
         <Text style={styles.hidden}>{routeName === 'settings' || subRoute.name === 'settings' ? AppText.header.logout.text : AppText.header.settings.text}</Text>
@@ -89,6 +90,7 @@ const Layout4 = ({  user,
 
       {/* Left btn/text */}
       {leftBtnShowing &&
+      (leftBtnIcon !== '' || leftBtnText !== '') &&
       <TouchableOpacity style={styles.barBtnContainer} onPress={leftBtnNavigation}>
         {leftBtnIcon !== '' &&
         <Icon

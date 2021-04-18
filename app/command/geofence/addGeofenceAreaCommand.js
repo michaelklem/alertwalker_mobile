@@ -39,7 +39,7 @@ export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, dat
       {
         if(dataSet.geofenceAreas[i]._id.toString() === response.data.results._id.toString())
         {
-          dataSet.geofenceAreas[i] = params;
+          dataSet.geofenceAreas[i] = response.data.results;
           found = true;
           break;
         }

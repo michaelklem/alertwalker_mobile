@@ -25,6 +25,7 @@ import {extractValueFromPointer} from '../../../helper/coreModel';
 export default class Notifications extends Component
 {
   _notificationMgr = null;
+  _isMounted = false;
 
   // MARK: - Constructor
   constructor(props)
@@ -40,21 +41,36 @@ export default class Notifications extends Component
       notifications: this._notificationMgr.getNotifications()
     };
 
+    props.navigation.addListener('focus', async() =>
+    {
+      if(this._isMounted !== true)
+      {
+        this._isMounted = true;
+      }
+      else
+      {
+        this.setState({ isLoading: true });
+        const token = await AsyncStorage.getItem('token');
+        await this._notificationMgr.init(token);
+        this.setState({ isLoading: false, notifications: this._notificationMgr.getNotifications() });
+      }
+    });
+
     //console.log(this.state.notifications);
   }
 
   async componentDidMount()
   {
-    console.log('Conversations.componentDidMount()');
+    console.log('Notifications.componentDidMount()');
     this._isMounted = true;
 
     // Listen for new notifications
-    NotificationManager.GetInstance().addObserver(this, 'notifications');
+    this._notificationMgr.addObserver(this, 'notifications');
   }
 
   componentWillUnmount()
   {
-    NotificationManager.GetInstance().removeObserver('notifications');
+    this._notificationMgr.removeObserver('notifications');
   }
 
   // Called from notification manager when notifications change
@@ -75,18 +91,7 @@ export default class Notifications extends Component
     //console.log(notification);
     //console.log(message);
 
-    //console.log(this.state.chat);
-    // If chat already open check if it's for this conversation
-    if(this.state.chat.conversation &&
-      this.state.chat.conversation._id.toString() === message.conversation._id.toString())
-    {
-      this._chatRef.current.onNewMessage(message);
-    }
-    // Otherwise show toast
-    else
-    {
-      this.showToast(notification, message);
-    }
+    this.showToast(notification, message);
   }
 
   showToast = (notification, message) =>
@@ -99,24 +104,12 @@ export default class Notifications extends Component
       visibilityTime: 5000,
       onPress: () =>
       {
-        const chat = {...this.state.chat};
-        chat.isOpen = true;
-        chat.conversation = message.conversation;
-        this.setState({ chat: chat });
       },
       onLeadingIconPress: () =>
       {
-        const chat = {...this.state.chat};
-        chat.isOpen = true;
-        chat.conversation = message.conversation;
-        this.setState({ chat: chat });
       },
       onTrailingIconPress: () =>
       {
-        const chat = {...this.state.chat};
-        chat.isOpen = true;
-        chat.conversation = message.conversation;
-        this.setState({ chat: chat });
       }
     });
   }

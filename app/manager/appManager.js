@@ -29,9 +29,6 @@ export default class AppManager
     #_pages = null;
     #_pageValuesCache = null;
     #_guestAccessAllowed = false;
-    #_termsOfService = [];
-    #_shareText = '';
-    #_inviteText = '';
     #_frontendUrl = '';
     // OAuth manager should manage this but for now it is what it is
     #_thirdPartyAccounts = [];
@@ -40,27 +37,12 @@ export default class AppManager
     #_internalTypes = [];
 
     #_mapCreateRadius = 1;
-
-
-    // TODO: Move this to a component manager and move individual components out
-    // Animation for search expanding past categories
-    _searchBarAnimation = new Animated.Value(0);
-    _categoryInterpolate =  this._searchBarAnimation.interpolate({inputRange:[0,1],outputRange:[1,0]});
-    _searchBarInterpolate = this._searchBarAnimation.interpolate({inputRange:[0,1],outputRange:['50%','100%']});
-    _searchBarTransitionOn = Animated.spring(this._searchBarAnimation,{ toValue: 1 });
-    _searchBarTransitionOff = Animated.spring(this._searchBarAnimation,{ toValue: 0 });
-    searchOnFocus = () =>
+    #_mapCreateDelta =
     {
-      //console.log('searchOnFocus');
-      this._searchBarTransitionOn.start();
-    }
-    searchOnBlur = () =>
-    {
-      //console.log('searchOnBlur');
-      this._searchBarTransitionOff.start();
-    }
-    // Categories they can filter on
-    #_categories = [];//['recent', 'rated', 'brutal', 'funniest'];
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+    };
+
 
     // Singleton
     /**
@@ -99,7 +81,7 @@ export default class AppManager
           return false;
   			}
 
-        //console.log(response.data);
+        console.log(response.data);
 
   			var componentMap = new Map();
         var fields = null;
@@ -142,12 +124,10 @@ export default class AppManager
         this.#_internalTypes = response.data.internalTypes;
         this.#_pageValuesCache = new Map();
         this.#_guestAccessAllowed = response.data.guestAccessAllowed;
-        this.#_termsOfService = response.data.termsOfService;
-        this.#_shareText = response.data.shareText;
-        this.#_inviteText = response.data.inviteText;
         this.#_frontendUrl = response.data.frontendUrl;
         this.#_thirdPartyAccounts = response.data.thirdPartyAccounts;
-        this.#_mapCreateRadius = response.data.mapCreateRadius;
+        this.#_mapCreateDelta = JSON.parse(response.data.mapCreateDelta);
+        //this.#_mapCreateRadius = response.data.mapCreateRadius;
 
 
         OauthManager.GetInstance().setOauthTokens(response.data.oauthTokens);
@@ -194,22 +174,6 @@ export default class AppManager
     {
       return this.#_pages.get(page);
     }
-
-    getTermsOfService = () =>
-    {
-      return this.#_termsOfService;
-    }
-
-    getShareText = () =>
-    {
-      return this.#_shareText;
-    }
-
-    getInviteText = () =>
-    {
-      return this.#_inviteText;
-    }
-
     getFrontEndUrl = () =>
     {
       return this.#_frontendUrl;
@@ -218,6 +182,11 @@ export default class AppManager
     getMapCreateRadius = () =>
     {
       return parseInt(this.#_mapCreateRadius);
+    }
+
+    getMapCreateDelta = () =>
+    {
+      return this.#_mapCreateDelta;
     }
 
     processFormInputsForPage = (pageName) =>

@@ -281,17 +281,7 @@ export default class App extends Component
   onPushNotification = (notification) =>
   {
     console.log('App.onPushNotification()');
-
-    // Handle calendar event notification
-    if(notification.data.calendarEventId)
-    {
-      RootNavigation.navigate('calendar', { _id: notification.data.calendarEventId });
-    }
-    // Handle every other notification
-    else
-    {
-      this._notificationManager.readNotification(({_id: notification.data.data.pinpoint.deeplink }));
-    }
+    this._notificationManager.readNotification(({_id: notification.data.data.pinpoint.deeplink }));
   }
 
   // MARK: - Deep linking

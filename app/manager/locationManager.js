@@ -70,7 +70,11 @@ export default class LocationManager
         debug: false,
         startOnBoot: false,
         stopOnTerminate: false,
-        locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
+        locationProvider: Platform.select({
+          ios: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
+          android: BackgroundGeolocation.ACTIVITY_PROVIDER,
+          default: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
+        }),
         interval: 15000,
         fastestInterval: 10000,
         activitiesInterval: 15000,

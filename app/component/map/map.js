@@ -49,7 +49,8 @@ export default class Map extends Component
       radius: 500,
       note: '',
       hideRadiusOption: true,
-      mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
+      // Disabled this to use map restriction instead
+      //mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
       dataVersion: 0
     };
 
@@ -139,6 +140,22 @@ export default class Map extends Component
       setLoading: (isLoading) => this.props.updateMasterState({ isLoading: isLoading }),
       dataVersion: this.state.dataVersion
     }));
+
+    // Set map location to use delta configuration if create mode
+    if(this.props.createMode)
+    {
+      const locationData = this._dataMgr.getData('location');
+      const region = {...locationData.mapLocation};
+      const delta = {...AppManager.GetInstance().getMapCreateDelta()};
+      region.latitudeDelta = delta.latitudeDelta;
+      region.longitudeDelta = delta.longitudeDelta;
+      await this._dataMgr.execute(await new SetLocationCommand({
+        newLocation: region,
+        updateMasterState: (state) => this.setState(state),
+        dataVersion: this.state.dataVersion,
+        type: 'map',
+      }));
+    }
   }
 
   refresh = () =>
@@ -253,10 +270,18 @@ export default class Map extends Component
               longitudeDelta: 0.0421,
             }}
             showsUserLocation={true}
+
+            scrollEnabled={!this.props.createMode}
+            rotateEnabled={!this.props.createMode}
+            zoomEnabled={!this.props.createMode}
+            zoomTapEnabled={!this.props.createMode}
+            zoomControlEnabled={!this.props.createMode}
+            pitchEnabled={!this.props.createMode}
           >
 
-            { /* Create marker bounds */}
+            { /* Create marker bounds (Disabled this for now, instead will restrict map view itself )*/}
             {this.props.createMode &&
+            false &&
             (locationData && locationData.userLocation) &&
             <Circle
               center={locationData.userLocation}
@@ -302,7 +327,7 @@ export default class Map extends Component
               onDragEnd={async(e) =>
               {
                 console.log('OnMarkerDragEnd()');
-                if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
+                /*if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
                 {
                   console.log('Resetting marker');
                   await this._dataMgr.execute(await new SetLocationCommand({
@@ -320,7 +345,7 @@ export default class Map extends Component
                 else
                 {
                   console.log('Took the value change');
-                  await this._dataMgr.execute(await new SetLocationCommand({
+                  */await this._dataMgr.execute(await new SetLocationCommand({
                     newLocation:
                     {
                       latitude: e.nativeEvent.coordinate.latitude,
@@ -330,22 +355,22 @@ export default class Map extends Component
                     dataVersion: this.state.dataVersion,
                     type: 'alert',
                   }));
-                }
+                //}
               }}
               onDrag={async(e) =>
               {
-                console.log('onMarkerDrag()');
+                // Disabling this and restricting map view itself to restrict marker movement
+                /*console.log('onMarkerDrag()');
 
                 // If not in circle set back to good position
                 if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
                 {
-                  e.nativeEvent.coordinate = this._mapCreateLastGoodPosition;
                   console.log('Not in circle');
                 }
                 else
                 {
                   this._mapCreateLastGoodPosition = e.nativeEvent.coordinate;
-                }
+                }*/
               }}
               pinColor={"green"}
             />}

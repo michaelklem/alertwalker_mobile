@@ -37,7 +37,11 @@ function CustomDrawerContent({  updateGlobalState,
       <Animated.View style={{ transform: [{ translateX }] }}>
 
         <View style={styles.headerContainer}>
-          <Text style={styles.label}>{`${OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email}`}</Text>
+          <Text
+            style={styles.label}
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
+          >{`${OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email}`}</Text>
           <Text style={styles.label}>{`version ${AppJson.version}`}</Text>
         </View>
 
