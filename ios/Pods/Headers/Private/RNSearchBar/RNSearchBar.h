@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-search-bar/ios/RNSearchBar.h
