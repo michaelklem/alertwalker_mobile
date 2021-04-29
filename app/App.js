@@ -281,7 +281,38 @@ export default class App extends Component
   onPushNotification = (notification) =>
   {
     console.log('App.onPushNotification()');
-    this._notificationManager.readNotification(({_id: notification.data.data.pinpoint.deeplink }));
+    //this.showAlert("Success", "Push notification was received!");
+    console.log(notification);
+
+    let body = '';
+    let deeplink = '';
+    let isForeground = '';
+
+    // iOS
+    if(notification.data.data)
+    {
+      body = notification.data.data.pinpoint.body;
+      deeplink = notification.data.data.pinpoint.deeplink;
+      isForeground = notification.data.foreground;
+    }
+    // Android
+    else
+    {
+      body = notification.data.body;
+      deeplink = notification.data.deeplink;
+      isForeground = notification.foreground;
+    }
+
+    // If app is foreground show toast pop up
+    /*if(isForeground)
+    {
+      */this._notificationManager.newNotification({ _id: deeplink, body: body });
+    /*}
+    // Otherwise read notification immediately
+    else
+    {
+      this._notificationManager.readNotification(({_id: deeplink }));
+    }*/
   }
 
   // MARK: - Deep linking

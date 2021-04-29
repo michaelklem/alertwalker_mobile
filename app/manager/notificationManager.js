@@ -272,6 +272,7 @@ export default class NotificationManager
       text1: notification.title,
       text2: this.parseNotificationBody(notification),
       visibilityTime: 5000,
+      autoHide: true,
       onPress: () =>
       {
         this.readNotification(notification);
@@ -326,7 +327,7 @@ export default class NotificationManager
       }
       if(needToAdd)
       {
-        this.#notifications.unshift(esponse.data.results.document);
+        this.#notifications.unshift(response.data.results.document);
       }
 
       if(response.data.results.type === 'message')

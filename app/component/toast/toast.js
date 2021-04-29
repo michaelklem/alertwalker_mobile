@@ -402,7 +402,7 @@ Toast.defaultProps = {
   topOffset: 30,
   bottomOffset: 40,
   keyboardOffset: 15,
-  visibilityTime: 4000,
+  visibilityTime: 5000,
   autoHide: true,
   height: 60,
   position: 'top',

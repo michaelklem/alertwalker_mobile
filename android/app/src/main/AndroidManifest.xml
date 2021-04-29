@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="software.bitbybit.alertwalker">
 
+    <!-- Push notifications -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <!-- Chat -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
@@ -10,6 +14,7 @@
     <!-- Geolocation -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <!-- Web RTC -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -75,7 +80,27 @@
             android:value="AIzaSyB1qBa4Fo-5_v3GcPR5BZzKkDrG4V9MWTA"/>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
-
+        <!-- Foreground remote notifications -->
+        <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
+        <meta-data
+          android:name="com.dieam.reactnativepushnotification.notification_foreground"
+          android:value="true"/>
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 </manifest>
