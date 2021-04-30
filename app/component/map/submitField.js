@@ -18,7 +18,8 @@ import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 
 const SubmitField = ({  note,
                         submit,
-                        updateMasterState }) =>
+                        updateMasterState,
+                        isEnabled }) =>
 {
   return (
   <View
@@ -42,6 +43,7 @@ const SubmitField = ({  note,
           submit();
         }}
         style={styles.commentIcon}
+        disabled={!isEnabled}
       >
         {false && /* Using text instead of icon */
         <Icon

@@ -73,6 +73,12 @@ export default class MapPage extends Component
         colors={[Colors.white, Colors.white]}
         style={[Styles.fullScreen]}
       >
+        <ActivityIndicator
+          size="large"
+          color={Colors.burnoutGreen}
+          animating={this.state.isLoading}
+          style={Styles.loading}
+        />
         <View style={styles.mapContainer}>
           <Map
             updateMasterState={(state) => this.setState(state)}

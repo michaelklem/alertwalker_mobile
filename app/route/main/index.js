@@ -90,9 +90,6 @@ export function MainStack(props)
         name="add"
         options={{
           headerLeft: ()=> null,
-          headerStyle:
-          {
-          },
         }}
       >
         {(props) => <AddPage {...props}

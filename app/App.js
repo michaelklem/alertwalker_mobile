@@ -286,7 +286,8 @@ export default class App extends Component
 
     let body = '';
     let deeplink = '';
-    let isForeground = '';
+    let isForeground = false;
+    let isUserInteraction = false;
 
     // iOS
     if(notification.data.data)
@@ -294,6 +295,7 @@ export default class App extends Component
       body = notification.data.data.pinpoint.body;
       deeplink = notification.data.data.pinpoint.deeplink;
       isForeground = notification.data.foreground;
+      isUserInteraction = notification.data.userInteraction;
     }
     // Android
     else
@@ -301,12 +303,17 @@ export default class App extends Component
       body = notification.data.body;
       deeplink = notification.data.deeplink;
       isForeground = notification.foreground;
+      isUserInteraction = notification.userInteraction;
     }
 
+    if(isUserInteraction)
+    {
+      this._notificationManager.readNotification(({_id: deeplink }));
+    }
     // If app is foreground show toast pop up
     /*if(isForeground)
     {
-      */this._notificationManager.newNotification({ _id: deeplink, body: body });
+      */ //this._notificationManager.newNotification({ _id: deeplink, body: body });
     /*}
     // Otherwise read notification immediately
     else

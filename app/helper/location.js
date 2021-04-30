@@ -11,11 +11,14 @@ async function hasLocationPermissionIOS(showAlert)
 {
   try
   {
-    const openSetting = () => {
-      Linking.openSettings().catch(() => {
+    const openSetting = () =>
+    {
+      Linking.openSettings().catch(() =>
+      {
         showAlert('Error', 'Unable to open settings');
       });
     };
+
     const status = await Geolocation.requestAuthorization('always');
 
     if (status === 'granted') {
@@ -45,25 +48,28 @@ export async function hasLocationPermission(showAlert)
 {
   try
   {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios')
+    {
       const hasPermission = await hasLocationPermissionIOS(showAlert);
       return hasPermission;
     }
 
-    if (Platform.OS === 'android' && Platform.Version < 23) {
+    if (Platform.OS === 'android' && Platform.Version < 23)
+    {
       return true;
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
     );
 
     if (hasPermission) {
       return true;
     }
 
+    console.log('Requesting: ' + PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
     );
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {

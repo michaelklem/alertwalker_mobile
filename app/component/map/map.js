@@ -51,6 +51,7 @@ export default class Map extends Component
       hideRadiusOption: true,
       // Disabled this to use map restriction instead
       //mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
+      submitIsEnabled: true,
       dataVersion: 0
     };
 
@@ -207,10 +208,14 @@ export default class Map extends Component
             {
               this.setState({ note: val });
             }}
+            isEnabled={this.state.submitIsEnabled}
             submit={async() =>
             {
+              console.log('Submit()');
+              this.setState({ submitIsEnabled: false });
               const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
-                updateMasterState: (state) => this.setState(state),
+                updateMasterState: (state) => this.props.updateMasterState(state),
+                updateDataVersion: (dataVersion) => this.setState({ dataVersion: dataVersion }),
                 showAlert: this.props.showAlert,
                 data:
                 {
@@ -220,6 +225,7 @@ export default class Map extends Component
                 },
                 dataVersion: this.state.dataVersion
               }));
+              this.setState({ submitIsEnabled: true });
               if(dataSet)
               {
                 this.setState({ note: '', radius: 500 });
@@ -270,7 +276,7 @@ export default class Map extends Component
               longitudeDelta: 0.0421,
             }}
             showsUserLocation={true}
-
+            moveOnMarkerPress={false}
             scrollEnabled={!this.props.createMode}
             rotateEnabled={!this.props.createMode}
             zoomEnabled={!this.props.createMode}

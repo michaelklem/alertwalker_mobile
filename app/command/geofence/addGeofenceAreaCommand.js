@@ -1,7 +1,7 @@
 import ApiRequest from '../../helper/ApiRequest';
 import { Command } from '..';
 
-export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, data, dataVersion })
+export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVersion, showAlert, data, dataVersion })
 {
   return new Command(async(dataStore) =>
   {
@@ -52,10 +52,9 @@ export async function AddGeofenceAreaCommand({ updateMasterState, showAlert, dat
 
       dataStore.set('geofenceAreas', dataSet);
 
-      updateMasterState ? updateMasterState({
-        isLoading: false,
-        dataVersion: dataVersion + 1,
-      }) : '';
+      updateMasterState ? updateMasterState({ isLoading: false }) : '';
+
+      updateDataVersion ? updateDataVersion(dataVersion + 1) : '';
 
       showAlert('Success', response.data.message);
       return dataSet;

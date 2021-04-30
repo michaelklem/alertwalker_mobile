@@ -83,6 +83,12 @@ export default class Home extends Component
         colors={[Colors.white, Colors.white]}
         style={[Styles.fullScreen]}
       >
+        <ActivityIndicator
+          size="large"
+          color={Colors.burnoutGreen}
+          animating={this.state.isLoading}
+          style={Styles.loading}
+        />
         <View style={styles.mapContainer} key={`component-map-container`}>
           <Map
             ref={this._componentRef}
