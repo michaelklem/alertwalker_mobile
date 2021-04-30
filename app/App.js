@@ -284,42 +284,58 @@ export default class App extends Component
     //this.showAlert("Success", "Push notification was received!");
     console.log(notification);
 
-    let body = '';
-    let deeplink = '';
-    let isForeground = false;
-    let isUserInteraction = false;
+    try
+    {
 
-    // iOS
-    if(notification.data.data)
-    {
-      body = notification.data.data.pinpoint.body;
-      deeplink = notification.data.data.pinpoint.deeplink;
-      isForeground = notification.data.foreground;
-      isUserInteraction = notification.data.userInteraction;
-    }
-    // Android
-    else
-    {
-      body = notification.data.body;
-      deeplink = notification.data.deeplink;
-      isForeground = notification.foreground;
-      isUserInteraction = notification.userInteraction;
-    }
+      let body = '';
+      let deeplink = '';
+      let isForeground = false;
+      let isUserInteraction = false;
 
-    if(isUserInteraction)
-    {
-      this._notificationManager.readNotification(({_id: deeplink }));
+      // iOS
+      if(notification.data && notification.data.data)
+      {
+        body = notification.data.data.pinpoint.body;
+        deeplink = notification.data.data.pinpoint.deeplink;
+        isForeground = notification.data.foreground;
+        isUserInteraction = notification.data.userInteraction;
+      }
+      // Android comes in with just data node (if in foreground)
+      else if(notification.data)
+      {
+        body = notification.data.body;
+        deeplink = notification.data.deeplink;
+        isForeground = notification.foreground;
+        isUserInteraction = notification.userInteraction;
+      }
+      // Android from background is missing data node for some odd reason
+      else
+      {
+        body = notification.body;
+        deeplink = notification.deeplink;
+        isForeground = notification.foreground;
+        isUserInteraction = true;
+      }
+
+      if(isUserInteraction)
+      {
+        this._notificationManager.readNotification(({_id: deeplink }));
+      }
+      // If app is foreground show toast pop up
+      /*if(isForeground)
+      {
+        */ //this._notificationManager.newNotification({ _id: deeplink, body: body });
+      /*}
+      // Otherwise read notification immediately
+      else
+      {
+        this._notificationManager.readNotification(({_id: deeplink }));
+      }*/
     }
-    // If app is foreground show toast pop up
-    /*if(isForeground)
+    catch(err)
     {
-      */ //this._notificationManager.newNotification({ _id: deeplink, body: body });
-    /*}
-    // Otherwise read notification immediately
-    else
-    {
-      this._notificationManager.readNotification(({_id: deeplink }));
-    }*/
+      console.error(err);
+    }
   }
 
   // MARK: - Deep linking

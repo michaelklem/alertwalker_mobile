@@ -21,7 +21,8 @@ async function hasLocationPermissionIOS(showAlert)
 
     const status = await Geolocation.requestAuthorization('always');
 
-    if (status === 'granted') {
+    if (status === 'granted')
+    {
       return true;
     }
 
@@ -59,20 +60,21 @@ export async function hasLocationPermission(showAlert)
       return true;
     }
 
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    );
-
-    if (hasPermission) {
+    // Check if we have background location permissions
+    let hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
+    if (hasPermission)
+    {
       return true;
     }
 
-    console.log('Requesting: ' + PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    );
+    // Check if we at least have while using app permissions
+    hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
 
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+    // Android 10 and above doesn't allow us to request background location, user needs to manually set that.
+    const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED)
+    {
       return true;
     }
 
