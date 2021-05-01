@@ -94,6 +94,10 @@ export default class LocationManager
       BackgroundGeolocation.on('location', async(location) =>
       {
         const locationData = this.#dataMgr.getData('location');
+        
+        // check for valid data.
+        if (locationData === {} || typeof locationData.userLocation === 'undefined' ) return
+
         if( location.latitude !== locationData.userLocation.latitude ||
             location.longitude !== locationData.userLocation.longitude)
         {
