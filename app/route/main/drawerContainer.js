@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View, Platform } from 'react-native';
 import {  createDrawerNavigator,
           DrawerContentScrollView,
           DrawerItemList,
@@ -38,16 +38,16 @@ function CustomDrawerContent({  updateGlobalState,
 
         <View style={styles.headerContainer}>
           <Text
-            style={styles.label}
+            style={styles.emailLabel}
             adjustsFontSizeToFit={true}
             numberOfLines={1}
           >{`${OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email}`}</Text>
-          <Text style={styles.label}>{`version ${AppJson.version}`}</Text>
+          <Text style={styles.versionLabel}>{`version ${AppJson.version}`}</Text>
         </View>
 
         <DrawerItemList {...rest} />
         <DrawerItem
-          label="logout"
+          label="Logout"
           onPress={async() =>
           {
             updateGlobalState('deepLink', '');
@@ -87,7 +87,7 @@ export default class DrawerContainer extends Component
           />}
       >
         <Drawer.Screen
-          name='home'
+          name='Home'
           drawerLabel='Home'
         >
           {(props) => <HomePage {...props}
@@ -98,7 +98,7 @@ export default class DrawerContainer extends Component
                       />}
         </Drawer.Screen>
         <Drawer.Screen
-          name='previously received alerts'
+          name='Previously received alerts'
           drawerLabel='Notifications'
         >
           {(props) => <NotificationsPage {...props}
@@ -125,13 +125,25 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: h15,
-    paddingVertical: h15,
-    marginTop: -1 * h27,
+    paddingVertical: Platform.OS === 'ios' ? h15 : 20,
     backgroundColor: '#E5E7E9',
+    marginTop: Platform.OS === 'ios' ? (-1 * h27) : -4, /* -4 makes it align with the map */
   },
   label: {
     fontFamily: 'Arial',
     fontSize: h18,
+    textAlign: 'left',
+    color: 'rgba(0, 0, 0, .87)',
+  },  
+  emailLabel: {
+    fontFamily: 'Arial',
+    fontSize: 18,
+    textAlign: 'left',
+    color: 'rgba(0, 0, 0, .87)',
+  },  
+  versionLabel: {
+    fontFamily: 'Arial',
+    fontSize: 14,
     textAlign: 'left',
     color: 'rgba(0, 0, 0, .87)',
   },
