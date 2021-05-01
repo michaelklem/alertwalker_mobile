@@ -126,9 +126,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: h15,
     paddingVertical: Platform.OS === 'ios' ? h15 : 20,
-    marginTop: -1 * h27,
     backgroundColor: '#E5E7E9',
-    marginTop: Platform.OS === 'ios' ? initial : -4, /* -4 makes it align with the map */
+    marginTop: Platform.OS === 'ios' ? (-1 * h27) : -4, /* -4 makes it align with the map */
   },
   label: {
     fontFamily: 'Arial',
