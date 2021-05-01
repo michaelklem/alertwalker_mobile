@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: Math.round(Dimensions.get('window').width),
     borderBottomColor: Colors.darkBlue1,
+    width: '100%',
   },
   barBtnImage: {
     width: Math.round(Dimensions.get('window').width * 0.05),
