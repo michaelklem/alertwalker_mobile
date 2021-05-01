@@ -294,6 +294,7 @@ export default StyleSheet.create({
     borderRadius: 4,
     padding: 20,
     backgroundColor: Colors.white,
+    width:'96%'
   },
   paperNoPadding: {
     shadowColor: "#000",
