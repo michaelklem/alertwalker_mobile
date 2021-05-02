@@ -1,5 +1,6 @@
 import ApiRequest from '../../helper/ApiRequest';
 import { Command } from '..';
+import { ToastAndroid } from 'react-native';
 
 export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVersion, showAlert, data, dataVersion })
 {
@@ -56,7 +57,16 @@ export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVers
 
       updateDataVersion ? updateDataVersion(dataVersion + 1) : '';
 
-      showAlert('Success', response.data.message);
+      // Need to get this changed on the server side.
+      if (response.data.message === 'Created successfully') {
+        response.data.message = 'Alert created successfully'
+      }
+      
+      ToastAndroid.show(
+        response.data.message,
+        ToastAndroid.SHORT
+      );
+
       return dataSet;
     }
     catch(err)
