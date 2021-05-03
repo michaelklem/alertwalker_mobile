@@ -139,7 +139,7 @@ export default class LocationManager
         {
           // we need to set delay or otherwise alert may not be shown
           setTimeout(() =>
-            Alert.alert('App requires background location tracking permission',
+            Alert.alert('Alert Walker requires background location tracking permission.',
                         'Would you like to open app settings to allow this permission now?',
                         [
                           { text: 'Yes', onPress: () => BackgroundGeolocation.showAppSettings() },
