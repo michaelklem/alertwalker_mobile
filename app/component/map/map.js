@@ -17,7 +17,7 @@ import {
 
 import { isPointWithinRadius } from 'geolib';
 import { StackActions } from '@react-navigation/native';
-import MapView, { Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { AnimatedRegion, Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { AppManager, DataManager, LocationManager } from '../../manager';
@@ -27,6 +27,8 @@ import { Colors } from '../../constant';
 import {  AddGeofenceAreaCommand,
           LoadGeofenceAreasCommand } from '../../command/geofence';
 import { GetLocationCommand, SetLocationCommand } from '../../command/location';
+
+const RADIUS_SIZE = 500
 
 export default class Map extends Component
 {
@@ -46,7 +48,7 @@ export default class Map extends Component
     this._dataMgr = DataManager.GetInstance();
     this.state =
     {
-      radius: 500,
+      radius: RADIUS_SIZE,
       note: '',
       hideRadiusOption: true,
       // Disabled this to use map restriction instead
@@ -185,7 +187,7 @@ export default class Map extends Component
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
-    console.log(locationData.alertLocation);
+    console.log(' zzzzzz locationData: ' + JSON.stringify(locationData.alertLocation) );
     console.log(this._mapCreateLastGoodPosition);
 
     return (
@@ -229,7 +231,7 @@ export default class Map extends Component
               this.setState({ submitIsEnabled: true });
               if(dataSet)
               {
-                this.setState({ note: '', radius: 500 });
+                this.setState({ note: '', radius: RADIUS_SIZE });
                 this.props.navigation.dispatch(StackActions.pop(1));
               }
             }}
@@ -250,25 +252,25 @@ export default class Map extends Component
                 Keyboard.dismiss();
               }
             }}
-            onRegionChangeComplete={async(region, isGesture) =>
-            {
-              console.log('Map.onRegionChangeComplete()');
-              console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
-              console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
-              console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
-              if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
-                  region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
-                  region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
-                  region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
-              {
-                await this._dataMgr.execute(await new SetLocationCommand({
-                  newLocation: region,
-                  updateMasterState: (state) => this.setState(state),
-                  dataVersion: this.state.dataVersion,
-                  type: 'map',
-                }));
-              }
-            }}
+            // onRegionChangeComplete={async(region, isGesture) =>
+            // {
+            //   console.log('Map.onRegionChangeComplete()');
+            //   console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
+            //   console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
+            //   console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
+            //   if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+            //       region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+            //       region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+            //       region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
+            //   {
+            //     await this._dataMgr.execute(await new SetLocationCommand({
+            //       newLocation: region,
+            //       updateMasterState: (state) => this.setState(state),
+            //       dataVersion: this.state.dataVersion,
+            //       type: 'map',
+            //     }));
+            //   }
+            // }}
             region={(locationData && locationData.mapLocation) ? locationData.mapLocation :
             {
               latitude: this.props.geofenceArea.location.coordinates[1],
