@@ -3,6 +3,8 @@ var PushNotification = require("react-native-push-notification");
 
 export default class PushManager
 {
+  // Must match channel ID defined in backend pusher utility 
+  #channelId = 'alert-walker-channel';
   static singleton = null;
 
   // Singleton
@@ -22,6 +24,27 @@ export default class PushManager
 
   init(onPushRegister, onPushNotification)
   {
+    console.log('Channels');
+    PushNotification.getChannels( (channel_ids) =>
+    {
+      if(channel_ids.indexOf(this.#channelId) === -1)
+      {
+        PushNotification.createChannel(
+        {
+          channelId: this.#channelId, // (required)
+          channelName: "Alert Walker Alerts", // (required)
+          channelDescription: "Geofenced alerts", // (optional) default: undefined.
+          playSound: true, // (optional) default: true
+          soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+          importance: 4, // (optional) default: 4. Int value of the Android notification importance
+          vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+        },
+          (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+        );
+      }
+      console.log(channel_ids);
+    });
+
     PushNotification.configure(
     {
       // Called when Token is generated (iOS and Android)
@@ -54,7 +77,7 @@ export default class PushManager
     // Clear badge number at start
     PushNotification.setApplicationIconBadgeNumber(0);
 
-    // Only works for iOS 
+    // Only works for iOS
     /*PushNotification.getApplicationIconBadgeNumber((number) =>
     {
       if(number > 0)

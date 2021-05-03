@@ -5,6 +5,7 @@
   "scripts": {
     "android-adb-port": "/Users/tom/Library/Android/sdk/platform-tools/adb reverse tcp:8081 tcp:8081",
     "android": "react-native run-android variant=release",
+    "android-dev": "react-native run-android variant=debug",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
@@ -72,7 +73,7 @@
     "react-native-pdf": "^6.2.2",
     "react-native-pdf-lib": "^1.0.0",
     "react-native-popup-menu": "^0.15.9",
-    "react-native-push-notification": "^3.5.2",
+    "react-native-push-notification": "^7.2.3",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^2.0.3",
     "react-native-safe-area-view": "^1.1.1",
