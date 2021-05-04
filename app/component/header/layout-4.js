@@ -14,6 +14,10 @@ import { AppManager, OauthManager } from '../../manager';
 import { ImageButton } from '../imageButton';
 import {AppText, Colors, Images, Styles} from '../../constant';
 //import * as DrawerNavigation from '../drawerNavigation.js';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+
+
 
 const Layout4 = ({  user,
                     route,
@@ -47,9 +51,9 @@ const Layout4 = ({  user,
   {
     navigation.navigate('add', { });
   }
-  let leftBtnText = 'Menu';
+  let leftBtnText = '';
   let rightBtnText = 'Add Alert';
-  let leftBtnIcon = '';
+  let leftBtnIcon = faBars;
   let rightBtnIcon = '';
 
   //console.log(route);
@@ -59,13 +63,13 @@ const Layout4 = ({  user,
     if(subRoute.name === 'add' || subRoute.name === 'map')
     {
       rightBtnIcon = '';
-      leftBtnIcon = '';
+      leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
         navigation.dispatch(StackActions.pop(1));
       };
       rightBtnText = '';
-      leftBtnText = 'Back'
+      leftBtnText = ''
     }
     else
     {
@@ -90,19 +94,17 @@ const Layout4 = ({  user,
 
       {/* Left btn/text */}
       {leftBtnShowing &&
-      (leftBtnIcon !== '' || leftBtnText !== '') &&
-      <TouchableOpacity style={styles.barBtnContainer} onPress={leftBtnNavigation}>
-        {leftBtnIcon !== '' &&
-        <Icon
-          name={leftBtnIcon}
-          size={h20}
-          color={Colors.black}
-        />}
-        {leftBtnText !== '' &&
-        <Text
-          adjustsFontSizeToFit={true}
-          style={styles.barBtnText}>{leftBtnText}</Text>}
-      </TouchableOpacity>}
+        (leftBtnIcon !== '' || leftBtnText !== '') &&
+        <TouchableOpacity style={styles.barBtnContainer} onPress={leftBtnNavigation}>
+          {leftBtnIcon !== '' &&
+            <FontAwesomeIcon style={styles.menuIcon} icon={ leftBtnIcon } />
+          }
+          {leftBtnText !== '' &&
+          <Text
+            adjustsFontSizeToFit={true}
+            style={styles.barBtnText}>{leftBtnText}</Text>}
+        </TouchableOpacity>
+      }
 
       {/* Title text */}
       <Text style={styles.text}>{'Alert Walker'}</Text>
@@ -180,6 +182,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.header.layout4.background,
   },
+  menuIcon: {
+    marginTop:8,
+  }
 });
 
 export default Layout4;
