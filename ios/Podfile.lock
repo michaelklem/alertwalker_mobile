@@ -347,7 +347,7 @@ PODS:
     - React-Core
   - RNDeviceInfo (5.6.5):
     - React
-  - RNFS (2.16.6):
+  - RNFS (2.17.0):
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
@@ -640,7 +640,7 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
   RNDateTimePicker: e1c24487ab8aa0850403bd90dba75eff8a4e9b84
   RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
-  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
+  RNFS: 93d5b5535eb39d98e6b19009faa8fe717f7ea45d
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNIap: c22d7a249e35fa75f35cfaac19fd6aea012ad342
   RNImageCropPicker: 08ba3a2e2f4f8833d606f01906c371e382c4dea9
@@ -654,6 +654,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: 014d17be0ee93a8280ee0661646d1d48f28aed74
+PODFILE CHECKSUM: 001a75d619148bdec7663d05f7b03227fba176ab
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

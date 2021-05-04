@@ -179,9 +179,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   conversationContainer: {
-   marginBottom: 10,
+   marginBottom: 5,
    marginLeft: 10,
    marginRight: 10,
+   marginTop: 5,
    width: Math.round(Dimensions.get('window').width) - 20,
    height: 'auto',
    flex: 1,

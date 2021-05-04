@@ -15,7 +15,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 import {AppText, Colors, Images, Styles} from '../../../constant';
 
@@ -29,30 +29,13 @@ const Layout1 = ({  isLoading,
 {
   return (
     <KeyboardAvoidingView style={styles.innerContainer}>
-      <KeyboardAwareScrollView contentContainerStyle={[styles.inner]}>
-
-        {isLoading &&
-        <ActivityIndicator
-          size="large"
-          color={Colors.burnoutGreen}
-          animating={isLoading}
-          style={Styles.loading}
-        />}
-
-        {notifications &&
-        notifications.length > 0 &&
-        <FlatList
-          data={notifications}
-          numColumns={1}
-          scrollEnabled={true}
-          keyExtractor={item => item._id.toString()}
-          renderItem={(item, index) => renderNotification(item.item, index)}
-        />}
-
-        {(!notifications || notifications.length === 0) &&
-        <Text style={styles.noNotes}>{AppText.notificationsPage.layout1.noNotifications.text}</Text>}
-
-      </KeyboardAwareScrollView>
+      <KeyboardAwareFlatList
+        data={notifications}
+        numColumns={1}
+        scrollEnabled={true}
+        keyExtractor={item => item._id.toString()}
+        renderItem={(item, index) => renderNotification(item.item, index)}
+      />
     </KeyboardAvoidingView>
   );
 };

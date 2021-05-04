@@ -92,12 +92,12 @@ export default class App extends Component
     console.log('Deep link: ' + props.deepLink);
   }
 
-  async componentWillMount()
-  {
-    console.log('App.componentWillMount()');
+  // async componentWillMount()
+  // {
+  //   console.log('App.componentWillMount()');
 
-    await this.init();
-  }
+  //   // await this.init();
+  // }
 
   async componentDidMount()
   {
@@ -105,6 +105,8 @@ export default class App extends Component
 
     // Add deep link listener
     Linking.addEventListener('url', this.handleOpenURL);
+
+    await this.init();
   }
 
   componentWillUnmount()

@@ -46,7 +46,7 @@ const SubmitField = ({  note,
           // Move the alert logic here as it helps deal with the button logic.
           if(note.trim().length === 0)
           {
-            showAlert('Error', 'Please provide a note for the alert.');
+            showAlert('Error', 'Please add a note for the alert.');
             return;
           }
 

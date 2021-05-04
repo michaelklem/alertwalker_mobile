@@ -1,0 +1,7 @@
+{
+  "backendUrl": "https://backend.alertwalker.com/",
+  "description": "Alert Walker",
+  "displayName": "Alert Walker",
+  "name": "CoreMobile",
+  "version": 1.0
+}
