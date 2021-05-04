@@ -203,15 +203,16 @@ export default class Map extends Component
             updateMasterState={(state) => this.setState(state)}
           />}
           <SubmitField
-            messageText={this.state.note}
+            note={this.state.note}
             updateMasterState={(id, val) =>
             {
               this.setState({ note: val });
             }}
-            isEnabled={this.state.submitIsEnabled}
+            isEnabled={this.state.submitIsEnabled} // submitIsEnabled was not working to prevent multiple submissions.
+            showAlert={this.props.showAlert}
             submit={async() =>
             {
-              console.log('Submit()');
+
               this.setState({ submitIsEnabled: false });
               const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
                 updateMasterState: (state) => this.props.updateMasterState(state),

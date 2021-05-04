@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -19,8 +19,11 @@ import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 const SubmitField = ({  note,
                         submit,
                         updateMasterState,
+                        showAlert,
                         isEnabled }) =>
 {
+  const [disabled, setDisabled] = useState(false);
+
   return (
   <View
     style={styles.container}
@@ -40,7 +43,18 @@ const SubmitField = ({  note,
       <TouchableOpacity
         onPress={() =>
         {
-          submit();
+          // Move the alert logic here as it helps deal with the button logic.
+          if(note.trim().length === 0)
+          {
+            showAlert('Error', 'Please provide a note for the alert.');
+            return;
+          }
+
+          // When submitting, disable the button to prevent extra alerts from being created.
+          if (! disabled) {
+            setDisabled(true)
+            submit();
+          }
         }}
         style={styles.commentIcon}
         disabled={!isEnabled}
