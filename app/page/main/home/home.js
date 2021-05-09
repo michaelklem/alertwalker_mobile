@@ -107,12 +107,6 @@ export default class Home extends Component
 const height18 = Math.round(Dimensions.get('window').height * 0.02307);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: Colors.white,
-    justifyContent: 'flex-start',
-  },
   mapContainer: {
     flex: 1,
     flexDirection: 'column',

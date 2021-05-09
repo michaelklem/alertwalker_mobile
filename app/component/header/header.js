@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import { HeaderManager } from '../../manager';
 import Layout4 from './layout-4';
 import { Images } from '../../constant';
 
 export default class Header extends Component
 {
+  _headerMgr = null;
+
   constructor(props)
   {
     super(props);
@@ -15,7 +18,11 @@ export default class Header extends Component
     {
       leftBtnShowing: true,
       rightBtnShowing: true,
+      isCreateMode: false,
     };
+
+    this._headerMgr = HeaderManager.GetInstance();
+    this._headerMgr.setHeader(this);
   }
 
   setSideShowing = (side) =>
@@ -54,6 +61,11 @@ export default class Header extends Component
     }
   }
 
+  setIsCreateMode = (isCreateMode) =>
+  {
+    this.setState({ isCreateMode: isCreateMode });
+  }
+
 
   logout = async() =>
   {
@@ -76,8 +88,8 @@ export default class Header extends Component
         updateStack={this.props.updateStack}
         showAlert={this.props.showAlert}
         updateMasterState={async (state) => { return this.setState(state) }}
-        leftBtnShowing={this.state.leftBtnShowing}
-        rightBtnShowing={this.state.rightBtnShowing}
+        isCreateMode={this.state.isCreateMode}
+        headerMgr={this._headerMgr}
         logout={this.logout}
       />
     );

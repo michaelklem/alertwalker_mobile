@@ -248,7 +248,7 @@ PODS:
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
     - React-Core
-  - react-native-image-picker (2.3.4):
+  - react-native-image-picker (3.6.0):
     - React-Core
   - react-native-maps (0.28.0):
     - React-Core
@@ -347,7 +347,7 @@ PODS:
     - React-Core
   - RNDeviceInfo (5.6.5):
     - React
-  - RNFS (2.17.0):
+  - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
@@ -612,7 +612,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk: 00c15d138bba6d4efa628670886fc58cec858c19
   react-native-geolocation-service: 7c9436da6dfdecd9526c62eac62ea2bc3f0cc8ea
   react-native-google-maps: 46dea4aa4acb7300beff508f64d9f8c84e9fb106
-  react-native-image-picker: 32d1ad2c0024ca36161ae0d5c2117e2d6c441f11
+  react-native-image-picker: 25f5fe3a3a9c4297e0b7a5a16566c5609632856d
   react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
   react-native-pdf: ef641e79a6d550cfabe5d7ec1916799726514c43
   react-native-progress-bar-android: ce95a69f11ac580799021633071368d08aaf9ad8
@@ -640,7 +640,7 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
   RNDateTimePicker: e1c24487ab8aa0850403bd90dba75eff8a4e9b84
   RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
-  RNFS: 93d5b5535eb39d98e6b19009faa8fe717f7ea45d
+  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNIap: c22d7a249e35fa75f35cfaac19fd6aea012ad342
   RNImageCropPicker: 08ba3a2e2f4f8833d606f01906c371e382c4dea9
@@ -656,4 +656,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 001a75d619148bdec7663d05f7b03227fba176ab
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.0

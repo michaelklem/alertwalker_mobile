@@ -75,7 +75,7 @@ export function MainStack(props)
       <Stack.Screen
         name="api"
         options={{
-            headerStyle: { height: Math.round(Dimensions.get('window').height * 0.15), shadowOffset: { height: 0 }, backgroundColor: Colors.cAccordionRowInactive }
+            headerStyle: { height: Math.round(Dimensions.get('window').height * 0.15), shadowOffset: { height: 0 }, backgroundColor: Colors.white }
         }}
       >
         {(props) => <Api {...props}

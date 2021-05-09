@@ -26,8 +26,8 @@ const Layout4 = ({  user,
                     updateStack,
                     showAlert,
                     updateMasterState,
-                    leftBtnShowing,
-                    rightBtnShowing,
+                    isCreateMode,
+                    headerMgr,
                     logout }) =>
 {
   let navigationState = navigation.dangerouslyGetState();
@@ -52,21 +52,20 @@ const Layout4 = ({  user,
     navigation.navigate('add', { });
   }
   let leftBtnText = '';
-  let rightBtnText = 'Add Alert';
+  let rightBtnText = '';
   let leftBtnIcon = faBars;
   let rightBtnIcon = '';
 
-  //console.log(route);
   if(routeName === 'homeContainer' || routeName === 'main')
   {
     routeName = 'main';
-    if(subRoute.name === 'add' || subRoute.name === 'map')
+    if(subRoute.name === 'add' || subRoute.name === 'map' || isCreateMode)
     {
       rightBtnIcon = '';
       leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
-        navigation.dispatch(StackActions.pop(1));
+        headerMgr.notifyListeners({ route: 'map', side: 'left' });
       };
       rightBtnText = '';
       leftBtnText = ''
@@ -77,24 +76,21 @@ const Layout4 = ({  user,
       {
         navigation.dispatch(DrawerActions.openDrawer());
       };
-      rightBtnText = 'Add Alert';
     }
   }
-  console.log( (!leftBtnShowing || (leftBtnIcon === '' && leftBtnText === '')));
 
   return (
     <View style={[styles.headerContainer]}>
 
       {/* Left side space */}
-      {(!leftBtnShowing || (leftBtnIcon === '' && leftBtnText === '')) &&
+      {(leftBtnIcon === '' && leftBtnText === '') &&
       <View style={styles.barBtnContainer}>
         <View style={styles.barBtnImage} />
         <Text style={styles.hidden}>{routeName === 'settings' || subRoute.name === 'settings' ? AppText.header.logout.text : AppText.header.settings.text}</Text>
       </View>}
 
       {/* Left btn/text */}
-      {leftBtnShowing &&
-        (leftBtnIcon !== '' || leftBtnText !== '') &&
+      {(leftBtnIcon !== '' || leftBtnText !== '') &&
         <TouchableOpacity style={styles.barBtnContainer} onPress={leftBtnNavigation}>
           {leftBtnIcon !== '' &&
             <FontAwesomeIcon style={styles.menuIcon} icon={ leftBtnIcon } />
@@ -107,11 +103,10 @@ const Layout4 = ({  user,
       }
 
       {/* Title text */}
-      <Text style={styles.text}>{'Alert Walker'}</Text>
+      <Text style={styles.text}>{isCreateMode ? 'New Alert' : 'Alert Walker'}</Text>
 
       {/* Right btn/text */}
-      {rightBtnShowing &&
-      (rightBtnIcon !== '' || rightBtnText !== '') &&
+      {(rightBtnIcon !== '' || rightBtnText !== '') &&
       <TouchableOpacity style={styles.barBtnContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
         <Icon
@@ -126,7 +121,7 @@ const Layout4 = ({  user,
       </TouchableOpacity>}
 
       {/* Right side space */}
-      {(!rightBtnShowing || (rightBtnIcon === '' && rightBtnText === '')) &&
+      {(rightBtnIcon === '' && rightBtnText === '') &&
       <View style={styles.barBtnContainer} />}
 
     </View>
