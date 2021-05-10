@@ -85,7 +85,7 @@ export default class Home extends Component
       >
         <ActivityIndicator
           size="large"
-          color={Colors.burnoutGreen}
+          color={Colors.black}
           animating={this.state.isLoading}
           style={Styles.loading}
         />

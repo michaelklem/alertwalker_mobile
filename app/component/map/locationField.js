@@ -16,11 +16,10 @@ import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 
 const LocationField = ({  location,
                           onPress,
-                          updateMasterState,
                           showAlert,
                           isShowingLocation }) =>
 {
-  console.log(location);
+  //console.log(location);
   return (
   <TouchableHighlight
     style={styles.container}
@@ -35,7 +34,7 @@ const LocationField = ({  location,
       >{isShowingLocation ? 'Save location' : (location ? 'Change location' : 'Add location')}</Text>
       <Icon
         name={isShowingLocation ? 'save' : 'add-location'}
-        size={h22}
+        size={h16}
         color={Colors.linkBlue}
       />
     </View>
@@ -46,6 +45,7 @@ const h100 = Math.round(Dimensions.get('window').height * 0.1282);
 const h50 = Math.round(Dimensions.get('window').height * 0.064);
 const h22 = Math.round(Dimensions.get('window').height * 0.0282);
 const h20 = Math.round(Dimensions.get('window').height * 0.0256);
+const h16 = Math.round(Dimensions.get('window').height * 0.0205);
 
 const styles = StyleSheet.create({
   container: {
@@ -58,13 +58,8 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingLeft: 10,
     color: Colors.linkBlue,
-    fontSize: h20,
+    fontSize: h16,
     fontFamily: 'Arial'
-  },
-  text: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: h22,
   },
 });
 

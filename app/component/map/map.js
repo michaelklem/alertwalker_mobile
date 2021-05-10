@@ -22,6 +22,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { HeaderHeightContext } from '@react-navigation/stack';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
 import SubmitField from './submitField';
@@ -29,6 +30,7 @@ import LocationField from './locationField';
 import CreateMap from './createMap';
 import ImageField from './imageField';
 import { ImageButton } from '../imageButton';
+import { ImageModal } from '../imageModal';
 import { Colors } from '../../constant';
 import {  AddGeofenceAreaCommand,
           LoadGeofenceAreasCommand } from '../../command/geofence';
@@ -89,6 +91,11 @@ export default class Map extends Component
       submitIsEnabled: true,
       menuIsOpen: false,
       choosingLocation: false,
+      imageModal:
+      {
+        image: null,
+        isOpen: false
+      },
       dataVersion: 0
     };
 
@@ -120,8 +127,16 @@ export default class Map extends Component
 
     this._headerMgr.addListener('map', (side) =>
     {
-      this._headerMgr.setIsCreateMode(false);
-      this._bottomSheetRef.current.hide();
+      console.log('\tMap.HeaderManagerListener: ' + side);
+      if(side === 'left')
+      {
+        this._headerMgr.setIsCreateMode(false);
+        this._bottomSheetRef.current.hide();
+      }
+      else if(side === 'right')
+      {
+        this.createAlert();
+      }
     });
 
     try
@@ -132,7 +147,7 @@ export default class Map extends Component
       if(!this.props.geofenceArea)
       {
         const locationData = this._dataMgr.getData('location');
-        console.log(locationData);
+        //console.log(locationData);
         if(!locationData || !locationData.mapLocation)
         {
           await this.getLocation();
@@ -209,25 +224,48 @@ export default class Map extends Component
   {
     if(this.state.submitIsEnabled)
     {
-      this.setState({ submitIsEnabled: false });
-      const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
-        updateMasterState: (state) => this.props.updateMasterState(state),
-        updateDataVersion: (dataVersion) => this.setState({ dataVersion: dataVersion }),
-        showAlert: this.props.showAlert,
-        data:
-        {
-          location: locationData.alertLocation,
-          note: this.state.note,
-          radius: this.state.radius
-        },
-        dataVersion: this.state.dataVersion
-      }));
-      this.setState({ submitIsEnabled: true });
-      if(dataSet)
+      this.setState({ submitIsEnabled: false }, async() =>
       {
-        this.setState({ note: '', radius: RADIUS_SIZE });
-        this.props.navigation.dispatch(StackActions.pop(1));
-      }
+        const locationData = this._dataMgr.getData('location');
+
+        let image = {};
+        if(this.state.image)
+        {
+          image =
+          {
+            uri: this.state.image.uri,
+            name: this.state.image.fileName ? this.state.image.fileName : 'alert-image',
+            type: this.state.image.type,
+            path: this.state.image.uri,
+            fileName: this.state.image.fileName ? this.state.image.fileName : 'alert-image'
+          };
+        }
+
+        const dataSet = await this._dataMgr.execute(await new AddGeofenceAreaCommand({
+          updateMasterState: (state) => this.props.updateMasterState(state),
+          updateDataVersion: (dataVersion) => this.setState({ dataVersion: dataVersion }),
+          setLoading: (isLoading) => this.props.updateMasterState({ isLoading: isLoading }),
+          showAlert: this.props.showAlert,
+          data:
+          {
+            location: locationData.alertLocation,
+            note: this.state.note,
+            radius: this.state.radius,
+            image: image,
+          },
+          dataVersion: this.state.dataVersion
+        }));
+        this.setState({ submitIsEnabled: true });
+
+        if(dataSet)
+        {
+          this.setState({ note: '', radius: RADIUS_SIZE, choosingLocation: false, image: null }, () =>
+          {
+            this._bottomSheetRef.current.hide();
+            this._headerMgr.setIsCreateMode(false);
+          });
+        }
+      });
     }
     return true;
   }
@@ -262,8 +300,22 @@ export default class Map extends Component
             <Callout
               tooltip={true}
               style={styles.callout}
+              onPress={() =>
+              {
+                console.log('OnPress');
+                // Display image if there
+                if(geofenceArea.image)
+                {
+                  const tempImageModal = {...this.state.imageModal};
+                  tempImageModal.image = geofenceArea.image;
+                  tempImageModal.isOpen = true;
+                  this.setState({ imageModal: tempImageModal });
+                }
+              }}
             >
               <Text style={styles.description}>{geofenceArea.note}</Text>
+              {geofenceArea.image &&
+              <Text style={styles.subDescription}>{('(tap to view image)')}</Text>}
             </Callout>
           </Marker>
         </View>
@@ -280,7 +332,7 @@ export default class Map extends Component
         {
           this._bottomSheetRef.current.show();
           this._headerMgr.setIsCreateMode(true);
-          console.log(selection);
+          //console.log(selection);
         }}
         name={MENU_NAME}
         onClose={() => this.setState({ menuIsOpen: false })}
@@ -387,6 +439,18 @@ export default class Map extends Component
             <Callout
               tooltip={true}
               style={styles.callout}
+              onPress={() =>
+              {
+                console.log('OnPress');
+                // Display image if there
+                if(this.props.geofenceArea.image)
+                {
+                  const tempImageModal = {...this.state.imageModal};
+                  tempImageModal.image = this.props.geofenceArea.image;
+                  tempImageModal.isOpen = true;
+                  this.setState({ imageModal: tempImageModal });
+                }
+              }}
             >
               <Text style={styles.description}>{this.props.geofenceArea.note}</Text>
             </Callout>
@@ -398,8 +462,8 @@ export default class Map extends Component
 
   renderBottomSheet = (data, locationData, headerHeight) =>
   {
-    console.log('HeaderHeight: ' + headerHeight);
-    console.log('Max bottom sheet height: ' + this._heights.maxBottomSheetHeight);
+    //console.log('HeaderHeight: ' + headerHeight);
+    //console.log('Max bottom sheet height: ' + this._heights.maxBottomSheetHeight);
     return (
       <BottomSheet
         ref={this._bottomSheetRef}
@@ -415,7 +479,10 @@ export default class Map extends Component
         allowDragging={false}
       >
         {/* Actions for create mode */}
-        <View style={[styles.actionsContainer]}>
+        <TouchableWithoutFeedback
+          style={[styles.actionsContainer]}
+          onPress={() => Keyboard.dismiss()}
+        >
           <SubmitField
             note={this.state.note}
             updateMasterState={(id, val) =>
@@ -425,23 +492,23 @@ export default class Map extends Component
             showAlert={this.props.showAlert}
           />
           <LocationField
-            updateMasterState={(id, val) =>
-            {
-              this.setState({ note: val });
-            }}
             showAlert={this.props.showAlert}
             onPress={() =>
             {
-              console.log('OnPress');
+              Keyboard.dismiss();
               this.setState({ choosingLocation: !this.state.choosingLocation });
             }}
             isShowingLocation={this.state.choosingLocation}
             location={locationData.alertLocation}
           />
           <ImageField
-            updateMasterState={(id, val) =>
+            onPress={() =>
             {
-              this.setState({ note: val });
+              Keyboard.dismiss();
+            }}
+            updateMasterState={(val) =>
+            {
+              this.setState({ image: val });
             }}
             showAlert={this.props.showAlert}
           />
@@ -449,7 +516,7 @@ export default class Map extends Component
           {/* Choose location map view */}
           {this.state.choosingLocation &&
           this.renderCreateMap()}
-        </View>
+        </TouchableWithoutFeedback>
       </BottomSheet>
     );
   }
@@ -466,13 +533,29 @@ export default class Map extends Component
     );
   }
 
+  renderImageModal = () =>
+  {
+    return (
+      <ImageModal
+        imageSrc={this.state.imageModal.image}
+        onClose={() =>
+        {
+          let tempModal = {...this.state.imageModal};
+          tempModal.isOpen = false;
+          tempModal.image = null;
+          this.setState({ imageModal: tempModal });
+        }}
+      />
+    );
+  }
+
   render()
   {
     console.log('\tMap.render()');
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
-    console.log(Dimensions.get('window'));
+    //console.log(Dimensions.get('window'));
     //console.log('locationData: ' + JSON.stringify(locationData.alertLocation) );
     //console.log(this._mapCreateLastGoodPosition);
 
@@ -492,6 +575,10 @@ export default class Map extends Component
 
               {/* Create alert screen */}
               {this.renderBottomSheet(data, locationData, headerHeight)}
+
+              {/* Image modal */}
+              {this.state.imageModal.isOpen &&
+              this.renderImageModal()}
           </View>
         </KeyboardAvoidingView>
       </MenuProvider>
@@ -546,7 +633,13 @@ const styles = StyleSheet.create({
   },
   description: {
     color: "#707070",
-    fontSize: 12,
+    fontSize: h14,
+    lineHeight: h16,
+    flex: 1,
+  },
+  subDescription: {
+    color: "#707070",
+    fontSize: h10,
     lineHeight: h16,
     flex: 1,
   },

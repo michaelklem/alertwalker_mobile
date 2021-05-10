@@ -16,16 +16,23 @@ import { MyButton } from '../myButton';
 import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 
 const ImageField = ({ updateMasterState,
-                      showAlert }) =>
+                      showAlert,
+                      onPress }) =>
 {
   return (
     <View style={styles.container}>
       <MyButton
         buttonStyle={styles.actionBtn}
-        titleStyle={styles.actionBtnText}
+        titleStyle={styles.text}
         title={'Capture image'}
+        icon={{
+          name: 'photo-camera',
+          size: h16,
+          color: Colors.linkBlue
+        }}
         onPress={() =>
         {
+          onPress();
           ImagePicker.launchCamera(
             {
               mediaType: 'image',
@@ -44,15 +51,13 @@ const ImageField = ({ updateMasterState,
               }
               if(response.error)
               {
-                this.props.showAlert('Error', response.error.toString());
+                showAlert('Error', response.error.toString());
                 return;
               }
               else
               {
                 console.log(response);
-                const tempReview = {...this.state.review};
-                tempReview.file = response;
-                this.setState({ review: tempReview });
+                updateMasterState(response);
               }
             },
           )
@@ -60,10 +65,16 @@ const ImageField = ({ updateMasterState,
       />
       <MyButton
         buttonStyle={styles.actionBtn}
-        titleStyle={styles.actionBtnText}
+        titleStyle={styles.text}
         title={'Choose existing image'}
+        icon={{
+          name: 'photo-library',
+          size: h22,
+          color: Colors.linkBlue
+        }}
         onPress={() =>
         {
+          onPress();
           ImagePicker.launchImageLibrary(
             {
               mediaType: 'image',
@@ -82,15 +93,13 @@ const ImageField = ({ updateMasterState,
               }
               if(response.error)
               {
-                this.props.showAlert('Error', response.error.toString());
+                showAlert('Error', response.error.toString());
                 return;
               }
               else
               {
                 console.log(response);
-                const tempReview = {...this.state.review};
-                tempReview.file = response;
-                this.setState({ review: tempReview });
+                updateMasterState(response);
               }
             },
           )
@@ -103,28 +112,30 @@ const h100 = Math.round(Dimensions.get('window').height * 0.1282);
 const h50 = Math.round(Dimensions.get('window').height * 0.064);
 const h22 = Math.round(Dimensions.get('window').height * 0.0282);
 const h20 = Math.round(Dimensions.get('window').height * 0.0256);
+const h16 = Math.round(Dimensions.get('window').height * 0.0205);
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
     marginBottom: 0,
-    justifyContent: 'flex-start',
     marginTop: h20,
     paddingLeft: 10,
-  },
-  commentTextField: {
-    height: '100%',
-    paddingLeft: 10,
-    color: Colors.linkBlue,
-    fontSize: h20,
-    fontFamily: 'Arial'
+    paddingRight: 10,
   },
   text: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: h22,
+    height: '100%',
+    color: Colors.linkBlue,
+    fontSize: h16,
+    fontFamily: 'Arial'
   },
+  actionBtn: {
+    height: h100,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  }
 });
 
 export default ImageField;

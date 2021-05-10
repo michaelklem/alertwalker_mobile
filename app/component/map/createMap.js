@@ -169,7 +169,7 @@ export default class CreateMap extends Component
   // MARK: - Renders
   renderMapView = (data, locationData) =>
   {
-    console.log(locationData);
+    //console.log(locationData);
     return (
       <MapView
         ref={this._mapViewRef}

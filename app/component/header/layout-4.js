@@ -61,11 +61,15 @@ const Layout4 = ({  user,
     routeName = 'main';
     if(subRoute.name === 'add' || subRoute.name === 'map' || isCreateMode)
     {
-      rightBtnIcon = '';
+      rightBtnIcon = 'post-add';
       leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
         headerMgr.notifyListeners({ route: 'map', side: 'left' });
+      };
+      rightBtnNavigation = async() =>
+      {
+        headerMgr.notifyListeners({ route: 'map', side: 'right' });
       };
       rightBtnText = '';
       leftBtnText = ''
@@ -93,7 +97,10 @@ const Layout4 = ({  user,
       {(leftBtnIcon !== '' || leftBtnText !== '') &&
         <TouchableOpacity style={styles.barBtnContainer} onPress={leftBtnNavigation}>
           {leftBtnIcon !== '' &&
-            <FontAwesomeIcon style={styles.menuIcon} icon={ leftBtnIcon } />
+          <FontAwesomeIcon
+            icon={ leftBtnIcon }
+            size={h20}
+          />
           }
           {leftBtnText !== '' &&
           <Text
@@ -131,6 +138,8 @@ const Layout4 = ({  user,
 const height11 = Math.round(Dimensions.get('window').height * 0.0141);
 const h22 = Math.round(Dimensions.get('window').height * 0.0282);
 const h20 = Math.round(Dimensions.get('window').height * 0.0256);
+const h8 = Math.round(Dimensions.get('window').height * 0.0102);
+
 const styles = StyleSheet.create({
   text: {
     height: Math.round(Dimensions.get('window').height * 0.04),
@@ -171,15 +180,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignContent: 'flex-start',
     height: Math.round(Dimensions.get('window').height * 0.04),
+    marginTop: h8,
   },
   hidden: {
     fontSize: height11,
     textAlign: 'center',
     color: Colors.header.layout4.background,
   },
-  menuIcon: {
-    marginTop:8,
-  }
 });
 
 export default Layout4;

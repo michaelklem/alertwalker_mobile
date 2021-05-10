@@ -19,7 +19,7 @@ const SubmitField = ({  note,
                         updateMasterState,
                         showAlert }) =>
 {
-  console.log('SubmitField');
+  //console.log('SubmitField');
   return (
   <View
     style={styles.container}

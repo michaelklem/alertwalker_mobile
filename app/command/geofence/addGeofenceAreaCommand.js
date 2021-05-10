@@ -2,7 +2,12 @@ import ApiRequest from '../../helper/ApiRequest';
 import { Command } from '..';
 import { ToastAndroid } from 'react-native';
 
-export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVersion, showAlert, data, dataVersion })
+export async function AddGeofenceAreaCommand({  updateMasterState,
+                                                setLoading,
+                                                updateDataVersion,
+                                                showAlert,
+                                                data,
+                                                dataVersion })
 {
   return new Command(async(dataStore) =>
   {
@@ -11,7 +16,12 @@ export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVers
     if(data.note.trim().length === 0)
     {
       showAlert('Error', 'A note is required');
-      return;
+      return null;
+    }
+    else if(!data.location)
+    {
+      showAlert('Error', 'A location is required');
+      return null;
     }
 
     let dataSet = {...dataStore.get('geofenceAreas')};
@@ -21,7 +31,14 @@ export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVers
     createFormData.append('location', ('[' + data.location.longitude + ', ' + data.location.latitude + ']'));
     createFormData.append('note', data.note);
     createFormData.append('radius', data.radius);
-    updateMasterState ? updateMasterState({ isLoading: true }) : '';
+
+    // Image is optional
+    if(data.image && data.image.path)
+    {
+      createFormData.append('image', data.image);
+    }
+
+    setLoading ? setLoading(true) : '';
 
     try
     {
@@ -30,7 +47,7 @@ export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVers
 
       if(response.data.error !== null)
       {
-        updateMasterState ? updateMasterState({ isLoading: false }) : '';
+        setLoading ? setLoading(false) : '';
         showAlert('Error', response.data.error);
         return null;
       }
@@ -53,26 +70,17 @@ export async function AddGeofenceAreaCommand({ updateMasterState, updateDataVers
 
       dataStore.set('geofenceAreas', dataSet);
 
-      updateMasterState ? updateMasterState({ isLoading: false }) : '';
-
+      setLoading ? setLoading(false) : '';
       updateDataVersion ? updateDataVersion(dataVersion + 1) : '';
 
-      // Need to get this changed on the server side.
-      if (response.data.message === 'Created successfully') {
-        response.data.message = 'Alert created successfully'
-      }
-      
-      ToastAndroid.show(
-        response.data.message,
-        ToastAndroid.SHORT
-      );
+      showAlert('', 'Alert created successfully');
 
       return dataSet;
     }
     catch(err)
     {
       console.log(err);
-      updateMasterState ? updateMasterState({ isLoading: false }) : '';
+      setLoading ? setLoading(false) : '';
       showAlert('Error', 'An error has occurred, please try again or contact support.\nError: 10 ' + err);
       return null;
     }

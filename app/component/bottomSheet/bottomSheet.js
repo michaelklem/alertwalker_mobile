@@ -407,7 +407,11 @@ class SlidingUpPanel extends React.PureComponent {
         key="backdrop"
         pointerEvents={this._backdropPointerEvents}
         ref={c => (this._backdrop = c)}
-        onTouchStart={() => this._flick.stop()}
+        onTouchStart={() =>
+        {
+          console.log('onTouchStart');
+          this._flick.stop();
+        }}
         onTouchEnd={() => this.hide()}
         style={[styles.backdrop, backdropStyle, {opacity: backdropOpacity}]}
       />
@@ -436,7 +440,7 @@ class SlidingUpPanel extends React.PureComponent {
       {height, bottom: Platform.os === 'ios' ? -height : -height / 1.01}
     ]
 
-    console.log(animatedContainerStyles);
+    //console.log(animatedContainerStyles);
 
     console.log('\tBottomSheet.render()');
     if (typeof this.props.children === 'function') {

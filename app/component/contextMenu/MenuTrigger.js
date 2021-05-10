@@ -16,7 +16,7 @@ export class MenuTrigger extends Component {
   }
 
   render() {
-    const { disabled, onRef, text, children, style, customStyles, menuName, ...other } = this.props;
+    const { disabled, onRef, text, children, customStyles, menuName, ...other } = this.props;
     const onPress = () =>
     {
       !disabled && this._onPress();
@@ -30,7 +30,7 @@ export class MenuTrigger extends Component {
             console.log('OnPress');
             onPress();
           }}
-          style={style}
+          style={this.props.style}
           {...defaultTouchableProps}
         >
           {children}
