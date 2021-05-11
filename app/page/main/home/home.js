@@ -94,7 +94,7 @@ export default class Home extends Component
             ref={this._componentRef}
             updateMasterState={(state) => this.setState(state)}
             showAlert={this.props.showAlert}
-            createMode={false}
+            createMode={true}
             navigation={this.props.navigation}
           />
         </View>

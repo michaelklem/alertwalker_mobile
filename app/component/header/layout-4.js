@@ -65,11 +65,12 @@ const Layout4 = ({  user,
       leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
-        headerMgr.notifyListeners({ route: 'map', side: 'left' });
+        headerMgr.notifyListeners({ route: 'view-map', side: 'left' });
+        headerMgr.notifyListeners({ route: 'create-map', side: 'left' });
       };
       rightBtnNavigation = async() =>
       {
-        headerMgr.notifyListeners({ route: 'map', side: 'right' });
+        headerMgr.notifyListeners({ route: 'create-map', side: 'right' });
       };
       rightBtnText = '';
       leftBtnText = ''

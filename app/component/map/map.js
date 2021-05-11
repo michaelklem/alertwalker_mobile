@@ -23,6 +23,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { HeaderHeightContext } from '@react-navigation/stack';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import ActionButton from 'react-native-action-button';
 
 import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
 import SubmitField from './submitField';
@@ -73,6 +74,8 @@ export default class Map extends Component
     minBottomSheetHeight: 0,
     maxBottomSheetHeight: Math.round(Dimensions.get('window').height),
   };
+  // Used for header manager observer
+  _id = '';
 
 
   // MARK: - Constructor
@@ -99,6 +102,8 @@ export default class Map extends Component
       dataVersion: 0
     };
 
+    this._id = this.props.createMode ? 'create-map' : 'view-map';
+
     this._mapViewRef = React.createRef();
     this._bottomSheetRef = React.createRef();
   }
@@ -108,12 +113,13 @@ export default class Map extends Component
     // Remove observers
     LocationManager.GetInstance().removeListener('map');
     this._dataMgr.removeObserver('map');
-    this._headerMgr.removeListener('map');
+    this._headerMgr.removeListener(this._id);
   }
 
   async componentDidMount()
   {
     console.log('\tMap.componentDidMount()');
+    console.log(this.props);
 
     // Setup observers
     LocationManager.GetInstance().addListener('map', this.onLocation);
@@ -125,13 +131,24 @@ export default class Map extends Component
     'map',
     'geofenceAreas');
 
-    this._headerMgr.addListener('map', (side) =>
+    this._headerMgr.addListener(this._id, (side) =>
     {
       console.log('\tMap.HeaderManagerListener: ' + side);
       if(side === 'left')
       {
-        this._headerMgr.setIsCreateMode(false);
-        this._bottomSheetRef.current.hide();
+        console.log(this.props);
+        // Exit notification viewing
+        if(this.props.geofenceArea)
+        {
+          this.props.navigation.dispatch(StackActions.pop(1));
+          console.log('Pop');
+        }
+        // Exit create mode
+        else
+        {
+          this._headerMgr.setIsCreateMode(false);
+          this._bottomSheetRef.current.hide();
+        }
       }
       else if(side === 'right')
       {
@@ -152,10 +169,7 @@ export default class Map extends Component
         {
           await this.getLocation();
         }
-      }
 
-      if(!this.props.geofenceArea)
-      {
         await this.loadData();
       }
     }
@@ -324,6 +338,7 @@ export default class Map extends Component
     );
   }
 
+  // Not used, this was an early implementation of the floating action button
   renderAlertMenu = () =>
   {
     return (
@@ -339,7 +354,9 @@ export default class Map extends Component
         onOpen={() => this.setState({ menuIsOpen: true })}
         renderer={renderers.SlideInMenu}
       >
-        <MenuTrigger style={styles.createBtn}>
+        <MenuTrigger
+          style={styles.createBtn}
+        >
           <Icon
             name={this.state.menuIsOpen ? 'cancel' : 'add-circle'}
             size={h50}
@@ -354,6 +371,30 @@ export default class Map extends Component
           </MenuOption>
         </MenuOptions>
       </Menu>
+    );
+  }
+
+  // This is the floating action button
+  renderAlertMenu2 = () =>
+  {
+    return (
+      <ActionButton buttonColor="rgba(231,76,60,1)">
+        <ActionButton.Item
+          buttonColor='#9b59b6'
+          title="New Alert"
+          onPress={() =>
+          {
+            this._bottomSheetRef.current.show();
+            this._headerMgr.setIsCreateMode(true);
+          }}
+        >
+          <Icon
+            name="notifications-active"
+            size={h50}
+            style={styles.createBtn2}
+          />
+        </ActionButton.Item>
+      </ActionButton>
     );
   }
 
@@ -570,15 +611,17 @@ export default class Map extends Component
               {((locationData && locationData.mapLocation) || this.props.geofenceArea) &&
               this.renderMapView(data, locationData)}
 
-              {/* Add alert button & menu */}
-              {this.renderAlertMenu()}
-
               {/* Create alert screen */}
               {this.renderBottomSheet(data, locationData, headerHeight)}
 
               {/* Image modal */}
               {this.state.imageModal.isOpen &&
               this.renderImageModal()}
+
+              {/* Add alert button & menu */}
+              {this.props.createMode &&
+              this.renderAlertMenu2()}
+
           </View>
         </KeyboardAvoidingView>
       </MenuProvider>
@@ -649,7 +692,12 @@ const styles = StyleSheet.create({
     right: h25,
     width: h50,
     height: h50,
-    zIndex: 100,
+    zIndex: 102,
+  },
+  createBtn2: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
   },
   menuContainer: {
     backgroundColor: Colors.transparent,

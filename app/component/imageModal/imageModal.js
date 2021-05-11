@@ -18,7 +18,7 @@ const ImageModal = ({ imageSrc,
                       onClose,
                     }) =>
 {
-  console.log('ImageModal');
+  console.log('ImageModal: ' + imageSrc);
   return (
     <Modal
       animationType={'slide'}
@@ -102,12 +102,12 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   image: {
-    marginTop: '50%',
-    width: '80%',
-    height: '50%',
+    width: Math.round(Dimensions.get('window').width * 0.8),
+    height: Math.round(Dimensions.get('window').height * 0.5),
     overflow: 'visible',
     resizeMode: 'cover',
     marginLeft: '10%',
+    backgroundColor: Colors.white,
   },
 });
 

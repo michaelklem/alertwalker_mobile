@@ -6,7 +6,7 @@ export default class HeaderManager
   #_listeners = [];
 
   // Reference to header component
-  #_header = null;
+  #_headers = [];
 
   // Singleton
   /**
@@ -68,7 +68,7 @@ export default class HeaderManager
   }
 
 
-  hide(side)
+  /*hide(side)
   {
     console.log('Hiding ' + side);
     this.#_header.setSideHiding(side);
@@ -83,15 +83,25 @@ export default class HeaderManager
   isShowing(side)
   {
     return this.#_header.isShowing(side);
-  }
+  }*/
 
   setHeader(header)
   {
-    this.#_header = header;
+    console.log('\t\tHeaderManager.setHeader');
+    console.log(header);
+    if(header)
+    {
+      this.#_headers.push(header);
+    }
+    else
+    {
+      this.#_headers.pop();
+    }
   }
 
   setIsCreateMode(isCreateMode)
   {
-    this.#_header.setIsCreateMode(isCreateMode);
+    console.log('\t\tHeaderManager.setIsCreateMode(' + isCreateMode + ')');
+    this.#_headers[this.#_headers.length - 1].setIsCreateMode(isCreateMode);
   }
 }

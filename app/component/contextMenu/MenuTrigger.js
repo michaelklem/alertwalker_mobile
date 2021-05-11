@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Pressable, Dimensions } from 'react-native';
+import { View, Text, Pressable, Platform, Dimensions } from 'react-native';
 import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 
 import { debug } from './logger.js';
 import { makeTouchable } from './helpers';
 import { withCtx } from './MenuProvider';
+import { ImageModal } from '../imageModal';
+import { Colors } from '../../constant';
 
 export class MenuTrigger extends Component {
 
@@ -22,21 +24,43 @@ export class MenuTrigger extends Component {
       !disabled && this._onPress();
     };
     const { Touchable, defaultTouchableProps } = makeTouchable(customStyles.TriggerTouchableComponent);
-    return (
-      <View ref={onRef} collapsable={false} style={customStyles.triggerOuterWrapper}>
-        <Pressable
-          onPressIn={() =>
-          {
-            console.log('OnPress');
-            onPress();
-          }}
-          style={this.props.style}
-          {...defaultTouchableProps}
-        >
-          {children}
-        </Pressable>
-      </View>
-    );
+
+    if(Platform.os === 'ios')
+    {
+      return (
+        <View ref={onRef} collapsable={false} style={{zIndex: 101}}>
+          <Pressable
+            onPressIn={() =>
+            {
+              console.log('OnPress');
+              onPress();
+            }}
+            style={this.props.style}
+            {...defaultTouchableProps}
+          >
+            {children}
+          </Pressable>
+        </View>
+      );
+    }
+    else
+    {
+      return (
+        <View ref={onRef} collapsable={false} style={{zIndex: 101}}>
+          <TouchableOpacity
+            onPress={() =>
+            {
+              console.log('OnPress');
+              onPress();
+            }}
+            style={this.props.style}
+            {...defaultTouchableProps}
+          >
+            {children}
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
 
 }

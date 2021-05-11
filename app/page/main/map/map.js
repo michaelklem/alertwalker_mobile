@@ -34,6 +34,8 @@ export default class MapPage extends Component
     {
       isLoading: false,
       location: null,
+      geofenceArea: (this.props.route.params && this.props.route.params.geofenceArea) ?
+                                                 this.props.route.params.geofenceArea : null
     };
 
     // Refresh data
@@ -66,6 +68,7 @@ export default class MapPage extends Component
   {
     //console.log(this.state);
     console.log('Map.render()');
+    console.log(this.state.geofenceArea);
     return (
       <LinearGradient
         start={{x: 0, y: 0}}

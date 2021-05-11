@@ -22,6 +22,14 @@ export default class Header extends Component
     };
 
     this._headerMgr = HeaderManager.GetInstance();
+  }
+
+  async componentWillUnmount()
+  {
+    this._headerMgr.setHeader(null);
+  }
+  async componentDidMount()
+  {
     this._headerMgr.setHeader(this);
   }
 
@@ -63,6 +71,7 @@ export default class Header extends Component
 
   setIsCreateMode = (isCreateMode) =>
   {
+    console.log('\tHeader.setIsCreateMode(' + isCreateMode + ')');
     this.setState({ isCreateMode: isCreateMode });
   }
 
