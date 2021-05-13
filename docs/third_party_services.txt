@@ -6,14 +6,21 @@ Email: alertwalkerapp@gmail.com
 
 Firebase - Android Push Notifications 
 https://console.firebase.google.com/u/1/project/alert-walker/settings/general/android:software.bitbybit.alertwalker
-login: alertwalkerapp@gmail.com
+
+The only thing we utilize from this is the server key on this page. As this is required for firebase cloud messaging (push notifications) to work.
+
+
 
 
 MongoDB - Database 
 https://cloud.mongodb.com/v2/
+alertwalkerapp@gmail.com
+michael.klem@gmail.com
 
 Google OAuth - Google Sign In 
 https://console.cloud.google.com/apis/credentials/consent?authuser=1&project=prismatic-iris-307621
+alertwalkerapp@gmail.com
+
 
 Google Maps - Displaying Map In Mobile App 
 https://console.cloud.google.com/google/maps-apis/overview?authuser=1&project=prismatic-iris-307621&folder=&organizationId=

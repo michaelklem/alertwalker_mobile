@@ -61,7 +61,8 @@ const Layout4 = ({  user,
     routeName = 'main';
     if(subRoute.name === 'add' || subRoute.name === 'map' || isCreateMode)
     {
-      rightBtnIcon = 'post-add';
+      // only need to display the save/add alert icon when in create mode
+      rightBtnIcon = isCreateMode ? 'post-add' : null;
       leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
