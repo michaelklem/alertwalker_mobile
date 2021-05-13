@@ -1,0 +1,31 @@
+http://www.alertwalker.com.s3-website-us-east-1.amazonaws.com/doc/
+
+
+Credentials 
+Email: alertwalkerapp@gmail.com
+Password: gk/[?+&Jdz3)Rdy[
+
+Firebase - Android Push Notifications 
+https://console.firebase.google.com/u/1/project/alert-walker/settings/general/android:software.bitbybit.alertwalker
+login: alertwalkerapp@gmail.com
+
+
+MongoDB - Database 
+https://cloud.mongodb.com/v2/
+
+Google OAuth - Google Sign In 
+https://console.cloud.google.com/apis/credentials/consent?authuser=1&project=prismatic-iris-307621
+
+Google Maps - Displaying Map In Mobile App 
+https://console.cloud.google.com/google/maps-apis/overview?authuser=1&project=prismatic-iris-307621&folder=&organizationId=
+
+AWS S3 - File Hosting 
+https://s3.console.aws.amazon.com/s3/home?region=us-east-1
+
+AWS Pinpoint - Push Notifications 
+https://console.aws.amazon.com/pinpoint/home?region=us-east-1#/apps/de1704a69a7d4da6ab90b05e21ea4646
+
+Heroku - Backend Hosting
+https://dashboard.heroku.com/apps/alertwalker-backend
+
+
