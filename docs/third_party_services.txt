@@ -3,7 +3,6 @@ http://www.alertwalker.com.s3-website-us-east-1.amazonaws.com/doc/
 
 Credentials 
 Email: alertwalkerapp@gmail.com
-Password: gk/[?+&Jdz3)Rdy[
 
 Firebase - Android Push Notifications 
 https://console.firebase.google.com/u/1/project/alert-walker/settings/general/android:software.bitbybit.alertwalker
