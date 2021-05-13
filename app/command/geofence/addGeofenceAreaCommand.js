@@ -73,7 +73,9 @@ export async function AddGeofenceAreaCommand({  updateMasterState,
       setLoading ? setLoading(false) : '';
       updateDataVersion ? updateDataVersion(dataVersion + 1) : '';
 
-      showAlert('', 'Alert created successfully');
+      // showAlert('', 'Alert created successfully');
+      ToastAndroid.showWithGravity("Alert created successfully.", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+
 
       return dataSet;
     }
