@@ -32,6 +32,7 @@ import { GetLocationCommand, SetLocationCommand } from '../../command/location';
 
 // MARK: - Constants
 const RADIUS_SIZE = 500;
+const ONE_SECOND_IN_MS = 1000;
 
 export default class CreateMap extends Component
 {
@@ -53,6 +54,7 @@ export default class CreateMap extends Component
   _threshold = 2;
   _isMapMovable = true;
 
+  
   constructor(props)
   {
     super(props);
@@ -304,7 +306,7 @@ export default class CreateMap extends Component
           onDragStart={() => 
           {
             // Provides user with feedback that marker is now draggable.
-            Vibration.vibrate();
+            Vibration.vibrate( 250 );
           }}
           onDrag={async(e) =>
           {

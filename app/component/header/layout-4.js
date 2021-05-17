@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, Platform, Text, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Platform, Text, SafeAreaView, StyleSheet, View , Button} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions } from '@react-navigation/native';
@@ -118,11 +118,12 @@ const Layout4 = ({  user,
       {(rightBtnIcon !== '' || rightBtnText !== '') &&
       <TouchableOpacity style={styles.barBtnContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
-        <Icon
-          name={rightBtnIcon}
-          size={h20}
-          color={Colors.black}
-        />}
+        <Button
+          onPress={() => alert('This is a button!')}
+          title='Save'
+          color='green'
+        />
+}
         {rightBtnText !== '' &&
         <Text
           adjustsFontSizeToFit={true}
