@@ -63,7 +63,7 @@ export default class Map extends Component
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
   _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   // Map view related
-  _mapCreateLastGoodPosition = null;
+  // _mapCreateLastGoodPosition = null;
   // The number of decimal places a longitude or latitude must change in order for an update to be processed
   // prevents map from repeatedly updating
   _threshold = 2;
@@ -536,6 +536,7 @@ export default class Map extends Component
             showAlert={this.props.showAlert}
             onPress={() =>
             {
+              console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
               Keyboard.dismiss();
               this.setState({ choosingLocation: !this.state.choosingLocation });
             }}

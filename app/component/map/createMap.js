@@ -11,7 +11,8 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Vibration
 } from 'react-native';
 
 import { isPointWithinRadius } from 'geolib';
@@ -46,11 +47,11 @@ export default class CreateMap extends Component
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
   _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   // Map view related
-  _mapCreateLastGoodPosition = null;
+  // _mapCreateLastGoodPosition = null;
   // The number of decimal places a longitude or latitude must change in order for an update to be processed
   // prevents map from repeatedly updating
   _threshold = 2;
-  _isMapMovable = false;
+  _isMapMovable = true;
 
   constructor(props)
   {
@@ -64,7 +65,7 @@ export default class CreateMap extends Component
       radius: RADIUS_SIZE,
       note: '',
       // Disabled this to use map restriction instead
-      //mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
+      // mapCreateRadius: AppManager.GetInstance().getMapCreateRadius(),
       dataVersion: 0
     };
 
@@ -184,26 +185,28 @@ export default class CreateMap extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
-          console.log('Map.onRegionChangeComplete()');
+          // console.log('Map.onRegionChangeComplete()');
           //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
           //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
           //console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
-          if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
-              region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
-              region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
-              region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
-          {
-            await this._dataMgr.execute(await new SetLocationCommand({
-              newLocation: region,
-              updateMasterState: (state) => this.setState(state),
-              dataVersion: this.state.dataVersion,
-              type: 'map',
-            }));
-          }
+
+
+          // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+          //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+          //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+          //     region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
+          // {
+          //   await this._dataMgr.execute(await new SetLocationCommand({
+          //     newLocation: region,
+          //     updateMasterState: (state) => this.setState(state),
+          //     dataVersion: this.state.dataVersion,
+          //     type: 'map',
+          //   }));
+          // }
         }}
         region={locationData.mapLocation}
         showsUserLocation={true}
-        moveOnMarkerPress={false}
+        moveOnMarkerPress={this._isMapMovable}
         scrollEnabled={this._isMapMovable}
         rotateEnabled={this._isMapMovable}
         zoomEnabled={this._isMapMovable}
@@ -230,18 +233,18 @@ export default class CreateMap extends Component
           radius={this.state.radius}
           onRegionChangeComplete={async(e) =>
           {
-            console.log('Circle.onRegionChangeComplete()');
-            await this._dataMgr.execute(await new SetLocationCommand({
-              newLocation:
-              {
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude
-              },
-              updateMasterState: (state) => this.setState(state),
-              dataVersion: this.state.dataVersion,
-              type: 'alert',
-            }));
-            return true;
+            // console.log('Circle.onRegionChangeComplete()');
+            // await this._dataMgr.execute(await new SetLocationCommand({
+            //   newLocation:
+            //   {
+            //     latitude: e.nativeEvent.coordinate.latitude,
+            //     longitude: e.nativeEvent.coordinate.longitude
+            //   },
+            //   updateMasterState: (state) => this.setState(state),
+            //   dataVersion: this.state.dataVersion,
+            //   type: 'alert',
+            // }));
+            // return true;
           }}
           strokeWidth = { 5 }
           strokeColor = { '#1a66ff' }
@@ -256,7 +259,7 @@ export default class CreateMap extends Component
           coordinate={locationData.alertLocation}
           onDragEnd={async(e) =>
           {
-            console.log('OnMarkerDragEnd()');
+            // console.log('OnMarkerDragEnd()');
             /*if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
             {
               console.log('Resetting marker');
@@ -275,20 +278,39 @@ export default class CreateMap extends Component
             else
             {
               console.log('Took the value change');
-              */await this._dataMgr.execute(await new SetLocationCommand({
+              */
+
+              console.log(`[Debug] new alert corrds: ${JSON.stringify( e.nativeEvent.coordinate)}` )
+                console.log('[Debug] state: ' + JSON.stringify(this.state));
+
+              await this._dataMgr.execute(await new SetLocationCommand({
                 newLocation:
                 {
                   latitude: e.nativeEvent.coordinate.latitude,
                   longitude: e.nativeEvent.coordinate.longitude
                 },
-                updateMasterState: (state) => this.setState(state),
+
+                // mk
+                // Uncommenting this line forces a refresh which causes the 
+                // map to re-render at user's current location.
+                // Not seeing the point of this at this time.
+                // updateMasterState: (state) => this.setState(state),
                 dataVersion: this.state.dataVersion,
                 type: 'alert',
               }));
             //}
+
+          }}
+          onDragStart={() => 
+          {
+            // Provides user with feedback that marker is now draggable.
+            Vibration.vibrate();
           }}
           onDrag={async(e) =>
           {
+            
+
+            // console.log('onMarkerDrag()');
             // Disabling this and restricting map view itself to restrict marker movement
             /*console.log('onMarkerDrag()');
 
@@ -301,8 +323,10 @@ export default class CreateMap extends Component
             {
               this._mapCreateLastGoodPosition = e.nativeEvent.coordinate;
             }*/
+
+              // this._mapCreateLastGoodPosition = e.nativeEvent.coordinate;
           }}
-          pinColor={"green"}
+          pinColor={"red"}
         />}
       </MapView>
     );
