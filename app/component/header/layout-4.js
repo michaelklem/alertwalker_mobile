@@ -117,7 +117,7 @@ const Layout4 = ({  user,
 
       {/* Right btn/text */}
       {(rightBtnIcon !== '' || rightBtnText !== '') &&
-      <TouchableOpacity style={styles.barBtnContainer} onPress={rightBtnNavigation}>
+      <TouchableOpacity style={styles.saveButtonContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
         <Button 
           title='Save'
@@ -132,7 +132,7 @@ const Layout4 = ({  user,
 
       {/* Right side space */}
       {(rightBtnIcon === '' && rightBtnText === '') &&
-      <View style={styles.barBtnContainer} />}
+      <View style={styles.barBtnContainer2} />}
 
     </View>
   );
@@ -185,6 +185,12 @@ const styles = StyleSheet.create({
     height: Math.round(Dimensions.get('window').height * 0.04),
     marginTop: h8,
   },
+  saveButtonContainer: {
+    borderRadius: 6,
+    borderWidth:1,
+    borderColor: 'darkgreen'
+
+  },  
   hidden: {
     fontSize: height11,
     textAlign: 'center',
