@@ -103,7 +103,7 @@ export function MainStack(props)
       <Stack.Screen
         name="map"
         options={{
-          headerLeft: () => (<></>)
+          headerLeft: ()=> null,
         }}
       >
         {(props) => <MapPage {...props}
