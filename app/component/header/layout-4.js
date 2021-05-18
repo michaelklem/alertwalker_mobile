@@ -61,8 +61,9 @@ const Layout4 = ({  user,
     routeName = 'main';
     if(subRoute.name === 'add' || subRoute.name === 'map' || isCreateMode)
     {
+      console.log('isCreateMode: ' + isCreateMode)
       // only need to display the save/add alert icon when in create mode
-      rightBtnIcon = isCreateMode ? 'post-add' : null;
+      rightBtnIcon = isCreateMode ? 'post-add' : '';
       leftBtnIcon = faArrowLeft;
       leftBtnNavigation = async() =>
       {
@@ -118,12 +119,11 @@ const Layout4 = ({  user,
       {(rightBtnIcon !== '' || rightBtnText !== '') &&
       <TouchableOpacity style={styles.barBtnContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
-        <Button
-          onPress={() => alert('This is a button!')}
+        <Button 
           title='Save'
           color='green'
         />
-}
+        }
         {rightBtnText !== '' &&
         <Text
           adjustsFontSizeToFit={true}
