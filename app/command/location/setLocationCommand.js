@@ -5,7 +5,7 @@ export async function SetLocationCommand({ newLocation, updateMasterState, dataV
 {
   return new Command(async(dataStore) =>
   {
-    console.log('\t\tSetLocationCommand.execute(' + type + ')');
+    console.log('\t\tSetLocationCommand.execute(' + type + ') ' + JSON.stringify(newLocation));
     let data = {...dataStore.get('location')};
     switch(type)
     {

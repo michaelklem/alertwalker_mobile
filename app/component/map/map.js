@@ -56,7 +56,7 @@ export default class Map extends Component
   _dataMgr = null;
   _headerMgr = null;
   // Refs
-  _mapViewRef = null;
+  // _mapViewRef = null;
   _bottomSheetRef = null;
   // Keyboard related
   _keyboardIsShowing = false;
@@ -104,7 +104,7 @@ export default class Map extends Component
 
     this._id = this.props.createMode ? 'create-map' : 'view-map';
 
-    this._mapViewRef = React.createRef();
+    // this._mapViewRef = React.createRef();
     this._bottomSheetRef = React.createRef();
   }
 
@@ -164,12 +164,16 @@ export default class Map extends Component
       if(!this.props.geofenceArea)
       {
         const locationData = this._dataMgr.getData('location');
-        //console.log(locationData);
+        console.log('component map locationData: ' + JSON.stringify(locationData) );
         if(!locationData || !locationData.mapLocation)
         {
           await this.getLocation();
         }
 
+        //await this.loadData();
+      }
+      else {
+        console.log('component map being set to notifcation location')
         await this.loadData();
       }
     }
@@ -402,7 +406,7 @@ export default class Map extends Component
   {
     return (
       <MapView
-        ref={this._mapViewRef}
+        // ref={this._mapViewRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         onPress={(e) =>
@@ -414,36 +418,53 @@ export default class Map extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
-          console.log('Map.onRegionChangeComplete()');
-          //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
-          //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
-          //console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
-          if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
-              region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
-              region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
-              region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
-          {
-            await this._dataMgr.execute(await new SetLocationCommand({
-              newLocation: region,
-              updateMasterState: (state) => this.setState(state),
-              dataVersion: this.state.dataVersion,
-              type: 'map',
-            }));
-          }
+          // console.log('Component Map.onRegionChangeComplete()');
+
+          // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+          //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+          //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+          //     region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
+          // {
+          //   console.log('   Component Map SetLocationCommand')
+          //   await this._dataMgr.execute(await new SetLocationCommand({
+          //     newLocation: region,
+          //     updateMasterState: (state) => this.setState(state),
+          //     dataVersion: this.state.dataVersion,
+          //     type: 'map',
+          //   }));
+          // }
         }}
-        region={(locationData && locationData.mapLocation) ? locationData.mapLocation :
+
+        // if there is an alert data, we show the map there, otherewise we show the map at the users location
+        region={(this.props.geofenceArea) ? 
         {
           latitude: this.props.geofenceArea.location.coordinates[1],
           longitude: this.props.geofenceArea.location.coordinates[0],
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }}
+        }
+        : 
+        {
+          latitude: locationData.userLocation.latitude,
+          longitude: locationData.userLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }
+        }
+
+        // region={(locationData && locationData.mapLocation) ? locationData.mapLocation :
+        // {
+        //   latitude: this.props.geofenceArea.location.coordinates[1],
+        //   longitude: this.props.geofenceArea.location.coordinates[0],
+        //   latitudeDelta: 0.0922,
+        //   longitudeDelta: 0.0421,
+        // }}
         showsUserLocation={true}
         moveOnMarkerPress={false}
         scrollEnabled={true}
         rotateEnabled={true}
         zoomEnabled={true}
-        zoomTapEnabled={true}
+        zoomTapEnabled={false}
         zoomControlEnabled={true}
         pitchEnabled={true}
       >
@@ -482,7 +503,7 @@ export default class Map extends Component
               style={styles.callout}
               onPress={() =>
               {
-                console.log('OnPress');
+                // console.log('OnPress');
                 // Display image if there
                 if(this.props.geofenceArea.image)
                 {
@@ -533,7 +554,6 @@ export default class Map extends Component
             showAlert={this.props.showAlert}
           />
           <LocationField
-            showAlert={this.props.showAlert}
             onPress={() =>
             {
               console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
@@ -567,7 +587,7 @@ export default class Map extends Component
   {
     return (
       <CreateMap
-        ref={this._componentRef}
+        //ref={this._componentRef}
         updateMasterState={(state) => this.setState(state)}
         showAlert={this.props.showAlert}
         navigation={this.props.navigation}
@@ -593,13 +613,13 @@ export default class Map extends Component
 
   render()
   {
-    console.log('\tMap.render()');
+    console.log('\t Component Map.render()');
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
-    //console.log(Dimensions.get('window'));
-    //console.log('locationData: ' + JSON.stringify(locationData.alertLocation) );
-    //console.log(this._mapCreateLastGoodPosition);
+    // console.log('   window dimensions: ' + Dimensions.get('window'));
+    console.log('   locationData: ' + JSON.stringify(locationData) );
+    console.log('   geofence data: ' + JSON.stringify(data) );
 
     return (
     <HeaderHeightContext.Consumer>

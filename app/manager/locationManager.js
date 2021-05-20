@@ -101,6 +101,8 @@ export default class LocationManager
         if( location.latitude !== locationData.userLocation.latitude ||
             location.longitude !== locationData.userLocation.longitude)
         {
+          console.log('   BackgroundGeolocation SetLocationCommand: ' + location.latitude + ' vs ' + locationData.userLocation.latitude )
+          console.log('   BackgroundGeolocation SetLocationCommand2: ' + location.longitude + ' vs ' + locationData.userLocation.longitude )
           await this.#dataMgr.execute(await new SetLocationCommand({
             newLocation: location,
             type: 'user',

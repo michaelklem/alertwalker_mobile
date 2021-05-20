@@ -37,7 +37,7 @@ export async function LoadGeofenceAreasCommand({ updateMasterState, dataVersion 
         geofenceAreas: response.data.results
       };
       dataStore.set('geofenceAreas', data);
-
+      console.log( 'Loaded geo fence data: ' + JSON.stringify(data))
       updateMasterState ? updateMasterState({
         isLoading: false,
         dataVersion: dataVersion + 1,

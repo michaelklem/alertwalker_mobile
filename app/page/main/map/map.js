@@ -27,7 +27,7 @@ export default class MapPage extends Component
   // MARK: - Constructor
   constructor(props)
   {
-    console.log('Map()');
+    console.log('Main Map()');
     super(props);
 
     this.state =
@@ -39,11 +39,13 @@ export default class MapPage extends Component
     };
 
     // Refresh data
+    // this appears to only get called when we click on 
+    // a previously received alert to render the map for that alert
     props.navigation.addListener('focus', () =>
     {
       if(this.props.route.params && this.props.route.params.geofenceArea)
       {
-        console.log('Map.focus()');
+        console.log('Main map about to show an alert')
         this.setState({ geofenceArea: this.props.route.params.geofenceArea });
       }
     });
@@ -66,9 +68,8 @@ export default class MapPage extends Component
   // MARK: - Render
   render()
   {
-    //console.log(this.state);
-    console.log('Map.render()');
-    console.log(this.state.geofenceArea);
+    console.log('Main Map.render() geo fence data: ' + JSON.stringify( this.state.geofenceArea ));
+
     return (
       <LinearGradient
         start={{x: 0, y: 0}}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Animated,
   Dimensions,
@@ -16,9 +16,9 @@ import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 
 const LocationField = ({  location,
                           onPress,
-                          showAlert,
                           isShowingLocation }) =>
 {
+
   //console.log(location);
   return (
   <TouchableHighlight

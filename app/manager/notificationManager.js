@@ -55,7 +55,7 @@ export default class NotificationManager
         console.error('NotificationManager.init error: ' + response.data.error);
         return false;
       }
-      console.log(response.data.results);
+      // console.log(response.data.results);
       this.#notifications = response.data.results;
       return true;
     }
@@ -343,6 +343,7 @@ export default class NotificationManager
       }
       else if(response.data.results.type === 'geofencearea')
       {
+        console.log('going to show the alert ' + JSON.stringify(response.data.results.document))
         RootNavigation.navigate('map', { geofenceArea: response.data.results.document });
       }
 		}

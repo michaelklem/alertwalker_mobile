@@ -25,7 +25,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
 import RadiusField from './radiusField';
 import SubmitField from './submitField';
-import LocationField from './locationField';
 import { ImageButton } from '../imageButton';
 import { Colors } from '../../constant';
 import { GetLocationCommand, SetLocationCommand } from '../../command/location';
@@ -40,14 +39,14 @@ export default class CreateMap extends Component
   _dataMgr = null;
   _headerMgr = null;
   // Refs
-  _mapViewRef = null;
-  _createMarkerRef = null;
+  // _mapViewRef = null;
+  // _createMarkerRef = null;
   // Keyboard related
   _keyboardIsShowing = false;
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
   _keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   // Map view related
-  _mapCreateLastGoodPosition = null;
+  // _mapCreateLastGoodPosition = null;
   // The number of decimal places a longitude or latitude must change in order for an update to be processed
   // prevents map from repeatedly updating
   _threshold = 2;
@@ -56,7 +55,7 @@ export default class CreateMap extends Component
   constructor(props)
   {
     super(props);
-    console.log('\tCreateMap()');
+    console.log('\t CreateMap() constructor');
     this._dataMgr = DataManager.GetInstance();
     this._headerMgr = HeaderManager.GetInstance();
 
@@ -69,8 +68,8 @@ export default class CreateMap extends Component
       dataVersion: 0
     };
 
-    this._mapViewRef = React.createRef();
-    this._createMarkerRef = React.createRef();
+    // this._mapViewRef = React.createRef();
+    // this._createMarkerRef = React.createRef();
   }
 
   async componentWillUnmount()
@@ -85,26 +84,30 @@ export default class CreateMap extends Component
   {
     console.log('\tCreateMap.componentDidMount()');
 
-    // Setup observers
-    LocationManager.GetInstance().addListener('map', this.onLocation);
 
-    this._dataMgr.addObserver(() =>
-    {
-      this.refresh();
-    },
-    'map',
-    'geofenceAreas');
+    // Setup observers
+    //LocationManager.GetInstance().addListener('map', this.onLocation);
+
+    // this._dataMgr.addObserver(() =>
+    // {
+    //   this.refresh();
+    // },
+    // 'map',
+    // 'geofenceAreas');
 
     try
     {
-      this._isMounted = true;
+      // this._isMounted = true;
 
-      // If location not supplied load user's location and set map to that
-      if(!this.props.geofenceArea)
-      {
         const locationData = this._dataMgr.getData('location');
         await this.getLocation();
-      }
+
+      // If location not supplied load user's location and set map to that
+      // if(!this.props.geofenceArea)
+      // {
+      //   const locationData = this._dataMgr.getData('location');
+      //   await this.getLocation();
+      // }
     }
     catch(err)
     {
@@ -139,6 +142,8 @@ export default class CreateMap extends Component
     const delta = {...AppManager.GetInstance().getMapCreateDelta()};
     region.latitudeDelta = delta.latitudeDelta;
     region.longitudeDelta = delta.longitudeDelta;
+
+    console.log('   CreateMap getLocation SetLocationCommand')
     await this._dataMgr.execute(await new SetLocationCommand({
       newLocation: region,
       updateMasterState: (state) => this.setState(state),
@@ -149,6 +154,7 @@ export default class CreateMap extends Component
 
   refresh = () =>
   {
+    console.log(' createmap refresh called')
     this.setState({ dataVersion: this.state.dataVersion + 1 });
   }
 
@@ -165,15 +171,17 @@ export default class CreateMap extends Component
         type: 'user',
       }));
     }*/
+
+
   }
 
   // MARK: - Renders
   renderMapView = (data, locationData) =>
   {
-    //console.log(locationData);
+    console.log(' createMap renderMapView called ' + JSON.stringify(locationData) );
     return (
       <MapView
-        ref={this._mapViewRef}
+        // ref={this._mapViewRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         onPress={(e) =>
@@ -185,30 +193,40 @@ export default class CreateMap extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
-          console.log('Map.onRegionChangeComplete()');
+          // console.log('Create Map.onRegionChangeComplete()');
           //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
           //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
           //console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
-          if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
-              region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
-              region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
-              region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
-          {
-            await this._dataMgr.execute(await new SetLocationCommand({
-              newLocation: region,
-              updateMasterState: (state) => this.setState(state),
-              dataVersion: this.state.dataVersion,
-              type: 'map',
-            }));
-          }
+          // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+          //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+          //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+          //     region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
+          // {
+          //     console.log('   CreateMap MapView SetLocationCommand')
+          //   await this._dataMgr.execute(await new SetLocationCommand({
+          //     newLocation: region,
+          //     updateMasterState: (state) => this.setState(state),
+          //     dataVersion: this.state.dataVersion,
+          //     type: 'map',
+          //   }));
+          // }
         }}
-        region={locationData.mapLocation}
+//        region={locationData.userLocation}
+        // we want to center the map on the user's location
+        region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        {
+          latitude: locationData.userLocation.latitude,
+          longitude: locationData.userLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+
         showsUserLocation={true}
         moveOnMarkerPress={this._isMapMovable}
         scrollEnabled={this._isMapMovable}
         rotateEnabled={this._isMapMovable}
         zoomEnabled={this._isMapMovable}
-        zoomTapEnabled={this._isMapMovable}
+        zoomTapEnabled={false}
         zoomControlEnabled={this._isMapMovable}
         pitchEnabled={this._isMapMovable}
       >
@@ -232,17 +250,17 @@ export default class CreateMap extends Component
           onRegionChangeComplete={async(e) =>
           {
             console.log('Circle.onRegionChangeComplete()');
-            await this._dataMgr.execute(await new SetLocationCommand({
-              newLocation:
-              {
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude
-              },
-              updateMasterState: (state) => this.setState(state),
-              dataVersion: this.state.dataVersion,
-              type: 'alert',
-            }));
-            return true;
+            // await this._dataMgr.execute(await new SetLocationCommand({
+            //   newLocation:
+            //   {
+            //     latitude: e.nativeEvent.coordinate.latitude,
+            //     longitude: e.nativeEvent.coordinate.longitude
+            //   },
+            //   updateMasterState: (state) => this.setState(state),
+            //   dataVersion: this.state.dataVersion,
+            //   type: 'alert',
+            // }));
+            // return true;
           }}
           strokeWidth = { 5 }
           strokeColor = { '#1a66ff' }
@@ -252,7 +270,7 @@ export default class CreateMap extends Component
         {/* Movable create marker */}
         {(locationData && locationData.alertLocation) &&
         <Marker
-          ref={this._createMarkerRef}
+          // ref={this._createMarkerRef}
           draggable
           coordinate={locationData.alertLocation}
           onDragEnd={async(e) =>
@@ -276,7 +294,9 @@ export default class CreateMap extends Component
             else
             {
               console.log('Took the value change');
-              */await this._dataMgr.execute(await new SetLocationCommand({
+              */
+              console.log('   CreateMap SetLocationCommand')
+              await this._dataMgr.execute(await new SetLocationCommand({
                 newLocation:
                 {
                   latitude: e.nativeEvent.coordinate.latitude,
@@ -318,7 +338,7 @@ export default class CreateMap extends Component
 
   render()
   {
-    console.log('\tCreateMap.render()');
+    console.log('\t CreateMap.render()');
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
