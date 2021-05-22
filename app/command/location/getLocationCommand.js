@@ -1,10 +1,9 @@
 import Geolocation from 'react-native-geolocation-service';
 import { hasLocationPermission } from '../../helper/location';
 import { Command } from '..';
+import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA} from '../../constant/App'
 
-const MIKES_DELTA = 0.006
-const OLD_DEFAULT_LAT_DELTA = 0.0922
-const OLD_DEFAULT_LNG_DELTA = 0.0421
+
 
 export async function GetLocationCommand({ updateMasterState, dataVersion, setLoading })
 {
@@ -25,22 +24,22 @@ export async function GetLocationCommand({ updateMasterState, dataVersion, setLo
             {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              latitudeDelta: MIKES_DELTA,
-              longitudeDelta: MIKES_DELTA,
+              latitudeDelta: DEFAULT_LAT_DELTA,
+              longitudeDelta: DEFAULT_LNG_DELTA,
             },
             mapLocation:
             {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              latitudeDelta: MIKES_DELTA,
-              longitudeDelta: MIKES_DELTA,
+              latitudeDelta: DEFAULT_LAT_DELTA,
+              longitudeDelta: DEFAULT_LNG_DELTA,
             },
             alertLocation:
             {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              latitudeDelta: 0.014,
-              longitudeDelta: 0.014,
+              latitudeDelta: DEFAULT_LAT_DELTA,
+              longitudeDelta: DEFAULT_LNG_DELTA,
             }
           };
           dataStore.set('location', data);

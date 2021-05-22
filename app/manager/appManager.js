@@ -21,6 +21,7 @@ import { LoginContainer } from '../component/loginContainer';
 import { MyButton }from '../component/myButton';
 import { ImageButton } from '../component/imageButton';
 import { WebsocketClient } from '../client';
+import {DEFAULT_LNG_DELTA, DEFAULT_LAT_DELTA} from '../constant/App'
 
 export default class AppManager
 {
@@ -39,8 +40,8 @@ export default class AppManager
     #_mapCreateRadius = 1;
     #_mapCreateDelta =
     {
-      latitudeDelta: 0.014,
-      longitudeDelta: 0.014
+      latitudeDelta: DEFAULT_LAT_DELTA,
+      longitudeDelta: DEFAULT_LNG_DELTA
     };
 
 

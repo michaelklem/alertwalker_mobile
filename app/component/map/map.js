@@ -44,6 +44,7 @@ import {  MenuTrigger,
           renderers
         } from '../contextMenu';
 import { BottomSheet } from '../bottomSheet';
+import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA} from '../../constant/App'
 
 // MARK: - Constants
 const RADIUS_SIZE = 500
@@ -106,7 +107,6 @@ export default class Map extends Component
       userLatDelta: 0.0200,
       userLngDelta: 0.0200
     };
-    //0.0173 0.0083
 
 
     this._id = this.props.createMode ? 'create-map' : 'view-map';
@@ -138,7 +138,7 @@ export default class Map extends Component
     'map',
     'geofenceAreas');
 
-    this._headerMgr.addListener(this._id, (side) =>
+    this._headerMgr.addListener(this._id, async (side) =>
     {
       console.log('\tMap.HeaderManagerListener: ' + side);
       if(side === 'left')
@@ -155,6 +155,9 @@ export default class Map extends Component
         {
           this._headerMgr.setIsCreateMode(false);
           this._bottomSheetRef.current.hide();
+          console.log('change it here') //666
+          await this.getLocation();
+
         }
       }
       else if(side === 'right')
@@ -468,15 +471,15 @@ export default class Map extends Component
           longitude: this.props.geofenceArea.location.coordinates[0],
           // latitudeDelta: this.state.userLatDelta, // force the marker to be zoomed in
           // longitudeDelta: this.state.userLngDelta
-          latitudeDelta: 0.013, // force the marker to be zoomed in
-          longitudeDelta: 0.013,
+          latitudeDelta: DEFAULT_LAT_DELTA, // force the marker to be zoomed in
+          longitudeDelta: DEFAULT_LNG_DELTA,
         }
         : 
         {
           latitude: locationData.userLocation.latitude,
           longitude: locationData.userLocation.longitude,
-          latitudeDelta: 0.006,//this.state.userLatDelta,
-          longitudeDelta: 0.006//this.state.userLngDelta,
+          latitudeDelta: DEFAULT_LAT_DELTA,
+          longitudeDelta: DEFAULT_LNG_DELTA,
         }
         }
 
