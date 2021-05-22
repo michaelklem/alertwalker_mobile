@@ -39,8 +39,8 @@ export async function GetLocationCommand({ updateMasterState, dataVersion, setLo
             {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              latitudeDelta: 0.210,
-              longitudeDelta: 0.210,
+              latitudeDelta: 0.014,
+              longitudeDelta: 0.014,
             }
           };
           dataStore.set('location', data);
