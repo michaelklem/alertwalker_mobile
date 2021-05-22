@@ -194,6 +194,8 @@ export default class CreateMap extends Component
         onRegionChangeComplete={async(region, isGesture) =>
         {
           console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
+          console.log('Create Map.onRegionChangeComplete() new userLocation: ' + JSON.stringify(locationData.userLocation) );
+          console.log('Create Map.onRegionChangeComplete() new alertLocation: ' + JSON.stringify(locationData.alertLocation) );
 
           // console.log('Create Map.onRegionChangeComplete()');
           //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
@@ -213,18 +215,25 @@ export default class CreateMap extends Component
           //   }));
           // }
         }}
-//        region={locationData.userLocation}
+      //  region={locationData.alertLocation}
         // we want to center the map on the user's location
-        region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        // region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        // {
+        //   latitude: locationData.userLocation.latitude,
+        //   longitude: locationData.userLocation.longitude,
+        //   latitudeDelta: 0.006, // force the marker to be zoomed in
+        //   longitudeDelta: 0.006
+        // }}
+
+        region={(locationData && locationData.alertLocation && locationData.alertLocation.longitudeDelta) ? locationData.alertLocation :
         {
-          latitude: locationData.userLocation.latitude,
-          longitude: locationData.userLocation.longitude,
+          latitude: locationData.alertLocation.latitude,
+          longitude: locationData.alertLocation.longitude,
           latitudeDelta: 0.006, // force the marker to be zoomed in
           longitudeDelta: 0.006
           // latitudeDelta: 0.0922,
           // longitudeDelta: 0.0421,
         }}
-
         showsUserLocation={true}
         moveOnMarkerPress={this._isMapMovable}
         scrollEnabled={this._isMapMovable}
@@ -334,7 +343,7 @@ export default class CreateMap extends Component
               this._mapCreateLastGoodPosition = e.nativeEvent.coordinate;
             }*/
           }}
-          pinColor={"green"}
+          pinColor={this.props.markerColor}
         />}
       </MapView>
     );

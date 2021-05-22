@@ -47,6 +47,7 @@ import { BottomSheet } from '../bottomSheet';
 
 // MARK: - Constants
 const RADIUS_SIZE = 500
+const MARKER_DEFAULT_COLOR = '#e19044' // alert walker icon orange
 const MENU_NAME = 'alert-type-menu';
 
 const { width, height } = Dimensions.get('window');
@@ -319,7 +320,7 @@ export default class Map extends Component
               latitude: geofenceArea.location.coordinates[1],
               longitude: geofenceArea.location.coordinates[0]
             }}
-            pinColor={"red"}
+            pinColor={MARKER_DEFAULT_COLOR}
           >
             <Callout
               tooltip={true}
@@ -388,10 +389,11 @@ export default class Map extends Component
   renderAlertMenu2 = () =>
   {
     return (
-      <ActionButton buttonColor="rgba(231,76,60,1)">
+      <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
         <ActionButton.Item
-          buttonColor='#9b59b6'
+          buttonColor={MARKER_DEFAULT_COLOR}
           title="New Alert"
+          size={40}
           onPress={() =>
           {
             this._bottomSheetRef.current.show();
@@ -400,7 +402,6 @@ export default class Map extends Component
         >
           <Icon
             name="notifications-active"
-            size={h50}
             style={styles.createBtn2}
           />
         </ActionButton.Item>
@@ -523,7 +524,7 @@ export default class Map extends Component
               longitude: this.props.geofenceArea.location.coordinates[0]
             }}
             description={this.props.geofenceArea.note}
-            pinColor={"red"}
+            pinColor={MARKER_DEFAULT_COLOR}
           >
             <Callout
               tooltip={true}
@@ -618,6 +619,7 @@ export default class Map extends Component
         updateMasterState={(state) => this.setState(state)}
         showAlert={this.props.showAlert}
         navigation={this.props.navigation}
+        markerColor={MARKER_DEFAULT_COLOR}
       />
     );
   }
