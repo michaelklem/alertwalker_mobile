@@ -49,6 +49,8 @@ import { BottomSheet } from '../bottomSheet';
 const RADIUS_SIZE = 500
 const MENU_NAME = 'alert-type-menu';
 
+const { width, height } = Dimensions.get('window');
+
 export default class Map extends Component
 {
   // MARK: - Data fields
@@ -99,8 +101,12 @@ export default class Map extends Component
         image: null,
         isOpen: false
       },
-      dataVersion: 0
+      dataVersion: 0,
+      userLatDelta: 0.0200,
+      userLngDelta: 0.0200
     };
+    //0.0173 0.0083
+
 
     this._id = this.props.createMode ? 'create-map' : 'view-map';
 
@@ -418,8 +424,27 @@ export default class Map extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
-          // console.log('Component Map.onRegionChangeComplete()');
+          console.log('Component Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
+          // const window = Dimensions.get('window');
+          // const { width, height }  = window
+          // const LATITUD_DELTA = 0.0922
+          // const LONGITUDE_DELTA = LATITUD_DELTA + (width / height)
+          // console.log('Component Map.onRegionChangeComplete() new LONGITUDE_DELTA: ' + LONGITUDE_DELTA );
+          // this.setState({ userLngDelta: LONGITUDE_DELTA })
 
+
+          // let { width, height } = Dimensions.get('window')
+          // const ASPECT_RATIO = width / height
+          // const LATITUDE_DELTA = region.latitudeDelta //0.01104
+          // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+          // console.log('Component Map.onRegionChangeComplete() new LATITUDE_DELTA: ' + LATITUDE_DELTA);
+          // console.log('Component Map.onRegionChangeComplete() new LONGITUDE_DELTA: ' + LONGITUDE_DELTA);
+          // this.setState({ userLatDelta: LATITUDE_DELTA, userLngDelta: LONGITUDE_DELTA })
+
+
+          // this will force the marker to always be re-centered.
+          // this.setState({ userLatDelta: region.latitudeDelta, userLngDelta: region.longitudeDelta })
+   
           // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
           //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
           //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
@@ -440,15 +465,17 @@ export default class Map extends Component
         {
           latitude: this.props.geofenceArea.location.coordinates[1],
           longitude: this.props.geofenceArea.location.coordinates[0],
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          // latitudeDelta: this.state.userLatDelta, // force the marker to be zoomed in
+          // longitudeDelta: this.state.userLngDelta
+          latitudeDelta: 0.013, // force the marker to be zoomed in
+          longitudeDelta: 0.013,
         }
         : 
         {
           latitude: locationData.userLocation.latitude,
           longitude: locationData.userLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.006,//this.state.userLatDelta,
+          longitudeDelta: 0.006//this.state.userLngDelta,
         }
         }
 
@@ -524,7 +551,7 @@ export default class Map extends Component
 
   renderBottomSheet = (data, locationData, headerHeight) =>
   {
-    //console.log('HeaderHeight: ' + headerHeight);
+    // console.log('xxxxxxxx locationData: ' + JSON.stringify(locationData) );
     //console.log('Max bottom sheet height: ' + this._heights.maxBottomSheetHeight);
     return (
       <BottomSheet

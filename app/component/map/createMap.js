@@ -49,7 +49,7 @@ export default class CreateMap extends Component
   // _mapCreateLastGoodPosition = null;
   // The number of decimal places a longitude or latitude must change in order for an update to be processed
   // prevents map from repeatedly updating
-  _threshold = 2;
+  // _threshold = 2;
   _isMapMovable = true;
 
   constructor(props)
@@ -99,7 +99,7 @@ export default class CreateMap extends Component
     {
       // this._isMounted = true;
 
-        const locationData = this._dataMgr.getData('location');
+        // const locationData = this._dataMgr.getData('location');
         await this.getLocation();
 
       // If location not supplied load user's location and set map to that
@@ -140,8 +140,8 @@ export default class CreateMap extends Component
     const locationData = this._dataMgr.getData('location');
     const region = {...locationData.mapLocation};
     const delta = {...AppManager.GetInstance().getMapCreateDelta()};
-    region.latitudeDelta = delta.latitudeDelta;
-    region.longitudeDelta = delta.longitudeDelta;
+    region.latitudeDelta = 0.006 //delta.latitudeDelta;
+    region.longitudeDelta = 0.006 //delta.longitudeDelta;
 
     console.log('   CreateMap getLocation SetLocationCommand')
     await this._dataMgr.execute(await new SetLocationCommand({
@@ -193,6 +193,8 @@ export default class CreateMap extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
+          console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
+
           // console.log('Create Map.onRegionChangeComplete()');
           //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
           //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
@@ -217,8 +219,10 @@ export default class CreateMap extends Component
         {
           latitude: locationData.userLocation.latitude,
           longitude: locationData.userLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.006, // force the marker to be zoomed in
+          longitudeDelta: 0.006
+          // latitudeDelta: 0.0922,
+          // longitudeDelta: 0.0421,
         }}
 
         showsUserLocation={true}

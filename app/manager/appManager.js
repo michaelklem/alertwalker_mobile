@@ -39,8 +39,10 @@ export default class AppManager
     #_mapCreateRadius = 1;
     #_mapCreateDelta =
     {
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
+      latitudeDelta: 0.006,
+      longitudeDelta: 0.006
+      // latitudeDelta: 0.0922,
+      // longitudeDelta: 0.0421
     };
 
 
