@@ -78,6 +78,7 @@ export default class CreateMap extends Component
     LocationManager.GetInstance().removeListener('map');
     this._dataMgr.removeObserver('map');
     this._headerMgr.removeListener('map');
+    console.log('\tCreateMap.componentWillUnMount()');
   }
 
   async componentDidMount()
@@ -98,6 +99,8 @@ export default class CreateMap extends Component
     try
     {
       // this._isMounted = true;
+    // const locationData = this._dataMgr.getData('location');
+    // console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX location: ' + JSON.stringify(locationData))
 
         // const locationData = this._dataMgr.getData('location');
         await this.getLocation();
@@ -140,7 +143,6 @@ export default class CreateMap extends Component
     const locationData = this._dataMgr.getData('location');
     const region = {...locationData.mapLocation};
     const delta = {...AppManager.GetInstance().getMapCreateDelta()};
-    console.log('ddddddddddddd ' + JSON.stringify(delta))
     region.latitudeDelta = delta.latitudeDelta;
     region.longitudeDelta = delta.longitudeDelta;
 
@@ -194,9 +196,9 @@ export default class CreateMap extends Component
         }}
         onRegionChangeComplete={async(region, isGesture) =>
         {
-          console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
-          console.log('Create Map.onRegionChangeComplete() new userLocation: ' + JSON.stringify(locationData.userLocation) );
-          console.log('Create Map.onRegionChangeComplete() new alertLocation: ' + JSON.stringify(locationData.alertLocation) );
+          // console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
+          // console.log('Create Map.onRegionChangeComplete() new userLocation: ' + JSON.stringify(locationData.userLocation) );
+          // console.log('Create Map.onRegionChangeComplete() new alertLocation: ' + JSON.stringify(locationData.alertLocation) );
 
           // console.log('Create Map.onRegionChangeComplete()');
           //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
@@ -356,7 +358,7 @@ export default class CreateMap extends Component
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
-    //console.log('locationData: ' + JSON.stringify(locationData.alertLocation) );
+    console.log('createmap locationData: ' + JSON.stringify(locationData.alertLocation) );
     //console.log(this._mapCreateLastGoodPosition);
 
     return (
