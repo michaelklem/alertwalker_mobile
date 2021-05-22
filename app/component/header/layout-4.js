@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, Platform, Text, SafeAreaView, StyleSheet, View , Button} from 'react-native';
+import { Dimensions, Image, Platform, Text, SafeAreaView, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions } from '@react-navigation/native';
@@ -16,6 +16,7 @@ import {AppText, Colors, Images, Styles} from '../../constant';
 //import * as DrawerNavigation from '../drawerNavigation.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import {Button} from 'react-native-elements';
 
 
 
@@ -87,6 +88,7 @@ const Layout4 = ({  user,
   }
 
   return (
+    
     <View style={[styles.headerContainer]}>
 
       {/* Left side space */}
@@ -115,13 +117,26 @@ const Layout4 = ({  user,
       {/* Title text */}
       <Text style={styles.text}>{isCreateMode ? 'New Alert' : 'Alert Walker'}</Text>
 
+
+
       {/* Right btn/text */}
       {(rightBtnIcon !== '' || rightBtnText !== '') &&
       <TouchableOpacity style={styles.saveButtonContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
+
         <Button 
           title='Save'
-          color='green'
+          titleStyle={{
+              color: "white",
+              fontSize: (Math.round(Dimensions.get('window').height) * 0.019), // 16 on pixel 4 xl
+          }}
+          buttonStyle={{
+            borderRadius: 6,
+            borderWidth:1,
+            backgroundColor: 'green',
+            borderColor: 'darkgreen',
+            height:34,
+          }}
         />
         }
         {rightBtnText !== '' &&
@@ -186,9 +201,6 @@ const styles = StyleSheet.create({
     marginTop: h8,
   },
   saveButtonContainer: {
-    borderRadius: 6,
-    borderWidth:1,
-    borderColor: 'darkgreen'
 
   },  
   hidden: {
