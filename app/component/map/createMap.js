@@ -136,19 +136,20 @@ export default class CreateMap extends Component
       dataVersion: this.state.dataVersion
     }));
 
-    // Set map location to use delta configuration
+    // Set alert location to use delta configuration
     const locationData = this._dataMgr.getData('location');
     const region = {...locationData.mapLocation};
     const delta = {...AppManager.GetInstance().getMapCreateDelta()};
-    region.latitudeDelta = 0.006 //delta.latitudeDelta;
-    region.longitudeDelta = 0.006 //delta.longitudeDelta;
+    console.log('ddddddddddddd ' + JSON.stringify(delta))
+    region.latitudeDelta = delta.latitudeDelta;
+    region.longitudeDelta = delta.longitudeDelta;
 
     console.log('   CreateMap getLocation SetLocationCommand')
     await this._dataMgr.execute(await new SetLocationCommand({
       newLocation: region,
       updateMasterState: (state) => this.setState(state),
       dataVersion: this.state.dataVersion,
-      type: 'map',
+      type: 'alert',
     }));
   }
 
@@ -215,7 +216,7 @@ export default class CreateMap extends Component
           //   }));
           // }
         }}
-      //  region={locationData.alertLocation}
+       initialRegion={locationData.alertLocation}
         // we want to center the map on the user's location
         // region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
         // {
@@ -225,15 +226,15 @@ export default class CreateMap extends Component
         //   longitudeDelta: 0.006
         // }}
 
-        region={(locationData && locationData.alertLocation && locationData.alertLocation.longitudeDelta) ? locationData.alertLocation :
-        {
-          latitude: locationData.alertLocation.latitude,
-          longitude: locationData.alertLocation.longitude,
-          latitudeDelta: 0.006, // force the marker to be zoomed in
-          longitudeDelta: 0.006
-          // latitudeDelta: 0.0922,
-          // longitudeDelta: 0.0421,
-        }}
+        // initialRegion={(locationData && locationData.alertLocation && locationData.alertLocation.longitudeDelta) ? locationData.alertLocation :
+        // {
+        //   latitude: locationData.alertLocation.latitude,
+        //   longitude: locationData.alertLocation.longitude,
+        //   latitudeDelta: 0.006, // force the marker to be zoomed in
+        //   longitudeDelta: 0.006
+        //   // latitudeDelta: 0.0922,
+        //   // longitudeDelta: 0.0421,
+        // }}
         showsUserLocation={true}
         moveOnMarkerPress={this._isMapMovable}
         scrollEnabled={this._isMapMovable}

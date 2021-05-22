@@ -39,10 +39,8 @@ export default class AppManager
     #_mapCreateRadius = 1;
     #_mapCreateDelta =
     {
-      latitudeDelta: 0.006,
-      longitudeDelta: 0.006
-      // latitudeDelta: 0.0922,
-      // longitudeDelta: 0.0421
+      latitudeDelta: 0.014,
+      longitudeDelta: 0.014
     };
 
 
@@ -128,7 +126,9 @@ export default class AppManager
         this.#_guestAccessAllowed = response.data.guestAccessAllowed;
         this.#_frontendUrl = response.data.frontendUrl;
         this.#_thirdPartyAccounts = response.data.thirdPartyAccounts;
-        this.#_mapCreateDelta = JSON.parse(response.data.mapCreateDelta);
+        
+        // ignoring this response from the server for now as I stated it here.
+        // this.#_mapCreateDelta = JSON.parse(response.data.mapCreateDelta);
         //this.#_mapCreateRadius = response.data.mapCreateRadius;
 
 
