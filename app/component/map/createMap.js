@@ -28,6 +28,7 @@ import SubmitField from './submitField';
 import { ImageButton } from '../imageButton';
 import { Colors } from '../../constant';
 import { GetLocationCommand, SetLocationCommand } from '../../command/location';
+import {MARKER_DEFAULT_COLOR} from '../../constant/App'
 
 // MARK: - Constants
 const RADIUS_SIZE = 500;
@@ -280,7 +281,7 @@ export default class CreateMap extends Component
             // return true;
           }}
           strokeWidth = { 5 }
-          strokeColor = { '#1a66ff' }
+          strokeColor = { MARKER_DEFAULT_COLOR }
           fillColor = { 'rgba(230,238,255,0.5)' }
         />}
 
@@ -384,6 +385,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     backgroundColor: Colors.white,
+    borderWidth:1,
+    borderColor:'#aaa',
+    marginLeft:1,
+    marginRight:1
   },
   map: {
     flex: 1,

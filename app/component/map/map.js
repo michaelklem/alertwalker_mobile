@@ -313,7 +313,7 @@ export default class Map extends Component
             }}
             radius={geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { '#1a66ff' }
+            strokeColor = { MARKER_DEFAULT_COLOR }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
@@ -510,7 +510,7 @@ export default class Map extends Component
             }}
             radius={this.props.geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { '#1a66ff' }
+            strokeColor = { MARKER_DEFAULT_COLOR }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
