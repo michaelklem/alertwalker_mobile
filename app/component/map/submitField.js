@@ -56,12 +56,20 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   commentTextField: {
+    // position:'absolute',
+    top:6,
     flex: 1,
-    height: '100%',
+    height: '70%',
     paddingLeft: 10,
+    marginTop:20,
+    marginLeft:4,
+    marginRight:4,
     color: Colors.black,
     fontSize: h20,
-    fontFamily: 'Arial'
+    fontFamily: 'Arial',
+    borderWidth:1,
+    borderRadius:6,
+    borderColor:'#888'
   },
   text: {
     textAlign: 'center',

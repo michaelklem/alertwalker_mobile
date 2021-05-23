@@ -238,12 +238,13 @@ export default class CreateMap extends Component
         //   // longitudeDelta: 0.0421,
         // }}
         showsUserLocation={true}
+        showsMyLocationButton={true}
         moveOnMarkerPress={this._isMapMovable}
         scrollEnabled={this._isMapMovable}
         rotateEnabled={this._isMapMovable}
         zoomEnabled={this._isMapMovable}
         zoomTapEnabled={false}
-        zoomControlEnabled={this._isMapMovable}
+        zoomControlEnabled={false}
         pitchEnabled={this._isMapMovable}
       >
 

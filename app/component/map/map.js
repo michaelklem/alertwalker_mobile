@@ -471,8 +471,6 @@ export default class Map extends Component
         {
           latitude: this.props.geofenceArea.location.coordinates[1],
           longitude: this.props.geofenceArea.location.coordinates[0],
-          // latitudeDelta: this.state.userLatDelta, // force the marker to be zoomed in
-          // longitudeDelta: this.state.userLngDelta
           latitudeDelta: DEFAULT_LAT_DELTA, // force the marker to be zoomed in
           longitudeDelta: DEFAULT_LNG_DELTA,
         }
@@ -485,15 +483,8 @@ export default class Map extends Component
         }
         }
 
-        // region={(locationData && locationData.mapLocation) ? locationData.mapLocation :
-        // {
-        //   latitude: this.props.geofenceArea.location.coordinates[1],
-        //   longitude: this.props.geofenceArea.location.coordinates[0],
-        //   latitudeDelta: 0.0922,
-        //   longitudeDelta: 0.0421,
-        // }}
         showsUserLocation={true}
-        showsMyLocationButton={false}
+        showsMyLocationButton={true}
         moveOnMarkerPress={false}
         scrollEnabled={true}
         rotateEnabled={true}
