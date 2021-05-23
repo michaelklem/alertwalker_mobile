@@ -44,11 +44,10 @@ import {  MenuTrigger,
           renderers
         } from '../contextMenu';
 import { BottomSheet } from '../bottomSheet';
-import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA} from '../../constant/App'
+import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA, MARKER_DEFAULT_COLOR} from '../../constant/App'
 
 // MARK: - Constants
 const RADIUS_SIZE = 500
-const MARKER_DEFAULT_COLOR = '#e19044' // alert walker icon orange
 const MENU_NAME = 'alert-type-menu';
 
 const { width, height } = Dimensions.get('window');

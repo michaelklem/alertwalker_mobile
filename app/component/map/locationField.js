@@ -14,29 +14,38 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 
+import {MARKER_DEFAULT_COLOR} from '../../constant/App'
+import {Button} from 'react-native-elements';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+
+
 const LocationField = ({  location,
                           onPress,
                           isShowingLocation }) =>
 {
 
-  //console.log(location);
   return (
   <TouchableHighlight
-    style={styles.container}
+    style={styles.TouchableContainer}
     activeOpacity={0.6}
     onPress={onPress}
     underlayColor={Colors.transparent}
   >
-    <View style={styles.container}>
+    <View style={styles.viewContainer}>
+      <Icon
+        style={styles.icon}
+        name={'place'}
+        size={h16}
+        color={MARKER_DEFAULT_COLOR}
+      />
+
       <Text
         style={[styles.commentTextField, {textAlignVertical: 'center'}]}
         underlineColorAndroid='transparent'
-      >{isShowingLocation ? 'Save location' : (location ? 'Change location' : 'Add location')}</Text>
-      <Icon
-        name={isShowingLocation ? 'save' : 'add-location'}
-        size={h16}
-        color={Colors.linkBlue}
-      />
+      >
+        {isShowingLocation ? 'Hide location' : (location ? 'Show location' : 'Show location')}      
+      </Text>      
+
     </View>
   </TouchableHighlight>);
 }
@@ -48,16 +57,21 @@ const h20 = Math.round(Dimensions.get('window').height * 0.0256);
 const h16 = Math.round(Dimensions.get('window').height * 0.0205);
 
 const styles = StyleSheet.create({
-  container: {
+  TouchableContainer: {
+    marginTop:4,
+  },
+  viewContainer: {
     backgroundColor: Colors.white,
     flexDirection: 'row',
     marginBottom: 0,
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start',  
+  },
+  icon: {
+    top:2
   },
   commentTextField: {
     height: '100%',
-    paddingLeft: 10,
-    color: Colors.linkBlue,
+    color: Colors.black,
     fontSize: h16,
     fontFamily: 'Arial'
   },
