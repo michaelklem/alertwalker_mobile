@@ -395,6 +395,8 @@ export default class Map extends Component
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
         <ActionButton.Item
           buttonColor={MARKER_DEFAULT_COLOR}
+          textContainerStyle={styles.fabItemContainerStyle}
+          textStyle={styles.fabItemStyle}
           title="New Alert"
           size={40}
           onPress={() =>
@@ -771,5 +773,12 @@ const styles = StyleSheet.create({
   },
   createModalContainer: {
     backgroundColor: Colors.plainGray5
+  },
+  fabItemContainerStyle: {
+    backgroundColor: MARKER_DEFAULT_COLOR,  
+  },
+  fabItemStyle: {
+    backgroundColor: MARKER_DEFAULT_COLOR,
+    color: 'white'
   }
 });
