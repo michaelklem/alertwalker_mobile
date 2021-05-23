@@ -491,12 +491,13 @@ export default class Map extends Component
         //   longitudeDelta: 0.0421,
         // }}
         showsUserLocation={true}
+        showsMyLocationButton={false}
         moveOnMarkerPress={false}
         scrollEnabled={true}
         rotateEnabled={true}
         zoomEnabled={true}
         zoomTapEnabled={false}
-        zoomControlEnabled={true}
+        zoomControlEnabled={false}
         pitchEnabled={true}
       >
 
