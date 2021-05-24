@@ -15,29 +15,34 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { MyButton } from '../myButton';
 import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
+import {MARKER_DEFAULT_COLOR} from '../../constant/App'
 
-const ImageField = ({ updateMasterState,
+/*
+  Component used to merge all 3 buttons into a single row.
+  Should split these out to individual components.
+*/
+const CreateAlertButtons = ({ updateMasterState,
                       showAlert,
-                      onPress }) =>
+                      onPress1, onPress2 }) =>
 {
   return (
     <View style={styles.masterViewContainer}>
 
-    <View style={styles.container}>
-      <TouchableHighlight onPress={onPress}>
-        <View style={styles.button}>
-          <Icon
-            style={styles.icon}
-            name={'place'}
-            size={h16}
-            color={Colors.black}
-          />
-          <Text>
-            {'Show Location'}      
-          </Text>
+        <View style={styles.container}>
+          <TouchableHighlight onPress={onPress1}>
+            <View style={styles.button}>
+              <Icon
+                style={styles.icon}
+                name={'place'}
+                size={h20}
+                color={Colors.black}
+              />
+              <Text>
+                {'Show Location'}      
+              </Text>
+            </View>
+          </TouchableHighlight>
         </View>
-      </TouchableHighlight>
-    </View>
 
 
 
@@ -45,7 +50,7 @@ const ImageField = ({ updateMasterState,
           <TouchableHighlight 
             onPress={() =>
             {
-              onPress();
+              onPress2();
               ImagePicker.launchCamera(
                 {
                   mediaType: 'image',
@@ -80,7 +85,7 @@ const ImageField = ({ updateMasterState,
               <Icon
                 style={styles.icon}
                 name={'photo-camera'}
-                size={h16}
+                size={h20}
                 color={Colors.black}
               />
               <Text>
@@ -97,7 +102,7 @@ const ImageField = ({ updateMasterState,
           <TouchableHighlight 
             onPress={() =>
             {
-              onPress();
+              onPress2();
               ImagePicker.launchImageLibrary(
                 {
                   mediaType: 'image',
@@ -133,7 +138,7 @@ const ImageField = ({ updateMasterState,
               <Icon
                 style={styles.icon}
                 name={'photo-library'}
-                size={h16}
+                size={h20}
                 color={Colors.black}
               />
               <Text>
@@ -149,7 +154,6 @@ const ImageField = ({ updateMasterState,
     </View>
 
   )
-
 }
 
 
@@ -163,29 +167,27 @@ const h16 = Math.round(Dimensions.get('window').height * 0.0205);
 const styles = StyleSheet.create({
 
   masterViewContainer: {
-    backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 0,
-    marginTop: h20,
     paddingLeft:4,
-    paddingRight:4
+    paddingRight:4,
+    marginBottom:6
   },
 
 
   container: {
     height:h64,
     width:'30%',
-    padding:2
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#eee",
+    backgroundColor: "#f4f4f4",
     padding: 10,
+    borderWidth: 1,
+    borderColor: '#aaa',
 
   },
 })
 
 
-export default ImageField;
+export default CreateAlertButtons;

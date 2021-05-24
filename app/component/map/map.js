@@ -27,10 +27,8 @@ import ActionButton from 'react-native-action-button';
 
 import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
 import SubmitField from './submitField';
-import LocationField from './locationField';
+import CreateAlertButtons from './createAlertButtons';
 import CreateMap from './createMap';
-import ImageField from './imageField';
-import { ImageButton } from '../imageButton';
 import { ImageModal } from '../imageModal';
 import { Colors } from '../../constant';
 import {  AddGeofenceAreaCommand,
@@ -577,8 +575,8 @@ export default class Map extends Component
             }}
             showAlert={this.props.showAlert}
           />
-          <LocationField
-            onPress={() =>
+          <CreateAlertButtons
+            onPress1={() =>
             {
               console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
               Keyboard.dismiss();
@@ -586,9 +584,7 @@ export default class Map extends Component
             }}
             isShowingLocation={this.state.choosingLocation}
             location={locationData.alertLocation}
-          />
-          <ImageField
-            onPress={() =>
+            onPress2={() =>
             {
               Keyboard.dismiss();
             }}
@@ -598,6 +594,7 @@ export default class Map extends Component
             }}
             showAlert={this.props.showAlert}
           />
+
 
           {/* Choose location map view */}
           {this.state.choosingLocation &&
