@@ -21,13 +21,13 @@ export default class Auth extends Component
 
   constructor(props)
   {
-    console.log('Auth()');
+    console.log('[Auth.constructor]');
     super(props);
 
     let activePageName = 'login';
     this._manager = AppManager.GetInstance();
 
-    console.log(props.deepLink);
+    console.log(`[Auth.constructor] props.deepLink: ${props.deepLink}`);
 
     if(props.deepLink)
     {
@@ -52,7 +52,7 @@ export default class Auth extends Component
 
   async componentDidMount()
   {
-    console.log(this.props);
+    console.log(`[Auth.componentDidMount] props: ${JSON.stringify(this.props)}`);
 
     let activePageName = this.state.activePageName;
 
@@ -179,10 +179,15 @@ export default class Auth extends Component
       url: url,
       isSimulator: DeviceInfo.isEmulator()
     };
+
+    console.log( `[Auth.thirdPartyLogin] calling API`);
+
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/login');
-    console.log(response.data);
+
+    console.log( `[Auth.thirdPartyLogin] response.data: ${response.data}`);
+
     if(response.data.error !== null)
     {
       this.setState({ isLoading: false });
@@ -227,8 +232,8 @@ export default class Auth extends Component
 
   render()
   {
-    console.log('Auth.render()');
-    console.log(this.state.components);
+    console.log(`[OauthManager:render] ${JSON.stringify(this.state.components)}`);
+
     return (
     <>
       {this.state.activePageName === 'login' &&

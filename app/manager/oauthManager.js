@@ -71,7 +71,7 @@ export default class OauthManager
   hasOauthToken()
   {
     const keys = Object.keys(this.#_oauthTokens);
-    console.log(keys);
+    console.log(`[oauthManager:hasOauthToken] keys: ${keys}`);
     for(let i = 0; i < keys.length; i++)
     {
       if(this.#_oauthTokens[keys[i]] !== null)
@@ -139,10 +139,14 @@ export default class OauthManager
 
   async saveToken(params)
   {
+    console.log(`[oauthManager:saveToken] calling API`);
+
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/save-token');
-    console.log(response.data);
+    
+    console.log(`[oauthManager:saveToken] API result: ${response.data}`);
+    
     if(response.data.error !== null)
     {
       //this.setState({ isLoading: false });
@@ -157,10 +161,14 @@ export default class OauthManager
 
   async removeToken(params)
   {
+    console.log(`[oauthManager:removeToken] calling API`);
+
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/remove-token');
-    console.log(response.data);
+
+    console.log(`[oauthManager:removeToken] API result: ${response.data}`);
+
     if(response.data.error !== null)
     {
       //this.setState({ isLoading: false });
@@ -177,7 +185,7 @@ export default class OauthManager
     else if(params.source === 'instagram')
     {
       const cookies = await CookieManager.getAll();
-      console.log('CookieManager.getAll =>', cookies);
+      console.log(`[oauthManager:removeToken] cookies: ${cookies}`);
     }
 
     this.notifyListeners({ source: params.source, token: null });

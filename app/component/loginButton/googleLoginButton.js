@@ -18,16 +18,18 @@ export default class GoogleLoginButton extends Component
   _oauthMgr = null;
   constructor(props)
   {
-    console.log('\tGoogleLoginButton()');
+    console.log('\t GoogleLoginButton()');
     super(props);
 
     this._oauthMgr = OauthManager.GetInstance();
     this._oauthMgr.addListener('GoogleLoginButton',
     (msg) =>
     {
-      console.log(msg);
+      console.log(`[GoogleLoginButton:constructor] msg: ${JSON.stringify(msg)}`);
+
       if(msg.source === 'google' && msg.token !== null)
       {
+        console.log(`[GoogleLoginButton:constructor] google token: ${msg.token}`);
         this.props.login(msg);
       }
     });
