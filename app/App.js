@@ -155,7 +155,7 @@ export default class App extends Component
 
     if(user)
     {
-      console.log(user);
+      console.log('User:' + user);
       // Broke this out so we don't have to wait for it
       //await this._dataManager.execute(await new LoadCalendarEventsCommand());
       LocationManager.GetInstanceA(userToken);
@@ -241,8 +241,7 @@ export default class App extends Component
   // MARK: - Push
   onPushRegister = async(token) =>
   {
-    console.log(token);
-    console.log('App.onPushRegister()');
+    console.log('App.onPushRegister() token: ' + token);
 
     // If guest access isn't allowed and we're not registered yet,
     // don't do anything
@@ -260,7 +259,7 @@ export default class App extends Component
       let params = { token: token };
       let response = await ApiRequest.sendRequest("post", params, "push/token");
 
-      console.log(response.data);
+      console.log('App response: ' + response.data);
 
       // Success
       if(response.data.error === null)
@@ -282,9 +281,8 @@ export default class App extends Component
 
   onPushNotification = (notification) =>
   {
-    console.log('App.onPushNotification()');
+    console.log('App.onPushNotification() notification: ' + notification);
     //this.showAlert("Success", "Push notification was received!");
-    console.log(notification);
 
     try
     {
@@ -347,7 +345,7 @@ export default class App extends Component
   handleOpenURL = (evt) =>
   {
     const route = evt.url.replace(/.*?:\/\//g, '');
-    console.log(route);
+    console.log('Route: ' + route);
     this.setState({ deepLink: route });
   }
 

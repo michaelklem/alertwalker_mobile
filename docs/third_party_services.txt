@@ -35,3 +35,6 @@ Heroku - Backend Hosting
 https://dashboard.heroku.com/apps/alertwalker-backend
 
 
+Google oauth redirects to:
+https://backend.alertwalker.com/oauth/handler
+

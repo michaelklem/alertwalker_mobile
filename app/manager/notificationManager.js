@@ -310,7 +310,7 @@ export default class NotificationManager
 				return;
 			}
 
-      console.log(response.data);
+      console.log('NotificationManager.readNotification response: ' + response.data);
 
       // Tell notification manager we read this
       this.markRead(response.data.results.document);

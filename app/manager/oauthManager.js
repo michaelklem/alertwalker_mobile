@@ -119,7 +119,7 @@ export default class OauthManager
       }
       else
       {
-        console.log(result);
+        console.log( 'oauthManager meRequestHandler result: ' + result);
         this.saveToken({
           accessToken: accessToken,
           externalId: result.id,

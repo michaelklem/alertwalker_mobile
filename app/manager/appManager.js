@@ -82,7 +82,7 @@ export default class AppManager
           return false;
   			}
 
-        console.log(response.data);
+        console.log('AppManager.init response: ' + response.data);
 
   			var componentMap = new Map();
         var fields = null;
@@ -139,7 +139,7 @@ export default class AppManager
       catch(err)
       {
         console.error('AppManager.init error2: ' + err + '\nStack:\n' + err.stack);
-        console.log(OauthManager);
+        console.log(' OauthManager: ' + OauthManager);
         return false;
       }
     }
@@ -226,8 +226,7 @@ export default class AppManager
 
     getThirdPartyAccount = (source) =>
     {
-      console.log('Third party accounts');
-      console.log(this.#_thirdPartyAccounts);
+      console.log('Third party accounts: ' + this.#_thirdPartyAccounts);
       for(let i = 0; i < this.#_thirdPartyAccounts.length; i++)
       {
         if(this.#_thirdPartyAccounts[i].source.toLowerCase() === source.toLowerCase())
@@ -549,7 +548,7 @@ export default class AppManager
       if(buttonParams.hiddenData)
       {
         let querystring = Qs.parse(deepLink.substr(deepLink.indexOf('?') + 1));
-        console.log(querystring);
+        console.log('Querystring: ' + querystring);
         for(let i = 0; i < buttonParams.hiddenData.length; i++)
         {
           // Read query string
@@ -634,8 +633,7 @@ export default class AppManager
                 }
                 break;
               case 'setGlobalState':
-                console.log('Setting global state');
-                console.log(response.data[buttonParams.successActions[i].dataField]);
+                console.log('Setting global state: ' + response.data[buttonParams.successActions[i].dataField]);
                 updateGlobalState(buttonParams.successActions[i].id, response.data[buttonParams.successActions[i].dataField]);
                 break;
               case 'setState':
