@@ -30,7 +30,7 @@ export default class WebsocketClient
     // Establish connection
     if(WebsocketClient.#instance.#client === null)
     {
-      WebsocketClient.LogMsg('instantiated');
+      WebsocketClient.LogMsg('[websocket] instantiated');
       WebsocketClient.#instance.connect();
 
       // We will send this on all messages so we can be identified
@@ -58,14 +58,16 @@ export default class WebsocketClient
   {
     if(WebsocketClient.#instance.#dbgMode)
     {
-      console.log('\t\tClient.<Websocket> ' + msg);
+      console.log('\t\t[websocket] Client.<Websocket> ' + msg);
     }
   }
 
   connect()
   {
-    WebsocketClient.LogMsg('creating new connection');
-    WebsocketClient.#instance.#client = new WebSocket('wss' + AppJson.backendUrl.replace('https', ''));
+    let url = 'wss' + AppJson.backendUrl.replace('https', '')
+    // let url = 'ws' + AppJson.backendUrl.replace('http', '')
+    WebsocketClient.LogMsg('[websocket] creating new connection url: ' + url);
+    WebsocketClient.#instance.#client = new WebSocket(url);
 
     // Setup message handlers
     WebsocketClient.#instance.#client.onopen = WebsocketClient.#instance.onOpen;
@@ -79,12 +81,12 @@ export default class WebsocketClient
   {
     if(!apiToken)
     {
-      WebsocketClient.LogMsg('closing connection');
+      WebsocketClient.LogMsg('[websocket] closing connection');
       WebsocketClient.#instance.#client.close();
     }
     if(apiToken !== this.apiToken)
     {
-      WebsocketClient.LogMsg('updating API token: ' + apiToken);
+      WebsocketClient.LogMsg('[websocket] updating API token: ' + apiToken);
       WebsocketClient.#instance.apiToken = apiToken;
       const msg = WebsocketClient.#instance.#idMsg;
       msg.type = 'token';
@@ -96,7 +98,7 @@ export default class WebsocketClient
       }
       else
       {
-        WebsocketClient.LogMsg('connection not open: ' + WebsocketClient.#instance.#client.OPEN);
+        WebsocketClient.LogMsg('[websocket] connection not open: ' + WebsocketClient.#instance.#client.OPEN);
         // Try to reconnect 3 times max
         if(this.#connectionAttempt < 3)
         {
@@ -106,7 +108,7 @@ export default class WebsocketClient
         }
         else
         {
-          WebsocketClient.LogMsg('max connection attempts reached. Goodbye.');
+          WebsocketClient.LogMsg('[websocket] max connection attempts reached. Goodbye.');
         }
       }
     }
@@ -117,7 +119,7 @@ export default class WebsocketClient
   // MARK: Message handlers
   onOpen = () =>
   {
-    WebsocketClient.LogMsg('onOpen()');
+    WebsocketClient.LogMsg('[websocket] onOpen()');
 
     // Tell the server who we are
     const msg = WebsocketClient.#instance.#idMsg;
@@ -128,7 +130,7 @@ export default class WebsocketClient
     // Kick off heart beat ping loop
     WebsocketClient.#instance.#pingTimeout = setTimeout( () =>
     {
-      WebsocketClient.LogMsg('pingTimeout()');
+      WebsocketClient.LogMsg('[websocket] pingTimeout()');
       WebsocketClient.#instance.#client.close();
 
       // Reconnect
@@ -138,7 +140,7 @@ export default class WebsocketClient
 
   onMessage = (message) =>
   {
-    console.log('\t\tClient.<Websocket>onMessage(' + message.data + ')');
+    console.log('\t\t[websocket] Client.<Websocket>onMessage(' + message.data + ')');
     const msg = JSON.parse(message.data);
 
     // Keeping connection alive
@@ -161,12 +163,12 @@ export default class WebsocketClient
 
   onError = (err) =>
   {
-    WebsocketClient.LogMsg('onError(' + JSON.stringify(err, ['message', 'arguments', 'type', 'name']) + ')');
+    WebsocketClient.LogMsg('[websocket] onError(' + JSON.stringify(err, ['message', 'arguments', 'type', 'name']) + ')');
   }
 
   onClose = (evt) =>
   {
-    WebsocketClient.LogMsg('onClose(' + JSON.stringify(evt) + ')');
+    WebsocketClient.LogMsg('[websocket] onClose(' + JSON.stringify(evt) + ')');
     clearTimeout(WebsocketClient.#instance.#pingTimeout);
   }
 
@@ -188,7 +190,7 @@ export default class WebsocketClient
 
     this.#pingTimeout = setTimeout(() =>
     {
-      WebsocketClient.LogMsg('pingTimeout()');
+      WebsocketClient.LogMsg('[websocket] pingTimeout()');
       this.#client.close();
     }, 8000 + 5000);
   }

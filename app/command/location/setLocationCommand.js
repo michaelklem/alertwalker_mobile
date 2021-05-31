@@ -1,4 +1,3 @@
-import ApiRequest from '../../helper/ApiRequest';
 import { Command } from '..';
 
 export async function SetLocationCommand({ newLocation, updateMasterState, dataVersion, type })

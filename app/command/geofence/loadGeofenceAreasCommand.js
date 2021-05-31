@@ -11,6 +11,8 @@ export async function LoadGeofenceAreasCommand({ updateMasterState, dataVersion 
     {
       var d = new Date();
       d.setHours(d.getHours() - 2);
+
+      console.log('[LoadGeofenceAreasCommand.execute] sendRequest...');
       let response = await ApiRequest.sendRequest("post",
       {
         model: 'geofencearea',
@@ -23,7 +25,7 @@ export async function LoadGeofenceAreasCommand({ updateMasterState, dataVersion 
         }
       },
       'data/query');
-      console.log(response.data);
+      console.log('[LoadGeofenceAreasCommand.execute] response.data: ' + JSON.stringify(response.data));
 
       if(response.data.error !== null)
       {

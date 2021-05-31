@@ -50,7 +50,7 @@ class ApiRequest
 			if(response.data.token && response.data.token !== token)
 			{
 				await AsyncStorage.setItem('token', response.data.token);
-				console.log('ApiRequest.sendRequest() updated token');
+				console.log('ApiRequest.sendRequest() updated token: ' + response.data.token);
 			}
 
 			// TODO: Check if token returned, and if different than token we sent in, update our end

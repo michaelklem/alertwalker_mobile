@@ -12,8 +12,9 @@ export async function LoadFilesCommand(updateMasterState, params, useRemoteStora
       if(useRemoteStorage)
       {
         updateMasterState ? updateMasterState({ isLoading: true }) : '';
+        console.log('\t\t LoadFilesCommand.sendRequest...');
         let response = await ApiRequest.sendRequest("post", params, 'data/query');
-        console.log(response.data);
+        console.log('\t\t LoadFilesCommand.sendRequest response: ' + JSON.stringify(response.data));
 
         if(response.data.error !== null)
         {

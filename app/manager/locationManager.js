@@ -94,6 +94,7 @@ export default class LocationManager
       BackgroundGeolocation.on('location', async(location) =>
       {
         const locationData = this.#dataMgr.getData('location');
+        console.log('   BackgroundGeolocation init locationData: ' + JSON.stringify(locationData) )
         
         // check for valid data.
         if (locationData === {} || typeof locationData.userLocation === 'undefined' ) return

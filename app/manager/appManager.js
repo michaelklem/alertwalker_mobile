@@ -571,7 +571,7 @@ export default class AppManager
         //console.log(params);
         let response = await ApiRequest.sendRequest("post", params, buttonParams.route);
 
-        //console.log(response.data);
+        console.log('[appManager.btnOnSubmit] response.data" ' + response.data);
         //console.log(buttonParams.successActions);
 
         // Success

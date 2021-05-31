@@ -42,8 +42,9 @@ export async function AddGeofenceAreaCommand({  updateMasterState,
 
     try
     {
+      console.log('\t\t AddGeofenceAreaCommand.sendRequest ...');
       let response = await ApiRequest.sendRequest("post", createFormData, 'data/create');
-      console.log(response.data);
+      console.log('\t\t AddGeofenceAreaCommand.sendRequest response: ' + JSON.stringify(response.data));
 
       if(response.data.error !== null)
       {
