@@ -126,16 +126,8 @@ const Layout4 = ({  user,
 
         <Button 
           title='Save'
-          titleStyle={{
-              color: "white",
-              fontSize: (Math.round(Dimensions.get('window').height) * 0.019), // 16 on pixel 4 xl
-          }}
           buttonStyle={{
-            borderRadius: 6,
-            borderWidth:1,
             backgroundColor: 'green',
-            borderColor: 'darkgreen',
-            height:34,
           }}
         />
         }
