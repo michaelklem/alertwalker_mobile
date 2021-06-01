@@ -28,7 +28,7 @@ export default class Api extends Component
       isLoading: false
     };
 
-    console.log('API props: ' + props.route.params);
+    console.log('API props: ' + JSON.stringify(props.route.params) );
 
     // Get components on page
     this._manager = AppManager.GetInstance();
@@ -49,11 +49,11 @@ export default class Api extends Component
       source: source,
       code: code
     };
-    console.log('[API.oauthConvert] calling API' );
+    console.log('[API.oauthConvert] calling API oauth/convert' );
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/convert');
-    console.log('[API.oauthConvert] response:' + response.data);
+    console.log('[API.oauthConvert] response:' + JSON.stringify(response.data) );
     if(response.data.error !== null)
     {
       this.setState({ isLoading: false });

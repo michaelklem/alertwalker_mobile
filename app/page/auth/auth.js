@@ -180,13 +180,13 @@ export default class Auth extends Component
       isSimulator: DeviceInfo.isEmulator()
     };
 
-    console.log( `[Auth.thirdPartyLogin] calling API`);
+    console.log( `[Auth.thirdPartyLogin] calling API with params ${JSON.stringify(params)}`);
 
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/login');
 
-    console.log( `[Auth.thirdPartyLogin] response.data: ${response.data}`);
+    console.log( `[Auth.thirdPartyLogin] response.data: ${JSON.stringify(response.data)}`);
 
     if(response.data.error !== null)
     {

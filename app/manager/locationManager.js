@@ -42,6 +42,16 @@ export default class LocationManager
     return LocationManager.singleton;
   }
 
+  distance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;    // Math.PI / 180
+    var c = Math.cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+            c(lat1 * p) * c(lat2 * p) * 
+            (1 - c((lon2 - lon1) * p))/2;
+
+    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+  }
+
   async init(token)
   {
     const httpHeaders =
@@ -99,6 +109,9 @@ export default class LocationManager
         // check for valid data.
         if (locationData === {} || typeof locationData.userLocation === 'undefined' ) return
 
+        let d = LocationManager.singleton.distance(locationData.userLocation.latitude, locationData.userLocation.longitude, location.latitude, location.longitude)
+        console.log('xxxx calc distance: ' + d)
+        
         if( location.latitude !== locationData.userLocation.latitude ||
             location.longitude !== locationData.userLocation.longitude)
         {

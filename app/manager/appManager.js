@@ -71,7 +71,7 @@ export default class AppManager
 
     async init(cookies)
     {
-      console.log('AppManager.init()');
+      console.log('AppManager.init() calling API site/init');
   		try
   		{
   			// Get users
@@ -82,7 +82,7 @@ export default class AppManager
           return false;
   			}
 
-        console.log('AppManager.init response: ' + response.data);
+        console.log('AppManager.init response: ' + JSON.stringify(response.data) );
 
   			var componentMap = new Map();
         var fields = null;

@@ -49,7 +49,7 @@ export default class LoginContainer extends Component
 
   login = async (updateParams) =>
   {
-    console.log(updateParams);
+    console.log('[loginContainer.login] updateParams: ' + JSON.stringify(updateParams ));
 
     if(updateParams.source === 'google')
     {
@@ -57,9 +57,12 @@ export default class LoginContainer extends Component
       params.cb = () =>
       {
         // Clear source
+        console.log('[loginContainer.login] in params cb ');
         this.props.updateFormInput('source', '');
         this.setState({ source: '' });
       };
+
+      console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
       await this.props.login(params);
     }
     else

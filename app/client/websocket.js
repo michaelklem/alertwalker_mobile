@@ -1,5 +1,6 @@
 import AppJson from '../../app.json';
 import { DataManager, NotificationManager } from '../manager';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class WebsocketClient
 {
@@ -79,6 +80,8 @@ export default class WebsocketClient
   // MARK: Token related
   validateToken(apiToken)
   {
+    console.log('[WebSocket.validateToken] called with token: ' + this.apiToken + ' and : ' + apiToken);
+    
     if(!apiToken)
     {
       WebsocketClient.LogMsg('[websocket] closing connection');
@@ -92,6 +95,12 @@ export default class WebsocketClient
       msg.type = 'token';
       msg.token = apiToken;
       this.apiToken = apiToken;
+
+      // verify that this works correctly
+      // when does it get called
+      console.log('[WebSocket.validateToken] update new token with: ' + apiToken)
+      //await AsyncStorage.setItem('token', apiToken);
+
       if(WebsocketClient.#instance.#client.readyState === WebsocketClient.#instance.#client.OPEN)
       {
         WebsocketClient.#instance.#client.send(JSON.stringify(msg));

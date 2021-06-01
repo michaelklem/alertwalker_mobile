@@ -1,5 +1,6 @@
 {
-  "backendUrl": "https://backend.alertwalker.com/",
+  "backendUrl": "https://alertwalkerlocal.ngrok.io/",
+  "backendUrl2": "https://backend.alertwalker.com/",
   "description": "Alert Walker",
   "displayName": "Alert Walker",
   "name": "CoreMobile",

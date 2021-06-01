@@ -52,6 +52,8 @@ function CustomDrawerContent({  updateGlobalState,
           {
             updateGlobalState('deepLink', '');
             updateGlobalState('user', null);
+            // const userToken = await AsyncStorage.getItem('token');
+            await OauthManager.GetInstance().logout()
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('user');
             updateStack('auth');

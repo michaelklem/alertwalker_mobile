@@ -25,6 +25,7 @@ export default class GoogleLoginButton extends Component
     this._oauthMgr.addListener('GoogleLoginButton',
     (msg) =>
     {
+      // called when used has selected google account to login
       console.log(`[GoogleLoginButton:constructor] msg: ${JSON.stringify(msg)}`);
 
       if(msg.source === 'google' && msg.token !== null)
@@ -38,10 +39,15 @@ export default class GoogleLoginButton extends Component
   getUrl = async() =>
   {
     this.props.updateMasterState({ isLoading: true });
+
+    console.log('[GoogleLoginButton.getUrl] sendRequest...');
+
     const response = await ApiRequest.sendRequest('post',
                                                   {source: 'google'},
                                                   'oauth/auth-url');
-    console.log(response.data);
+
+    console.log('[GoogleLoginButton.getUrl] response.data: ' + JSON.stringify(response.data) );
+
     if(response.data.error !== null)
     {
       this.props.updateMasterState({ isLoading: false });
@@ -55,6 +61,7 @@ export default class GoogleLoginButton extends Component
 
     if(isSupported)
     {
+      console.log('[GoogleLoginButton.getUrl] Linking.canOpenURL: ' + response.data.result );
       await Linking.openURL(response.data.result);
     }
     else

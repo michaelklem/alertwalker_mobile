@@ -155,7 +155,7 @@ export default class App extends Component
 
     if(user)
     {
-      console.log('User:' + user);
+      console.log('User:' + JSON.stringify(user) );
       // Broke this out so we don't have to wait for it
       //await this._dataManager.execute(await new LoadCalendarEventsCommand());
       LocationManager.GetInstanceA(userToken);

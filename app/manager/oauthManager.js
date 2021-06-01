@@ -49,16 +49,19 @@ export default class OauthManager
   */
   getOauthTokens()
   {
+    console.log(`[oauthManager:getOauthToken] tokens: ${ JSON.stringify(this.#_oauthTokens) }`);
     return this.#_oauthTokens;
   }
 
   setOauthTokens(tokens)
   {
+    console.log(`[oauthManager:setOauthToken] tokens: ${ JSON.stringify(tokens) }`);
     this.#_oauthTokens = tokens;
   }
 
   addOauthToken(source, token)
   {
+    console.log(`[oauthManager:addOauthToken] source: ${source} token: ${token}`);
     this.#_oauthTokens[source] = token;
     this.notifyListeners({ source: source.replace('Token', ''), token: token });
   }
@@ -139,7 +142,7 @@ export default class OauthManager
 
   async saveToken(params)
   {
-    console.log(`[oauthManager:saveToken] calling API`);
+    console.log(`[oauthManager:saveToken] calling API oauth/save-token with params ${JSON.stringify( params )}`);
 
     const response = await ApiRequest.sendRequest('post',
                                                   params,
@@ -154,20 +157,36 @@ export default class OauthManager
       return;
     }
 
+    console.log(`[oauthManager:saveToken] setting token: ${response.data.result} for source: ${params.source}`);
     this.#_oauthTokens[params.source + 'Token'] = response.data.result;
 
     this.notifyListeners({ source: 'facebook', token: response.data.result });
   }
 
+  async logout() {
+    const keys = Object.keys(this.#_oauthTokens);
+    console.log(`[oauthManager:logout] keys: ${keys}`);
+    for(let i = 0; i < keys.length; i++)
+    {
+      if(this.#_oauthTokens[keys[i]] !== null)
+      {
+        let token = this.#_oauthTokens[keys[i]]
+        console.log(`[oauthManager:logout] removing token index: ${i} : ${JSON.stringify(token)} from source: ${keys[i]}`);
+        // await this.removeToken( token )
+        await this.removeToken( {source: keys[i]} )
+      }
+    }
+  }
+  
   async removeToken(params)
   {
-    console.log(`[oauthManager:removeToken] calling API`);
+    console.log(`[oauthManager:removeToken] calling API oauth/remove-token with params ${JSON.stringify(params)}`);
 
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/remove-token');
 
-    console.log(`[oauthManager:removeToken] API result: ${response.data}`);
+    console.log(`[oauthManager:removeToken] API result: ${ JSON.stringify(response.data) }`);
 
     if(response.data.error !== null)
     {
@@ -176,6 +195,7 @@ export default class OauthManager
       return false;
     }
 
+    console.log(`[oauthManager:saveToken] removing token for source: ${params.source}`);
     this.#_oauthTokens[params.source + 'Token'] = null;
 
     if(params.source === 'facebook')
@@ -196,26 +216,37 @@ export default class OauthManager
   // MARK: - Listener related
   addListener(id, cb)
   {
+    console.log('[OauthManager.addListener] listenerId:' + id);
     this.#_listeners.push({ id: id, cb: cb });
+    console.log('[OauthManager.addListener] _listeners size:' + this.#_listeners.length);
   }
 
   removeListener(listenerId)
   {
+    console.log('[OauthManager.removeListener] listenerId:' + listenerId);
     for(let i = 0; i < this.#_listeners.length; i++)
     {
       if(this.#_listeners[i].id === listenerId)
       {
+        console.log('[OauthManager.removeListener] listenerId:' + listenerId + ' removed');
         this.#_listeners.splice(i, 1);
         break;
       }
     }
   }
 
+  removeListeners() {
+    for(let i = 0; i < this.#_listeners.length; i++)
+    {
+      this.#_listeners.splice(i, 1);
+    }  
+  }
+  
   notifyListeners(message)
   {
     for(let i = 0; i < this.#_listeners.length; i++)
     {
-      console.log('OauthManager.notifyListeners(' + this.#_listeners[i].id + ')');
+      console.log('[OauthManager.notifyListeners] Notifying listener #' + i + '(' + this.#_listeners[i].id + ')');
       this.#_listeners[i].cb(message);
     }
   }

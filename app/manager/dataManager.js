@@ -79,6 +79,7 @@ export default class DataManager
 
   getData(name)
   {
+    console.log('[DataManager.getData] name: ' + name)
     return {...this.#dataStore.get(name)};
   }
 
