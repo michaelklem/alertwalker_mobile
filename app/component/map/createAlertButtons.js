@@ -37,7 +37,9 @@ const CreateAlertButtons = ({ updateMasterState,
                 size={h20}
                 color={Colors.black}
               />
-              <Text>
+              <Text
+                style={{fontSize:h10}}
+                >
                 {'Show Location'}      
               </Text>
             </View>
@@ -88,7 +90,9 @@ const CreateAlertButtons = ({ updateMasterState,
                 size={h20}
                 color={Colors.black}
               />
-              <Text>
+              <Text
+                style={{fontSize:h10}}
+                >
                 {'Camera'}      
               </Text>
             </View>
@@ -141,7 +145,9 @@ const CreateAlertButtons = ({ updateMasterState,
                 size={h20}
                 color={Colors.black}
               />
-              <Text>
+              <Text
+                style={{fontSize:h10}}
+                >
                 {'Photo Library'}      
               </Text>
             </View>
@@ -159,10 +165,13 @@ const CreateAlertButtons = ({ updateMasterState,
 
 const h100 = Math.round(Dimensions.get('window').height * 0.1282);
 const h64 = Math.round(Dimensions.get('window').height * 0.075);
+const h60 = Math.round(Dimensions.get('window').height * 0.070);
 const h50 = Math.round(Dimensions.get('window').height * 0.064);
 const h22 = Math.round(Dimensions.get('window').height * 0.0282);
 const h20 = Math.round(Dimensions.get('window').height * 0.0256);
 const h16 = Math.round(Dimensions.get('window').height * 0.0205);
+const h10 = Math.round(Dimensions.get('window').height * 0.013);
+const h101 = Math.round(Dimensions.get('window').height * 0.01);
 
 const styles = StyleSheet.create({
 
@@ -171,12 +180,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft:4,
     paddingRight:4,
-    marginBottom:6
+    marginBottom:10
   },
 
 
   container: {
-    height:h64,
+    height:h60,
     width:'30%',
   },
   button: {
