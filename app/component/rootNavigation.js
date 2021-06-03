@@ -4,6 +4,7 @@ export const NavigationRef = React.createRef();
 
 export function navigate(name, params)
 {
+  console.log('[RootNavigation.navigate] name: ' + name + '  params: ' + JSON.stringify(params))
   NavigationRef.current?.navigate(name, params);
 }
 

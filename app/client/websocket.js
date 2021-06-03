@@ -63,6 +63,12 @@ export default class WebsocketClient
     }
   }
 
+  close() {
+    console.log('[Websocket.close] called')
+    WebsocketClient.#instance.#client.close();
+    clearTimeout(this.#pingTimeout);
+  }
+  
   connect()
   {
     let url = 'wss' + AppJson.backendUrl.replace('https', '')
@@ -99,7 +105,6 @@ export default class WebsocketClient
       // verify that this works correctly
       // when does it get called
       console.log('[WebSocket.validateToken] update new token with: ' + apiToken)
-      //await AsyncStorage.setItem('token', apiToken);
 
       if(WebsocketClient.#instance.#client.readyState === WebsocketClient.#instance.#client.OPEN)
       {
@@ -177,8 +182,9 @@ export default class WebsocketClient
 
   onClose = (evt) =>
   {
+    console.log('[Websocket.cleanup] called')
     WebsocketClient.LogMsg('[websocket] onClose(' + JSON.stringify(evt) + ')');
-    clearTimeout(WebsocketClient.#instance.#pingTimeout);
+    clearTimeout(this.#pingTimeout);
   }
 
 

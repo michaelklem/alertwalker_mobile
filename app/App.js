@@ -241,7 +241,7 @@ export default class App extends Component
   // MARK: - Push
   onPushRegister = async(token) =>
   {
-    console.log('App.onPushRegister() token: ' + token);
+    console.log('App.onPushRegister() token: ' + JSON.stringify(token) );
 
     // If guest access isn't allowed and we're not registered yet,
     // don't do anything
@@ -345,7 +345,7 @@ export default class App extends Component
   handleOpenURL = (evt) =>
   {
     const route = evt.url.replace(/.*?:\/\//g, '');
-    console.log('Route: ' + route);
+    console.log('[App.handleOpenURL] Route: ' + route);
     this.setState({ deepLink: route });
   }
 
@@ -360,9 +360,13 @@ export default class App extends Component
         let qs = this.state.deepLink.substr(this.state.deepLink.indexOf('?') + 1);
         let code = getVariableValue(qs, 'code');
         let source = getVariableValue(qs, 'source');
+
+        console.log('[App.componentDidUpdate] this._activeScreenRef.current: ' + this._activeScreenRef.current)
+        console.log('[App.componentDidUpdate] code: ' + code)
+        console.log('[App.componentDidUpdate] source: ' + source)
         RootNavigation.navigate('api',
         {
-          onGoBack: () => this._activeScreenRef.current.onGoBack(),
+          // onGoBack: () => this._activeScreenRef.current.onGoBack(),
           code: code,
           source: source
         });
@@ -393,7 +397,7 @@ export default class App extends Component
                          activeScreenRef={this._activeScreenRef}
                          headerBtnPressed={() =>
                          {
-                           console.log(this._activeScreenRef.current);
+                           console.log('[App.render] this._activeScreenRef.current: ' + this._activeScreenRef.current);
                            if(this._activeScreenRef.current && this._activeScreenRef.current.headerBtnPressed)
                            {
                              this._activeScreenRef.current.headerBtnPressed();

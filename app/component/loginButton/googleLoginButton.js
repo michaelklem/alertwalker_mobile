@@ -71,23 +71,25 @@ export default class GoogleLoginButton extends Component
   };
 
   render() {
-    //console.log(this.props.redirectUrl);
     return (
-      <TouchableOpacity
-        key={this.props.formInput.name}
-        style={styles.container}
-        onPress={async() => this.props.isLinked ? console.log("Already linked") : this.getUrl()}
-      >
-        <Image
-          style={styles.image}
-          source={Images.googleIcon}
-        />
-        <Text
-          style={styles.buttonText}
-          adjustsFontSizeToFit={true}
-          numberOfLines={1}
-        >{'Sign in with Google'}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          key={this.props.formInput.name}
+          style={styles.container}
+          onPress={async() => {
+            this.props.isLinked ? console.log("Already linked") : this.getUrl()
+            }
+          }
+        >
+          <Image
+            style={styles.image}
+            source={Images.googleIcon}
+          />
+          <Text
+            style={styles.buttonText}
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
+          >{'Sign in with Google'}</Text>
+        </TouchableOpacity>
     );
   }
 };

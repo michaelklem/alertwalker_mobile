@@ -67,7 +67,7 @@ export default class LocationManager
       })}`,
       'x-device-service-version': `${parseInt(Platform.Version)}`
     };
-    console.log(httpHeaders);
+    console.log('[LocationManager.init] headers: ' + httpHeaders);
     try
     {
       BackgroundGeolocation.configure(
@@ -122,17 +122,6 @@ export default class LocationManager
             type: 'user',
           }));
         }
-        //console.log(location);
-        // handle your locations here
-        // to perform long running operation on iOS
-        // you need to create background task
-        /*BackgroundGeolocation.startTask(taskKey =>
-        {
-          // execute long running task
-          // eg. ajax post location
-          // IMPORTANT: task has to be ended by endTask
-          BackgroundGeolocation.endTask(taskKey);
-        });*/
       });
 
       BackgroundGeolocation.on('stationary', (stationaryLocation) => {

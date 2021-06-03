@@ -30,7 +30,12 @@ function CustomDrawerContent({  updateGlobalState,
     outputRange: [-100, 0],
   });
 
-  console.log(rest);
+  console.log('[CustomDrawerContent.render] ' + rest);
+
+  let emailAddress = (OauthManager.GetInstance().getOauthTokens() !== null) ? 
+    OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email
+    :
+    ''
 
   return (
     <DrawerContentScrollView {...rest}>
@@ -41,7 +46,7 @@ function CustomDrawerContent({  updateGlobalState,
             style={styles.emailLabel}
             adjustsFontSizeToFit={true}
             numberOfLines={1}
-          >{`${OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email}`}</Text>
+          >{`${emailAddress}`}</Text>
           <Text style={styles.versionLabel}>{`version ${AppJson.version}`}</Text>
         </View>
 
@@ -50,13 +55,14 @@ function CustomDrawerContent({  updateGlobalState,
           label="Logout"
           onPress={async() =>
           {
+            console.log('XXXX user logging out...')
             updateGlobalState('deepLink', '');
             updateGlobalState('user', null);
-            // const userToken = await AsyncStorage.getItem('token');
             await OauthManager.GetInstance().logout()
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('user');
             updateStack('auth');
+            console.log('XXXX user logging out done')
           }}
         />
       </Animated.View>

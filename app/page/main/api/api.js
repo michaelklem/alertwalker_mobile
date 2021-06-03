@@ -54,6 +54,8 @@ export default class Api extends Component
                                                   params,
                                                   'oauth/convert');
     console.log('[API.oauthConvert] response:' + JSON.stringify(response.data) );
+  
+
     if(response.data.error !== null)
     {
       this.setState({ isLoading: false });
@@ -65,7 +67,8 @@ export default class Api extends Component
 
     // Need to tell GoogleLoginButton that we are done
     if(response.data.results.source === 'google')
-    {
+    { 
+      console.log('[API.oauthConvert] calling google listeners');
       OauthManager.GetInstance().notifyListeners(response.data.results);
     }
 
