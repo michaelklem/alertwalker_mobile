@@ -115,12 +115,13 @@ export default class LoginContainer extends Component
 
         let status = await auth().signInWithCredential(credential);
     console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
+    console.log( `[Auth.thirdPartyLogin] firebase auth status2 ${JSON.stringify(status.user.providerData)}`);
 
     // need to set source to google
     // need to send this to the server here
       const params = {
         accessToken: credential,
-        externalId: status.user.providerData.uid,
+        externalId: status.user.providerData[0].uid,
         email:status.user.email,
         source: 'google',
         // source: status.user.providerData.providerId,  // should work with this too
