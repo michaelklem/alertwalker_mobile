@@ -28,11 +28,11 @@ export default class GoogleLoginButton extends Component
       // called when used has selected google account to login
       console.log(`[GoogleLoginButton:constructor] msg: ${JSON.stringify(msg)}`);
 
-      if(msg.source === 'google' && msg.token !== null)
-      {
-        console.log(`[GoogleLoginButton:constructor] google token: ${msg.token}`);
-        this.props.login(msg);
-      }
+      // if(msg.source === 'google' && msg.token !== null)
+      // {
+      //   console.log(`[GoogleLoginButton:constructor] google token: ${msg.token}`);
+      //   this.props.login(msg);
+      // }
     });
   }
 
@@ -76,7 +76,9 @@ export default class GoogleLoginButton extends Component
           key={this.props.formInput.name}
           style={styles.container}
           onPress={async() => {
-            this.props.isLinked ? console.log("Already linked") : this.getUrl()
+            // this.props.isLinked ? console.log("Already linked") : this.getUrl()
+            console.log('[GoogleLoginButton.loginButton] pressed')
+            await this.props.login();
             }
           }
         >

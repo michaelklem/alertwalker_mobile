@@ -11,6 +11,12 @@ import {  AppleLoginButton,
 import { MyButton } from '../myButton';
 import { ImageButton } from '../imageButton';
 import { AppText, Colors, Images, Styles } from '../../constant';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 export default class LoginContainer extends Component
 {
@@ -26,8 +32,11 @@ export default class LoginContainer extends Component
       firstName: '',
       lastName: '',
       password: '',
+      loggedIn: false,
+      user: []
     };
   }
+
 
   componentDidMount()
   {
@@ -45,9 +54,100 @@ export default class LoginContainer extends Component
     {
       this.props.updateFormInput('source', enabledMethods[0].type);
     }
+
+
+    console.log('[loginContainer.componentDidMount] configuring GoogleSignIn')
+    GoogleSignin.configure({
+      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId:'936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    }); 
+
+    const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
+
   }
 
+  signOut = async () => {
+    try {
+      console.log('signout called')
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      auth()
+        .signOut()
+        .then(
+          // () => alert('Your are signed out!')
+          );
+      this.setState({loggedIn:false});
+      // setuserInfo([]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  onAuthStateChanged = (user) => {
+    console.log('onAuthStateChanged called with user: ' + JSON.stringify(user))
+    this.setState({user:user});
+    if (user) this.setState({loggedIn:true});
+  }
+
+  //666
   login = async (updateParams) =>
+  {
+    //await this.signOut() // for testing
+    console.log('[loginContainer.login] ' );
+
+    try {
+        await GoogleSignin.hasPlayServices();
+        const {accessToken, idToken} = await GoogleSignin.signIn();
+        console.log('[loginContainer.login] accessToken: ' + JSON.stringify(accessToken))
+        console.log('[loginContainer.login] idToken: ' + JSON.stringify(idToken))
+
+        const credential = auth.GoogleAuthProvider.credential(
+          idToken,
+          accessToken,
+        );
+
+        console.log('ZZZZZZ credential: ' + JSON.stringify(credential))
+
+        await auth().signInWithCredential(credential);
+      } catch (error) {
+        console.log('[loginContainer.login] error: ' + error)
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          // user cancelled the login flow
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          // operation (e.g. sign in) is in progress already
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          // play services not available or outdated
+        } else {
+          // some other error happened
+        }
+      }
+      
+    // if(updateParams.source === 'google')
+    // {
+    //   const params = {...updateParams};
+    //   params.cb = () =>
+    //   {
+    //     // Clear source
+    //     console.log('[loginContainer.login] in params cb ');
+    //     this.props.updateFormInput('source', '');
+    //     this.setState({ source: '' });
+    //   };
+
+    //   console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
+    //   await this.props.login(params);
+    // }
+    // else
+    // {
+    //   this.setState(updateParams);
+    //   if(updateParams.source)
+    //   {
+    //     this.props.updateFormInput('source', updateParams.source);
+    //   }
+    // }
+  }
+
+  login_old = async (updateParams) =>
   {
     console.log('[loginContainer.login] updateParams: ' + JSON.stringify(updateParams ));
 
@@ -74,6 +174,10 @@ export default class LoginContainer extends Component
       }
     }
   }
+
+
+
+
 
   formInput = (formInput) =>
   {
@@ -116,7 +220,7 @@ export default class LoginContainer extends Component
           {
             this.setState({ [id]: val });
           }}
-          value={this.state[formInput.name]}
+          value={this.setState[formInput.name]}
           label={label}
           autoCompleteType={formInput.name}
           textInputStyle={1}

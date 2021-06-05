@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "936513732404-scpv9mrna0aedttju8rrjp9574ojvnaj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "software.bitbybit.alertwalker",
+            "certificate_hash": "e688c70f1d234d05d656b93da1079828dfeacbd8"
+          }
+        },
+        {
           "client_id": "936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com",
           "client_type": 3
         }
