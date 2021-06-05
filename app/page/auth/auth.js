@@ -182,6 +182,7 @@ export default class Auth extends Component
 
     console.log( `[Auth.thirdPartyLogin] calling API with params ${JSON.stringify(params)}`);
 
+    // calls server oauth-controller.login method
     const response = await ApiRequest.sendRequest('post',
                                                   params,
                                                   'oauth/login');

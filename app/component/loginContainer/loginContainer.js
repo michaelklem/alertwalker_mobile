@@ -109,7 +109,9 @@ export default class LoginContainer extends Component
 
         console.log('ZZZZZZ credential: ' + JSON.stringify(credential))
 
-        await auth().signInWithCredential(credential);
+
+        let status = await auth().signInWithCredential(credential);
+    console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
       } catch (error) {
         console.log('[loginContainer.login] error: ' + error)
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
