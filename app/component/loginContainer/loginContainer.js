@@ -91,10 +91,13 @@ export default class LoginContainer extends Component
   }
 
   //666
+  // This function is only used by the google login button
+  // if we use other third party logins, we need to add specific names for them.
+  // can be refactored to be cleaner too.
   login = async (updateParams) =>
   {
     //await this.signOut() // for testing
-    console.log('[loginContainer.login] ' );
+    console.log('[loginContainer.login] updateParams: ' + JSON.stringify(updateParams) );
 
     try {
         await GoogleSignin.hasPlayServices();
@@ -112,6 +115,34 @@ export default class LoginContainer extends Component
 
         let status = await auth().signInWithCredential(credential);
     console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
+
+    // need to set source to google
+    // need to send this to the server here
+      const params = {
+        accessToken: credential,
+        externalId: status.user.providerData.uid,
+        email:status.user.email,
+        source: 'google',
+        // source: status.user.providerData.providerId,  // should work with this too
+        firstName: 'Google', // should not need this
+        lastName: 'User', // should not need this
+        photo: '',
+        password:'',
+        url:''
+      };
+      params.cb = () =>
+      {
+        // Clear source
+        console.log('[loginContainer.login] in params cb ');
+        this.props.updateFormInput('source', '');
+        this.setState({ source: '' });
+      };
+
+      console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
+      // ends up calling thirdPartyLogin in auth.js
+      // thirdPartyLogin = async({ accessToken, externalId, email, source, firstName, lastName, photo, password, url, cb }) =>
+      await this.props.login(params);
+
       } catch (error) {
         console.log('[loginContainer.login] error: ' + error)
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
