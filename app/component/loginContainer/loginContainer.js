@@ -37,7 +37,10 @@ export default class LoginContainer extends Component
     };
   }
 
-
+  componentWillUnmount() {
+    console.log('[loginContainer.willunmount]')
+  }
+  
   componentDidMount()
   {
     // If only one method enabled just display that
@@ -63,7 +66,7 @@ export default class LoginContainer extends Component
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     }); 
 
-    const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
+    // const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
 
   }
 
@@ -77,6 +80,7 @@ export default class LoginContainer extends Component
         .then(
           // () => alert('Your are signed out!')
           );
+      this.setState({user:[]});
       this.setState({loggedIn:false});
       // setuserInfo([]);
     } catch (error) {
@@ -94,10 +98,9 @@ export default class LoginContainer extends Component
   // This function is only used by the google login button
   // if we use other third party logins, we need to add specific names for them.
   // can be refactored to be cleaner too.
-  login = async (updateParams) =>
+  login = async () =>
   {
     //await this.signOut() // for testing
-    console.log('[loginContainer.login] updateParams: ' + JSON.stringify(updateParams) );
 
     try {
         await GoogleSignin.hasPlayServices();
@@ -110,75 +113,47 @@ export default class LoginContainer extends Component
           accessToken,
         );
 
-        console.log('ZZZZZZ credential: ' + JSON.stringify(credential))
+        console.log('[loginContainer.login] credential: ' + JSON.stringify(credential))
 
 
         let status = await auth().signInWithCredential(credential);
-    console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
-    console.log( `[Auth.thirdPartyLogin] firebase auth status2 ${JSON.stringify(status.user.providerData)}`);
+        console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
+        console.log( `[Auth.thirdPartyLogin] firebase auth status2 ${JSON.stringify(status.user.providerData)}`);
 
-    // need to set source to google
-    // need to send this to the server here
-      const params = {
-        accessToken: credential,
-        externalId: status.user.providerData[0].uid,
-        email:status.user.email,
-        source: 'google',
-        // source: status.user.providerData.providerId,  // should work with this too
-        firstName: 'Google', // should not need this
-        lastName: 'User', // should not need this
-        photo: '',
-        password:'',
-        url:''
-      };
-      params.cb = () =>
-      {
-        // Clear source
-        console.log('[loginContainer.login] in params cb ');
-        this.props.updateFormInput('source', '');
-        this.setState({ source: '' });
-      };
+        const params = {
+          accessToken: credential,
+          externalId: status.user.providerData[0].uid,
+          email:status.user.email,
+          source: 'google',
+          //source: status.user.providerData.providerId,  // should work with this too
+          firstName: 'Google', // should not need this
+          lastName: 'User', // should not need this
+          photo: '',
+          password:'',
+          url:''
+        };
+        params.cb = () =>
+        {
+          // Clear source
+          console.log('[loginContainer.login] in params cb ');
+          this.props.updateFormInput('source', '');
+          this.setState({ source: '' });
+        };
 
-      console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
-      // ends up calling thirdPartyLogin in auth.js
-      // thirdPartyLogin = async({ accessToken, externalId, email, source, firstName, lastName, photo, password, url, cb }) =>
-      await this.props.login(params);
-
-      } catch (error) {
-        console.log('[loginContainer.login] error: ' + error)
-        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-          // user cancelled the login flow
-        } else if (error.code === statusCodes.IN_PROGRESS) {
-          // operation (e.g. sign in) is in progress already
-        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-          // play services not available or outdated
-        } else {
-          // some other error happened
-        }
+        console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
+        await this.props.login(params);
+    } catch (error) {
+      console.log('[loginContainer.login] error: ' + error)
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
       }
-      
-    // if(updateParams.source === 'google')
-    // {
-    //   const params = {...updateParams};
-    //   params.cb = () =>
-    //   {
-    //     // Clear source
-    //     console.log('[loginContainer.login] in params cb ');
-    //     this.props.updateFormInput('source', '');
-    //     this.setState({ source: '' });
-    //   };
-
-    //   console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
-    //   await this.props.login(params);
-    // }
-    // else
-    // {
-    //   this.setState(updateParams);
-    //   if(updateParams.source)
-    //   {
-    //     this.props.updateFormInput('source', updateParams.source);
-    //   }
-    // }
+    }
   }
 
   login_old = async (updateParams) =>

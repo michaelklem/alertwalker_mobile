@@ -241,7 +241,7 @@ export default class App extends Component
   // MARK: - Push
   onPushRegister = async(token) =>
   {
-    console.log('App.onPushRegister() token: ' + JSON.stringify(token) );
+    console.log('[App.onPushRegister] token: ' + JSON.stringify(token) );
 
     // If guest access isn't allowed and we're not registered yet,
     // don't do anything
@@ -259,7 +259,7 @@ export default class App extends Component
       let params = { token: token };
       let response = await ApiRequest.sendRequest("post", params, "push/token");
 
-      console.log('App response: ' + response.data);
+      console.log('[App.onPushRegister] response: ' + JSON.stringify(response.data) );
 
       // Success
       if(response.data.error === null)
@@ -269,19 +269,19 @@ export default class App extends Component
       else
       {
         this.setState({ isLoading: false  });
-        this.showAlert('Error', response.data.error);
+        this.showAlert('[App.onPushRegister] Error', response.data.error);
       }
     }
     catch(err)
     {
       this.setState({ isLoading: false  });
-      this.showAlert('Error', 'An error has occurred, please try again or contact support.\nError: 1 ' + err, 'danger');
+      this.showAlert('[App.onPushRegister] Error', 'An error has occurred, please try again or contact support.\nError: 1 ' + err, 'danger');
     }
   }
 
   onPushNotification = (notification) =>
   {
-    console.log('App.onPushNotification() notification: ' + notification);
+    console.log('App.onPushNotification() notification: ' + JSON.stringify(notification) );
     //this.showAlert("Success", "Push notification was received!");
 
     try

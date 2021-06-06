@@ -139,7 +139,6 @@ export default class AppManager
       catch(err)
       {
         console.error('AppManager.init error2: ' + err + '\nStack:\n' + err.stack);
-        console.log(' OauthManager: ' + OauthManager);
         return false;
       }
     }

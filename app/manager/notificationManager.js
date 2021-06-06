@@ -61,7 +61,7 @@ export default class NotificationManager
     }
     catch(err)
     {
-      console.log('NotificationManager.init error: ' + err + '\nError stack: ' + err.stack);
+      console.log('NotificationManager.init error2: ' + err + '\nError stack: ' + err.stack);
       return false;
     }
   }

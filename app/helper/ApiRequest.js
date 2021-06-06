@@ -17,6 +17,7 @@ class ApiRequest
 	static async sendRequest(method, params, path, contentType = 'application/json')
 	{
 		let token = await AsyncStorage.getItem('token');
+		let requestUrl = AppJson.backendUrl + path;
 		if(token === null)
 		{
 			token = "guest";
@@ -26,7 +27,7 @@ class ApiRequest
 			let config =
 			{
 				method: 	method,
-				url:		AppJson.backendUrl + path,
+				url:		requestUrl,
 				headers:
 				{
 					'Content-Type': 		contentType,
@@ -58,7 +59,7 @@ class ApiRequest
 		}
 		catch(err)
 		{
-			console.error(err);
+			console.error('[ApiRequest:sendRequest] url: ' + requestUrl + ' error: ' + err);
 			throw err;
 		}
 	}

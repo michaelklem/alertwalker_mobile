@@ -10,6 +10,12 @@ import CookieManager from '@react-native-community/cookies';
 import ApiRequest from '../helper/ApiRequest';
 import { WebsocketClient } from '../client';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 
 export default class OauthManager
@@ -175,6 +181,16 @@ export default class OauthManager
   }
 
   async logout() {
+
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      await auth()
+        .signOut()
+        .then(
+          console.log('[oauthManager.logout] user is logged out')
+          // () => alert('Your are signed out!')
+          );
+
     const keys = Object.keys(this.#_oauthTokens);
     console.log(`[oauthManager:logout] keys: ${keys}`);
     for(let i = 0; i < keys.length; i++) {
@@ -207,7 +223,7 @@ export default class OauthManager
       return false;
     }
 
-    console.log(`[oauthManager:saveToken] removing token for source: ${params.source}`);
+    console.log(`[oauthManager:removeToken] removing token for source: ${params.source}`);
     this.#_oauthTokens[params.source + 'Token'] = null;
 
     if(params.source === 'facebook')
