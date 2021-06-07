@@ -1,4 +1,4 @@
-package software.bitbybit.alertwalker;
+package com.alertwalker;
 
 import android.app.Application;
 import android.content.Context;

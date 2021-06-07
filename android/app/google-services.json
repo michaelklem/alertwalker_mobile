@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "936513732404",
-    "project_id": "alert-walker",
-    "storage_bucket": "alert-walker.appspot.com"
+    "project_number": "888763880230",
+    "project_id": "alert-walker-dev",
+    "storage_bucket": "alert-walker-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:936513732404:android:d828232c03e32bc226af61",
+        "mobilesdk_app_id": "1:888763880230:android:93bf2ed6c780847b94a7e7",
         "android_client_info": {
-          "package_name": "software.bitbybit.alertwalker"
+          "package_name": "com.alertwalker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "936513732404-scpv9mrna0aedttju8rrjp9574ojvnaj.apps.googleusercontent.com",
+          "client_id": "888763880230-992k90j9dl933ds6gcdmfnb7iag6ml39.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "software.bitbybit.alertwalker",
+            "package_name": "com.alertwalker",
             "certificate_hash": "e688c70f1d234d05d656b93da1079828dfeacbd8"
           }
         },
         {
-          "client_id": "936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com",
+          "client_id": "888763880230-d83okh3eu057qhbr638jric6ho0fjj03.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBvF2vg0s-RRwn07CEkbjW6oLGiIcUs21g"
+          "current_key": "AIzaSyBtovQd8Oyzy3NziBuuqVibVSoRNO4A9uA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com",
+              "client_id": "888763880230-d83okh3eu057qhbr638jric6ho0fjj03.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="software.bitbybit.alertwalker">
+  package="com.alertwalker">
 
     <!-- Push notifications -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -19,21 +19,21 @@
     <!-- Web RTC -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA" android:required="false" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-      android:name="software.bitbybit.alertwalker.MainApplication"
+      android:name="com.alertwalker.MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <activity
-        android:name="software.bitbybit.alertwalker.MainActivity"
+        android:name="com.alertwalker.MainActivity"
         android:label="@string/app_name"
         android:launchMode="singleTask"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -107,14 +107,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
-          <intent-filter>
-              <action android:name="android.intent.action.BOOT_COMPLETED" />
-              <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-              <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-          </intent-filter>
-      </receiver>
 
     </application>
 </manifest>

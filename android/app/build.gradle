@@ -129,11 +129,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "software.bitbybit.alertwalker"
+        applicationId "com.alertwalker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "19.0"
+        versionCode 23
+        versionName "23.0"
         multiDexEnabled true
     }
 
@@ -156,6 +156,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('release.keystore')
+            storePassword 'myheadIsmybag1966'
+            keyAlias 'androidreleasekey'
+            keyPassword 'myheadIsmybag1966'
+        }
     }
     buildTypes {
         debug {
@@ -164,7 +170,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

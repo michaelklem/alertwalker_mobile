@@ -1,4 +1,4 @@
-package software.bitbybit.alertwalker;
+package com.alertwalker;
 
 import com.facebook.react.ReactActivity;
 
