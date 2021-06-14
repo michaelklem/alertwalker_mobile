@@ -62,11 +62,11 @@ export default class LoginContainer extends Component
     console.log('[loginContainer.componentDidMount] configuring GoogleSignIn')
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId:'936513732404-dim4fok8rjskpstvpuseekru5lb2gbvv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      webClientId:'888763880230-d83okh3eu057qhbr638jric6ho0fjj03.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     }); 
 
-    // const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
+   // const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
 
   }
 
@@ -94,7 +94,6 @@ export default class LoginContainer extends Component
     if (user) this.setState({loggedIn:true});
   }
 
-  //666
   // This function is only used by the google login button
   // if we use other third party logins, we need to add specific names for them.
   // can be refactored to be cleaner too.
@@ -103,10 +102,15 @@ export default class LoginContainer extends Component
     //await this.signOut() // for testing
 
     try {
+        // this.props.showAlert("Error","login 1")
+
         await GoogleSignin.hasPlayServices();
+
         const {accessToken, idToken} = await GoogleSignin.signIn();
         console.log('[loginContainer.login] accessToken: ' + JSON.stringify(accessToken))
         console.log('[loginContainer.login] idToken: ' + JSON.stringify(idToken))
+
+        // this.props.showAlert("Error","login 2")
 
         const credential = auth.GoogleAuthProvider.credential(
           idToken,
@@ -115,6 +119,7 @@ export default class LoginContainer extends Component
 
         console.log('[loginContainer.login] credential: ' + JSON.stringify(credential))
 
+        // this.props.showAlert("Error","login 3")
 
         let status = await auth().signInWithCredential(credential);
         console.log( `[Auth.thirdPartyLogin] firebase auth status ${JSON.stringify(status)}`);
@@ -144,6 +149,8 @@ export default class LoginContainer extends Component
         await this.props.login(params);
     } catch (error) {
       console.log('[loginContainer.login] error: ' + error)
+      this.props.showAlert("Error","logging in error: " + error.message)
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {

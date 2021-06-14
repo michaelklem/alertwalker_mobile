@@ -6,6 +6,8 @@ Email: alertwalkerapp@gmail.com
 
 Firebase - Android Push Notifications 
 https://console.firebase.google.com/u/1/project/alert-walker/settings/general/android:software.bitbybit.alertwalker
+https://console.firebase.google.com/u/1/project/alert-walker/settings/general/android:com.alertwalker
+
 
 The only thing we utilize from this is the server key on this page. As this is required for firebase cloud messaging (push notifications) to work.
 

@@ -1,5 +1,6 @@
 {
-  "backendUrl": "https://alertwalkerlocal.ngrok.io/",
+  "backendUrl": "https://dev.alertwalker.com/",
+  "backendUrl1": "https://alertwalkerlocal.ngrok.io/",
   "backendUrl2": "https://backend.alertwalker.com/",
   "description": "Alert Walker",
   "displayName": "Alert Walker",

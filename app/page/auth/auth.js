@@ -115,6 +115,9 @@ export default class Auth extends Component
     let toPage = inputToPage;
     console.log('Auth.segue(' + toPage + ')');
 
+    // this.props.showAlert('Un-oh', toPage);
+
+    // 666
     // Guest access
     if(toPage === 'main')
     {
@@ -196,6 +199,8 @@ export default class Auth extends Component
       return;
     }
 
+      // this.props.showAlert('Error', "thirdpartylogin 1");
+
     await AsyncStorage.setItem('token', response.data.token);
     await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
 
@@ -206,6 +211,8 @@ export default class Auth extends Component
     {
       OauthManager.GetInstance().setOauthTokens(response.data.oauthTokens);
     }
+
+      // this.props.showAlert('Error', "thirdpartylogin 2");
 
     // Update third party accounts
     this._manager.setThirdPartyAccounts(response.data.thirdPartyAccounts);
@@ -218,6 +225,8 @@ export default class Auth extends Component
 
     await NotificationManager.GetInstance().init(response.data.token);
 
+      // this.props.showAlert('Error', "thirdpartylogin 3");
+
     this.props.updateGlobalState('user', response.data.user);
     this.setState({ isLoading: false });
 
@@ -225,9 +234,11 @@ export default class Auth extends Component
 
     if(cb)
     {
+      // this.props.showAlert('Error', "thirdpartylogin 3aaaaa");
       cb();
     }
 
+      // this.props.showAlert('Error', "thirdpartylogin 4");
     this.segue('main');
   }
 

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "888763880230-df4mcagl1ia9bm36jcuo2u0h5neqi61o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alertwalker",
+            "certificate_hash": "1c036051cb73810da5c18439667229ac26974f36"
+          }
+        },
+        {
           "client_id": "888763880230-d83okh3eu057qhbr638jric6ho0fjj03.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -21,14 +21,14 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({  updateGlobalState,
                                 updateStack,
-                                progress,
+                                showAlert,
                                 ...rest })
 {
-  const translateX = Animated.interpolate(progress,
-  {
-    inputRange: [0, 1],
-    outputRange: [-100, 0],
-  });
+  // const translateX = Animated.interpolate(progress,
+  // {
+  //   inputRange: [0, 1],
+  //   outputRange: [-100, 0],
+  // });
 
   console.log('[CustomDrawerContent.render] ' + rest);
 
@@ -39,7 +39,7 @@ function CustomDrawerContent({  updateGlobalState,
 
   return (
     <DrawerContentScrollView {...rest}>
-      <Animated.View style={{ transform: [{ translateX }] }}>
+      <Animated.View>
 
         <View style={styles.headerContainer}>
           <Text
@@ -55,14 +55,20 @@ function CustomDrawerContent({  updateGlobalState,
           label="Logout"
           onPress={async() =>
           {
-            console.log('XXXX user logging out...')
-            updateGlobalState('deepLink', '');
-            updateGlobalState('user', null);
-            await OauthManager.GetInstance().logout()
-            await AsyncStorage.removeItem('token');
-            await AsyncStorage.removeItem('user');
+            try {
+              console.log('XXXX user logging out...')
+              updateGlobalState('deepLink', '');
+              updateGlobalState('user', null);
+              await OauthManager.GetInstance().logout()
+              await AsyncStorage.removeItem('token');
+              await AsyncStorage.removeItem('user');
+              // updateStack('auth');
+              console.log('XXXX user logging out done')
+            } catch(err) {
+              showAlert("Error","logging out error: " + err.message)
+            }
             updateStack('auth');
-            console.log('XXXX user logging out done')
+
           }}
         />
       </Animated.View>
