@@ -20,8 +20,10 @@ export default class WebsocketClient
   static async GetInstanceA(apiToken)
   {
     // Initialize
-    if(WebsocketClient.#instance == null)
+    // console.log('**** websocket A instance: ' + (WebsocketClient.#instance === null))
+    if(WebsocketClient.#instance === null)
     {
+      console.log('[WebsocketClient] instantiating new WebsocketClient...')
       WebsocketClient.#instance = new WebsocketClient();
     }
 
@@ -29,10 +31,13 @@ export default class WebsocketClient
     WebsocketClient.#instance.apiToken = apiToken;
 
     // Establish connection
+    // console.log('**** websocket A instance client: ' + (WebsocketClient.#instance.#client === null))
     if(WebsocketClient.#instance.#client === null)
     {
+      console.log('[WebsocketClient] connecting...')
       WebsocketClient.LogMsg('[websocket] instantiated');
       WebsocketClient.#instance.connect();
+      WebsocketClient.#instance.#connectionAttempt = 0;
 
       // We will send this on all messages so we can be identified
       WebsocketClient.#instance.#idMsg =
@@ -43,15 +48,19 @@ export default class WebsocketClient
       //console.log('\t\tClient.<Websocket> using token: ' + apiToken);
     }
 
+    console.log('[WebSocket.validateToken] GetInstanceA connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
+
     return WebsocketClient.#instance;
   }
 
   static GetInstance()
   {
-    if(WebsocketClient.#instance == null)
+    // console.log('**** websocket instance: ' + (WebsocketClient.#instance === null))
+    if(WebsocketClient.#instance === null)
     {
       throw new Error('WebsocketClient not instantiated');
     }
+    console.log('[WebSocket.validateToken] GetInstanceA connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
     return WebsocketClient.#instance;
   }
 
@@ -67,6 +76,7 @@ export default class WebsocketClient
     console.log('[Websocket.close] called')
     WebsocketClient.#instance.#client.close();
     clearTimeout(this.#pingTimeout);
+    WebsocketClient.#instance.#connectionAttempt = 0
   }
   
   connect()
@@ -105,13 +115,19 @@ export default class WebsocketClient
       // verify that this works correctly
       // when does it get called
       console.log('[WebSocket.validateToken] update new token with: ' + apiToken)
+      console.log('[WebSocket.validateToken] connectionAttempt: ' + this.#connectionAttempt)
+      console.log('[WebSocket.validateToken] WebsocketClient.#instance.#client.readyState: ' + WebsocketClient.#instance.#client.readyState)
+      console.log('[WebSocket.validateToken] WebsocketClient.#instance.#client.OPEN: ' + WebsocketClient.#instance.#client.OPEN)
 
       if(WebsocketClient.#instance.#client.readyState === WebsocketClient.#instance.#client.OPEN)
       {
         WebsocketClient.#instance.#client.send(JSON.stringify(msg));
+        this.#connectionAttempt = 0;
+        console.log('[WebSocket.validateToken] connectionAttempt after success: ' + this.#connectionAttempt)
       }
       else
       {
+        // this happens when you logout, we reconnect the socket.
         WebsocketClient.LogMsg('[websocket] connection not open: ' + WebsocketClient.#instance.#client.OPEN);
         // Try to reconnect 3 times max
         if(this.#connectionAttempt < 3)
