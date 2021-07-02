@@ -50,6 +50,11 @@ export default class Auth extends Component
     };
   }
 
+  componentWillUnmount() {
+    console.log(`[Auth.componentWillUnmount] UNMOUNTING`);
+    // this._websocketClient.close()
+  }
+
   async componentDidMount()
   {
     console.log(`[Auth.componentDidMount] props: ${JSON.stringify(this.props)}`);

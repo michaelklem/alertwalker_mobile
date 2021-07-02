@@ -62,7 +62,6 @@ function CustomDrawerContent({  updateGlobalState,
               await OauthManager.GetInstance().logout()
               await AsyncStorage.removeItem('token');
               await AsyncStorage.removeItem('user');
-              // updateStack('auth');
               console.log('XXXX user logging out done')
             } catch(err) {
               showAlert("Error","logging out error: " + err.message)

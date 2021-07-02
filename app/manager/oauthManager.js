@@ -182,6 +182,9 @@ export default class OauthManager
 
   async logout() {
 
+    console.log('[oauthManager.logout] called')
+    
+    try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       await auth()
@@ -190,7 +193,11 @@ export default class OauthManager
           console.log('[oauthManager.logout] user is logged out')
           // () => alert('Your are signed out!')
           );
-
+    } catch(err) {
+      console.log('[oauthManager] logout error: ' + err.message)
+    }
+    
+    
     const keys = Object.keys(this.#_oauthTokens);
     console.log(`[oauthManager:logout] keys: ${keys}`);
     for(let i = 0; i < keys.length; i++) {
