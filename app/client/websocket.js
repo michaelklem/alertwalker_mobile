@@ -75,8 +75,9 @@ export default class WebsocketClient
   close() {
     console.log('[Websocket.close] called')
     WebsocketClient.#instance.#client.close();
-    clearTimeout(this.#pingTimeout);
+    // clearTimeout(this.#pingTimeout);
     WebsocketClient.#instance.#connectionAttempt = 0
+    WebsocketClient.#instance.#client = null
   }
   
   connect()
@@ -93,6 +94,20 @@ export default class WebsocketClient
     WebsocketClient.#instance.#client.onclose = WebsocketClient.#instance.onClose;
   }
 
+  reconnect() {
+    // console.log('[Websocket.reconnect] reconnect called')
+    // console.log('xxxxxxx ' + WebsocketClient.#instance.#client )
+    // let that = this
+    // setTimeout(function() {
+    //   // if (WebsocketClient.#instance.#client === null) {
+    //     console.log('[Websocket.reconnect] reconnecting...')
+    //     WebsocketClient.#instance.connect()
+    //   // }
+    // }, 3000);      
+    
+  }
+  
+  
   // MARK: Token related
   validateToken(apiToken)
   {
@@ -149,18 +164,18 @@ export default class WebsocketClient
   // MARK: Message handlers
   onOpen = () =>
   {
-    WebsocketClient.LogMsg('[websocket] onOpen()');
+    WebsocketClient.LogMsg('[websocket.onOpen]');
 
     // Tell the server who we are
     const msg = WebsocketClient.#instance.#idMsg;
     msg.type = 'token';
-    console.log(msg.token);
+    console.log('[websocket.onOpen] token: ' + msg.token);
     WebsocketClient.#instance.#client.send(JSON.stringify(msg));
 
     // Kick off heart beat ping loop
     WebsocketClient.#instance.#pingTimeout = setTimeout( () =>
     {
-      WebsocketClient.LogMsg('[websocket] pingTimeout()');
+      WebsocketClient.LogMsg('[websocket] pingTimeout() reconecting...');
       WebsocketClient.#instance.#client.close();
 
       // Reconnect
@@ -200,7 +215,8 @@ export default class WebsocketClient
   {
     console.log('[Websocket.cleanup] called')
     WebsocketClient.LogMsg('[websocket] onClose(' + JSON.stringify(evt) + ')');
-    clearTimeout(this.#pingTimeout);
+    // clearTimeout(this.#pingTimeout);
+    // this.reconnect()
   }
 
 
@@ -223,6 +239,7 @@ export default class WebsocketClient
     {
       WebsocketClient.LogMsg('[websocket] pingTimeout()');
       this.#client.close();
+      WebsocketClient.#instance.connect();
     }, 8000 + 5000);
   }
 }
