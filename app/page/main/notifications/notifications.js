@@ -164,6 +164,7 @@ export default class Notifications extends Component
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.separatorGray,
     flex: 1,
   },
   inner: {

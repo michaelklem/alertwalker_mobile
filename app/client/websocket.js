@@ -237,8 +237,8 @@ export default class WebsocketClient
 
     this.#pingTimeout = setTimeout(() =>
     {
-      WebsocketClient.LogMsg('[websocket] pingTimeout()');
-      this.#client.close();
+      WebsocketClient.LogMsg('[websocket] pingTimeout() reconnect');
+      // WebsocketClient.#instance.#client.close();
       WebsocketClient.#instance.connect();
     }, 8000 + 5000);
   }
