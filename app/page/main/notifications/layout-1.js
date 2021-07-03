@@ -28,15 +28,25 @@ const Layout1 = ({  isLoading,
                   }) =>
 {
   return (
-    <KeyboardAvoidingView style={styles.innerContainer}>
-      <KeyboardAwareFlatList
-        data={notifications}
-        numColumns={1}
-        scrollEnabled={true}
-        keyExtractor={item => item._id.toString()}
-        renderItem={(item, index) => renderNotification(item.item, index)}
-      />
-    </KeyboardAvoidingView>
+      <>
+        {notifications.length === 0 &&
+          <View style={styles.noNotificationsContainer}>
+            <Text style={styles.top}>{'No alerts have been received yet.'}</Text>
+          </View>
+        }
+
+        {notifications.length > 0 &&  
+          <KeyboardAvoidingView style={styles.innerContainer}>
+            <KeyboardAwareFlatList
+              data={notifications}
+              numColumns={1}
+              scrollEnabled={true}
+              keyExtractor={item => item._id.toString()}
+              renderItem={(item, index) => renderNotification(item.item, index)}
+            />
+          </KeyboardAvoidingView>
+        }
+    </>
   );
 };
 
@@ -44,13 +54,8 @@ const Layout1 = ({  isLoading,
 const height16 = Math.round(Dimensions.get('window').height * 0.02051);
 const height18 = Math.round(Dimensions.get('window').height * 0.02307);
 const styles = StyleSheet.create({
-  bgImage: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-  },
   innerContainer: {
-    backgroundColor: Colors.separatorGray,
+    backgroundColor: Colors.red,
     flex: 1,
     justifyContent: 'flex-start',
   },
@@ -59,17 +64,22 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
   },
- conversationContent: {
-   flex: 1,
-   flexDirection: 'row',
-   justifyContent: 'flex-start',
- },
- noNotes: {
-  fontSize: height18,
-  marginTop: height16,
-  textAlign: 'center',
-  color: Colors.white,
-},
+  noNotificationsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+    margin: 10,
+    borderRadius:10,
+    borderWidth:1,
+    borderColor:'#ddd',
+  },
+  top: {
+    fontSize: height18,
+    flex: 0.5,
+  },
+
 });
 
 export default Layout1;

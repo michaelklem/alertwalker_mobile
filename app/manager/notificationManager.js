@@ -52,10 +52,12 @@ export default class NotificationManager
       var response = await ApiRequest.sendRequest("post", {}, "notification/init", apiToken);
       if(response.data.error !== null)
       {
-        console.error('NotificationManager.init error: ' + response.data.error);
+        console.error('[NotificationManager.init] error: ' + response.data.error);
         return false;
       }
-      // console.log(response.data.results);
+      
+      console.log(`[NotificationManager.init] notifications found for token ${apiToken}: ${response.data.results}`);
+
       this.#notifications = response.data.results;
       return true;
     }

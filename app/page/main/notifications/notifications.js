@@ -149,7 +149,6 @@ export default class Notifications extends Component
 
   render()
   {
-    console.log('\tNotifications.render()');
     return (
       <Layout1
         isLoading={this.state.isLoading}
@@ -164,13 +163,7 @@ export default class Notifications extends Component
 }
 
 const styles = StyleSheet.create({
-  bgImage: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-  },
   container: {
-    backgroundColor: Colors.separatorGray,
     flex: 1,
   },
   inner: {
