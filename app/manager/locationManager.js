@@ -39,6 +39,15 @@ export default class LocationManager
       LocationManager.singleton.#dataMgr = DataManager.GetInstance();
       await LocationManager.singleton.init(token);
     }
+
+    // needed when user logs back in so we turn geo location service back on.
+    BackgroundGeolocation.checkStatus(({ isRunning }) => {
+      if (! isRunning) {
+        console.log('restarting geo location service')
+        BackgroundGeolocation.start(); // service was running -> rebind all listeners
+      }
+    });
+
     return LocationManager.singleton;
   }
 
