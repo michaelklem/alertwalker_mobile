@@ -113,6 +113,10 @@ export default class WebsocketClient
   {
     console.log('[WebSocket.validateToken] called with token: ' + this.apiToken + ' and : ' + apiToken);
     
+    if (WebsocketClient.#instance.#client === null) {
+      console.log('[WebSocket.validateToken] socket client is null')
+    }
+    
     if(!apiToken)
     {
       WebsocketClient.LogMsg('[websocket] closing connection');
@@ -120,41 +124,42 @@ export default class WebsocketClient
     }
     if(apiToken !== this.apiToken)
     {
-      WebsocketClient.LogMsg('[websocket] updating API token: ' + apiToken);
-      WebsocketClient.#instance.apiToken = apiToken;
-      const msg = WebsocketClient.#instance.#idMsg;
-      msg.type = 'token';
-      msg.token = apiToken;
-      this.apiToken = apiToken;
+      try {
+        WebsocketClient.LogMsg('[websocket] updating API token: ' + apiToken);
+        WebsocketClient.#instance.apiToken = apiToken;
+        const msg = WebsocketClient.#instance.#idMsg;
+        msg.type = 'token';
+        msg.token = apiToken;
+        this.apiToken = apiToken;
 
-      // verify that this works correctly
-      // when does it get called
-      console.log('[WebSocket.validateToken] update new token with: ' + apiToken)
-      console.log('[WebSocket.validateToken] connectionAttempt: ' + this.#connectionAttempt)
-      console.log('[WebSocket.validateToken] WebsocketClient.#instance.#client.readyState: ' + WebsocketClient.#instance.#client.readyState)
-      console.log('[WebSocket.validateToken] WebsocketClient.#instance.#client.OPEN: ' + WebsocketClient.#instance.#client.OPEN)
+        console.log('[WebSocket.validateToken] update new token with: ' + apiToken)
+        console.log('[WebSocket.validateToken] connectionAttempt: ' + this.#connectionAttempt)
 
-      if(WebsocketClient.#instance.#client.readyState === WebsocketClient.#instance.#client.OPEN)
-      {
-        WebsocketClient.#instance.#client.send(JSON.stringify(msg));
-        this.#connectionAttempt = 0;
-        console.log('[WebSocket.validateToken] connectionAttempt after success: ' + this.#connectionAttempt)
-      }
-      else
-      {
-        // this happens when you logout, we reconnect the socket.
-        WebsocketClient.LogMsg('[websocket] connection not open: ' + WebsocketClient.#instance.#client.OPEN);
-        // Try to reconnect 3 times max
-        if(this.#connectionAttempt < 3)
+        if(WebsocketClient.#instance.#client.readyState === WebsocketClient.#instance.#client.OPEN)
         {
-          this.#connectionAttempt += 1;
-          this.connect();
-          this.validateToken(apiToken);
+          WebsocketClient.#instance.#client.send(JSON.stringify(msg));
+          this.#connectionAttempt = 0;
+          console.log('[WebSocket.validateToken] connectionAttempt after success: ' + this.#connectionAttempt)
         }
         else
         {
-          WebsocketClient.LogMsg('[websocket] max connection attempts reached. Goodbye.');
+          // this happens when you logout, we reconnect the socket.
+          WebsocketClient.LogMsg('[WebSocket.validateToken] connection not open ');
+          // Try to reconnect 3 times max
+          if(this.#connectionAttempt < 3)
+          {
+            this.#connectionAttempt += 1;
+            this.connect();
+            this.validateToken(apiToken);
+          }
+          else
+          {
+            WebsocketClient.LogMsg('[WebSocket.validateToken] max connection attempts reached. Goodbye.');
+          }
         }
+      }
+      catch(err) {
+        console.log('[WebSocket.validateToken] exception: ' + err + ' stack: ' + err.stack)
       }
     }
   }
@@ -169,13 +174,13 @@ export default class WebsocketClient
     // Tell the server who we are
     const msg = WebsocketClient.#instance.#idMsg;
     msg.type = 'token';
-    console.log('[websocket.onOpen] token: ' + msg.token);
+    console.log('[websocket.onOpen] token: ' + msg.id);
     WebsocketClient.#instance.#client.send(JSON.stringify(msg));
 
     // Kick off heart beat ping loop
     WebsocketClient.#instance.#pingTimeout = setTimeout( () =>
     {
-      WebsocketClient.LogMsg('[websocket] pingTimeout() reconecting...');
+      WebsocketClient.LogMsg('[websocket] pingTimeout() reconecting token: ' + msg.id);
       WebsocketClient.#instance.#client.close();
 
       // Reconnect

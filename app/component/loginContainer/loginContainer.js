@@ -148,7 +148,8 @@ export default class LoginContainer extends Component
         console.log('[loginContainer.login] calling props login with: ' + JSON.stringify(params ));
         await this.props.login(params);
     } catch (error) {
-      console.log('[loginContainer.login] error: ' + error)
+      console.log('[loginContainer.login] error: ' + error + ' stack: ' + error.stack)
+      
       this.props.showAlert("Error","logging in error: " + error.message)
 
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
