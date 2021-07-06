@@ -19,11 +19,12 @@ export default class WebsocketClient
    */
   static async GetInstanceA(apiToken)
   {
+      console.log('[WebsocketClient.GetInstanceA] called')
     // Initialize
     // console.log('**** websocket A instance: ' + (WebsocketClient.#instance === null))
     if(WebsocketClient.#instance === null)
     {
-      console.log('[WebsocketClient] instantiating new WebsocketClient...')
+      console.log('[WebsocketClient.GetInstanceA] instantiating new WebsocketClient...')
       WebsocketClient.#instance = new WebsocketClient();
     }
 
@@ -34,7 +35,7 @@ export default class WebsocketClient
     // console.log('**** websocket A instance client: ' + (WebsocketClient.#instance.#client === null))
     if(WebsocketClient.#instance.#client === null)
     {
-      console.log('[WebsocketClient] connecting...')
+      console.log('[WebsocketClient] GetInstanceA connecting...')
       WebsocketClient.LogMsg('[websocket] instantiated');
       WebsocketClient.#instance.connect();
       WebsocketClient.#instance.#connectionAttempt = 0;
@@ -48,7 +49,7 @@ export default class WebsocketClient
       //console.log('\t\tClient.<Websocket> using token: ' + apiToken);
     }
 
-    console.log('[WebSocket.validateToken] GetInstanceA connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
+    console.log('[WebSocket.validateToken.GetInstanceA] connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
 
     return WebsocketClient.#instance;
   }
@@ -60,7 +61,7 @@ export default class WebsocketClient
     {
       throw new Error('WebsocketClient not instantiated');
     }
-    console.log('[WebSocket.validateToken] GetInstanceA connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
+    console.log('[WebSocket.GetInstance] connectionAttempt: ' + WebsocketClient.#instance.#connectionAttempt);
     return WebsocketClient.#instance;
   }
 

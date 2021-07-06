@@ -177,7 +177,7 @@ export default class Map extends Component
           await this.getLocation();
         }
 
-        //await this.loadData();
+        await this.loadData();
       }
       else {
         console.log('component map being set to notifcation location')
