@@ -154,7 +154,6 @@ export default class Map extends Component
           this._bottomSheetRef.current.hide();
           console.log('change it here') //666
           await this.getLocation();
-
         }
       }
       else if(side === 'right')
@@ -176,8 +175,10 @@ export default class Map extends Component
         {
           await this.getLocation();
         }
-
-        await this.loadData();
+        else
+        {
+          await this.loadData();
+        }
       }
       else {
         console.log('component map being set to notifcation location')
@@ -221,7 +222,11 @@ export default class Map extends Component
     {
       updateMasterState: (state) => this.setState(state),
       setLoading: (isLoading) => this.props.updateMasterState({ isLoading: isLoading }),
-      dataVersion: this.state.dataVersion
+      dataVersion: this.state.dataVersion,
+      successCb: () =>
+      {
+        this.loadData();
+      }
     }));
   }
 
@@ -447,7 +452,7 @@ export default class Map extends Component
 
           // this will force the marker to always be re-centered.
           // this.setState({ userLatDelta: region.latitudeDelta, userLngDelta: region.longitudeDelta })
-   
+
           // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
           //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
           //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
@@ -464,14 +469,14 @@ export default class Map extends Component
         }}
 
         // if there is an alert data, we show the map there, otherewise we show the map at the users location
-        region={(this.props.geofenceArea) ? 
+        region={(this.props.geofenceArea) ?
         {
           latitude: this.props.geofenceArea.location.coordinates[1],
           longitude: this.props.geofenceArea.location.coordinates[0],
           latitudeDelta: DEFAULT_LAT_DELTA, // force the marker to be zoomed in
           longitudeDelta: DEFAULT_LNG_DELTA,
         }
-        : 
+        :
         {
           latitude: locationData.userLocation.latitude,
           longitude: locationData.userLocation.longitude,
@@ -762,7 +767,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.plainGray5
   },
   fabItemContainerStyle: {
-    backgroundColor: MARKER_DEFAULT_COLOR,  
+    backgroundColor: MARKER_DEFAULT_COLOR,
   },
   fabItemStyle: {
     backgroundColor: MARKER_DEFAULT_COLOR,
