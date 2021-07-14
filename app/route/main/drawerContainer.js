@@ -6,6 +6,8 @@ import {  createDrawerNavigator,
           DrawerItem  } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import AsyncStorage from '@react-native-community/async-storage';
+import VersionNumber from 'react-native-version-number';
+
 import { NotificationsPage } from '../../page/main/notifications';
 
 import { OauthManager } from '../../manager';
@@ -32,7 +34,7 @@ function CustomDrawerContent({  updateGlobalState,
 
   console.log('[CustomDrawerContent.render] ' + rest);
 
-  let emailAddress = (OauthManager.GetInstance().getOauthTokens() !== null) ? 
+  let emailAddress = (OauthManager.GetInstance().getOauthTokens() !== null) ?
     OauthManager.GetInstance().getOauthTokens().googleToken.createdBy.email
     :
     ''
@@ -47,7 +49,7 @@ function CustomDrawerContent({  updateGlobalState,
             adjustsFontSizeToFit={true}
             numberOfLines={1}
           >{`${emailAddress}`}</Text>
-          <Text style={styles.versionLabel}>{`version ${AppJson.version}`}</Text>
+          <Text style={styles.versionLabel}>{`version ${VersionNumber.appVersion}`}</Text>
         </View>
 
         <DrawerItemList {...rest} />
@@ -147,13 +149,13 @@ const styles = StyleSheet.create({
     fontSize: h18,
     textAlign: 'left',
     color: 'rgba(0, 0, 0, .87)',
-  },  
+  },
   emailLabel: {
     fontFamily: 'Arial',
     fontSize: 18,
     textAlign: 'left',
     color: 'rgba(0, 0, 0, .87)',
-  },  
+  },
   versionLabel: {
     fontFamily: 'Arial',
     fontSize: 14,
