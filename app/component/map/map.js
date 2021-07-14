@@ -94,7 +94,7 @@ export default class Map extends Component
       image: null,
       submitIsEnabled: true,
       menuIsOpen: false,
-      choosingLocation: false,
+      choosingLocation: true, // Display map by default
       imageModal:
       {
         image: null,
@@ -289,7 +289,7 @@ export default class Map extends Component
 
         if(dataSet)
         {
-          this.setState({ note: '', radius: RADIUS_SIZE, choosingLocation: false, image: null }, () =>
+          this.setState({ note: '', radius: RADIUS_SIZE, /*choosingLocation: false,*/ image: null }, () =>
           {
             this._bottomSheetRef.current.hide();
             this._headerMgr.setIsCreateMode(false);

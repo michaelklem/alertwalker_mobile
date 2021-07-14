@@ -28,6 +28,8 @@ const CreateAlertButtons = ({ updateMasterState,
   return (
     <View style={styles.masterViewContainer}>
 
+        {/* Hidden as map will be displayed by default */}
+        {false &&
         <View style={styles.container}>
           <TouchableHighlight onPress={onPress1}>
             <View style={styles.button}>
@@ -40,16 +42,16 @@ const CreateAlertButtons = ({ updateMasterState,
               <Text
                 style={{fontSize:h10}}
                 >
-                {'Show Location'}      
+                {'Show Location'}
               </Text>
             </View>
           </TouchableHighlight>
-        </View>
+        </View>}
 
 
 
         <View style={styles.container}>
-          <TouchableHighlight 
+          <TouchableHighlight
             onPress={() =>
             {
               onPress2();
@@ -93,7 +95,7 @@ const CreateAlertButtons = ({ updateMasterState,
               <Text
                 style={{fontSize:h10}}
                 >
-                {'Camera'}      
+                {'Camera'}
               </Text>
             </View>
           </TouchableHighlight>
@@ -103,7 +105,7 @@ const CreateAlertButtons = ({ updateMasterState,
 
 
         <View style={styles.container}>
-          <TouchableHighlight 
+          <TouchableHighlight
             onPress={() =>
             {
               onPress2();
@@ -148,7 +150,7 @@ const CreateAlertButtons = ({ updateMasterState,
               <Text
                 style={{fontSize:h10}}
                 >
-                {'Photo Library'}      
+                {'Photo Library'}
               </Text>
             </View>
           </TouchableHighlight>
