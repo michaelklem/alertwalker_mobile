@@ -85,7 +85,7 @@ export default {
     emailLoginBtn: '#EF9A47',
   },
   orange1: '#F39D48',
-
+  alertWalkerOrange: '#e19044',
 
 
   toast:

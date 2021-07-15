@@ -25,7 +25,12 @@ import { HeaderHeightContext } from '@react-navigation/stack';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 
-import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
+import {  AppManager,
+          DataManager,
+          HeaderManager,
+          LocationManager,
+          NotificationManager
+        } from '../../manager';
 import SubmitField from './submitField';
 import CreateAlertButtons from './createAlertButtons';
 import CreateMap from './createMap';
@@ -56,6 +61,7 @@ export default class Map extends Component
   // Managers
   _dataMgr = null;
   _headerMgr = null;
+  _notificationMgr = null;
   // Refs
   // _mapViewRef = null;
   _bottomSheetRef = null;
@@ -86,12 +92,14 @@ export default class Map extends Component
     console.log('\tMap()');
     this._dataMgr = DataManager.GetInstance();
     this._headerMgr = HeaderManager.GetInstance();
+    this._notificationMgr = NotificationManager.GetInstance();
 
     this.state =
     {
       radius: RADIUS_SIZE,
       note: '',
       image: null,
+      type: null,
       submitIsEnabled: true,
       menuIsOpen: false,
       choosingLocation: true, // Display map by default
@@ -180,7 +188,8 @@ export default class Map extends Component
           await this.loadData();
         }
       }
-      else {
+      else
+      {
         console.log('component map being set to notifcation location')
         await this.loadData();
       }
@@ -218,6 +227,7 @@ export default class Map extends Component
 
   getLocation = async() =>
   {
+    console.log('\tMap.getLocation()');
     await this._dataMgr.execute(await new GetLocationCommand(
     {
       updateMasterState: (state) => this.setState(state),
@@ -282,6 +292,7 @@ export default class Map extends Component
             note: this.state.note,
             radius: this.state.radius,
             image: image,
+            type: this.state.type._id.toString(),
           },
           dataVersion: this.state.dataVersion
         }));
@@ -316,7 +327,7 @@ export default class Map extends Component
             }}
             radius={geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { MARKER_DEFAULT_COLOR }
+            strokeColor = { geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
@@ -325,7 +336,7 @@ export default class Map extends Component
               latitude: geofenceArea.location.coordinates[1],
               longitude: geofenceArea.location.coordinates[0]
             }}
-            pinColor={MARKER_DEFAULT_COLOR}
+            pinColor={geofenceArea.type.color}
           >
             <Callout
               tooltip={true}
@@ -393,25 +404,35 @@ export default class Map extends Component
   // This is the floating action button
   renderAlertMenu2 = () =>
   {
+    const geofenceAreaTypes = this._notificationMgr.getGeofenceAreaTypes();
+    console.log(geofenceAreaTypes);
+
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
-        <ActionButton.Item
-          buttonColor={MARKER_DEFAULT_COLOR}
-          textContainerStyle={styles.fabItemContainerStyle}
-          textStyle={styles.fabItemStyle}
-          title="New Alert"
-          size={40}
-          onPress={() =>
-          {
-            this._bottomSheetRef.current.show();
-            this._headerMgr.setIsCreateMode(true);
-          }}
-        >
-          <Icon
-            name="notifications-active"
-            style={styles.createBtn2}
-          />
-        </ActionButton.Item>
+        {geofenceAreaTypes &&
+        geofenceAreaTypes.map( (geofenceAreaType) =>
+        {
+          return (
+            <ActionButton.Item
+              buttonColor={geofenceAreaType.color}
+              textContainerStyle={styles.fabItemContainerStyle}
+              textStyle={styles.fabItemStyle}
+              title={`New ${geofenceAreaType.label}`}
+              size={40}
+              onPress={() =>
+              {
+                this._bottomSheetRef.current.show();
+                this._headerMgr.setIsCreateMode(true);
+                this.setState({ type: geofenceAreaType });
+              }}
+            >
+              <Icon
+                name={geofenceAreaType.iconName}
+                style={styles.createBtn2}
+              />
+            </ActionButton.Item>
+          )
+        })}
       </ActionButton>
     );
   }
@@ -513,7 +534,7 @@ export default class Map extends Component
             }}
             radius={this.props.geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { MARKER_DEFAULT_COLOR }
+            strokeColor = { this.props.geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
@@ -523,7 +544,7 @@ export default class Map extends Component
               longitude: this.props.geofenceArea.location.coordinates[0]
             }}
             description={this.props.geofenceArea.note}
-            pinColor={MARKER_DEFAULT_COLOR}
+            pinColor={this.props.geofenceArea.type.color}
           >
             <Callout
               tooltip={true}
@@ -611,13 +632,14 @@ export default class Map extends Component
 
   renderCreateMap = () =>
   {
+    console.log(this.state.type);
     return (
       <CreateMap
         //ref={this._componentRef}
         updateMasterState={(state) => this.setState(state)}
         showAlert={this.props.showAlert}
         navigation={this.props.navigation}
-        markerColor={MARKER_DEFAULT_COLOR}
+        markerColor={this.state.type ? this.state.type.color : MARKER_DEFAULT_COLOR}
       />
     );
   }

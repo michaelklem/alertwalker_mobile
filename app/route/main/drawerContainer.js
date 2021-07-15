@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import VersionNumber from 'react-native-version-number';
 
 import { NotificationsPage } from '../../page/main/notifications';
+import { SettingsPage } from '../../page/main/settings';
 
 import { OauthManager } from '../../manager';
 import { ImageButton } from '../../component/imageButton';
@@ -117,6 +118,17 @@ export default class DrawerContainer extends Component
           drawerLabel='Notifications'
         >
           {(props) => <NotificationsPage {...props}
+                        ref={this.props.activeScreenRef}
+                        deepLink={this.props.deepLink}
+                        showAlert={this.props.showAlert}
+                        user={this.props.user}
+                      />}
+        </Drawer.Screen>
+        <Drawer.Screen
+          name='Notification preferences'
+          drawerLabel='Notification preferences'
+        >
+          {(props) => <SettingsPage {...props}
                         ref={this.props.activeScreenRef}
                         deepLink={this.props.deepLink}
                         showAlert={this.props.showAlert}

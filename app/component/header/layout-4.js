@@ -57,6 +57,8 @@ const Layout4 = ({  user,
   let leftBtnIcon = faBars;
   let rightBtnIcon = '';
 
+  console.log('Sub route: ' + subRoute.name);
+
   if(routeName === 'homeContainer' || routeName === 'main')
   {
     routeName = 'main';
@@ -88,7 +90,7 @@ const Layout4 = ({  user,
   }
 
   return (
-    
+
     <View style={[styles.headerContainer]}>
 
       {/* Left side space */}
@@ -124,7 +126,7 @@ const Layout4 = ({  user,
       <TouchableOpacity style={styles.saveButtonContainer} onPress={rightBtnNavigation}>
         {rightBtnIcon !== '' &&
 
-        <Button 
+        <Button
           title='Save'
           buttonStyle={{
             backgroundColor: 'green',
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
   },
   saveButtonContainer: {
 
-  },  
+  },
   hidden: {
     fontSize: height11,
     textAlign: 'center',

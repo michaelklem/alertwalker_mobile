@@ -281,7 +281,7 @@ export default class CreateMap extends Component
             // return true;
           }}
           strokeWidth = { 5 }
-          strokeColor = { MARKER_DEFAULT_COLOR }
+          strokeColor = { this.props.markerColor }
           fillColor = { 'rgba(230,238,255,0.5)' }
         />}
 
@@ -326,8 +326,8 @@ export default class CreateMap extends Component
               }));
             //}
           }}
- 
-          onDragStart={() => 
+
+          onDragStart={() =>
           {
             // Provides user with feedback that marker is now draggable.
             Vibration.vibrate( 250 );
