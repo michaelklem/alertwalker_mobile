@@ -56,7 +56,7 @@ export default class NotificationManager
         return false;
       }
       
-      console.log(`[NotificationManager.init] notifications found for token ${apiToken}: ${response.data.results}`);
+      console.log(`[NotificationManager.init] notifications found for token ${apiToken}: ${ JSON.stringify(response.data.results) }`);
 
       this.#notifications = response.data.results;
       return true;
@@ -312,7 +312,7 @@ export default class NotificationManager
 				return;
 			}
 
-      console.log('NotificationManager.readNotification response: ' + response.data);
+      console.log('NotificationManager.readNotification response: ' + JSON.stringify(response.data) );
 
       // Tell notification manager we read this
       this.markRead(response.data.results.document);
