@@ -1,4 +1,6 @@
-import { AppManager, OauthManager } from '.';
+import AppManager from './appManager';
+import OauthManager from './oauthManager';
+
 export default class DataManager
 {
   static #instance = null;

@@ -410,10 +410,11 @@ export default class Map extends Component
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
         {geofenceAreaTypes &&
-        geofenceAreaTypes.map( (geofenceAreaType) =>
+        geofenceAreaTypes.map( (geofenceAreaType, i) =>
         {
           return (
             <ActionButton.Item
+              key={`action-btn-${i}`}
               buttonColor={geofenceAreaType.color}
               textContainerStyle={styles.fabItemContainerStyle}
               textStyle={styles.fabItemStyle}

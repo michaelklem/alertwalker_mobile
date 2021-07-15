@@ -87,7 +87,10 @@ export default class SettingsPage extends Component
           {
             const geofenceAreaType = geofenceAreaTypes.filter( (area => area._id.toString() === subscription.trigger.geofenceAreaType));
             return (
-              <View style={styles.setting}>
+              <View
+                style={styles.setting}
+                key={`settings-toggle-${i}`}
+              >
                 <Text align='left'>{geofenceAreaType.length > 0 ? geofenceAreaType[0].label : ''}</Text>
                 <Switch
                   trackColor={{ false: "#767577", true: "#81b0ff" }}
