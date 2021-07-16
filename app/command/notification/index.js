@@ -1,0 +1,1 @@
+export {UpdateNotificationPreferencesCommand} from './updateNotificationPreferencesCommand';

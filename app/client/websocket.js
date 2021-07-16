@@ -175,17 +175,21 @@ export default class WebsocketClient
     // Tell the server who we are
     const msg = WebsocketClient.#instance.#idMsg;
     msg.type = 'token';
-    console.log('[websocket.onOpen] token: ' + msg.id);
+    // console.log('[websocket.onOpen] token: ' + msg.id);
     WebsocketClient.#instance.#client.send(JSON.stringify(msg));
 
     // Kick off heart beat ping loop
     WebsocketClient.#instance.#pingTimeout = setTimeout( () =>
     {
-      WebsocketClient.LogMsg('[websocket] pingTimeout() reconecting token: ' + msg.id);
-      WebsocketClient.#instance.#client.close();
+      if (WebsocketClient.#instance.#client) {
+        if (typeof msg.id !== undefined) {
+          WebsocketClient.LogMsg('[websocket] pingTimeout() reconecting token: ' + msg.id);
+        }
+        WebsocketClient.#instance.#client.close();
 
-      // Reconnect
-      WebsocketClient.#instance.connect();
+        // Reconnect
+        WebsocketClient.#instance.connect();
+      }
     }, 8000 + 5000);
   }
 

@@ -31,6 +31,7 @@ export async function AddGeofenceAreaCommand({  updateMasterState,
     createFormData.append('location', ('[' + data.location.longitude + ', ' + data.location.latitude + ']'));
     createFormData.append('note', data.note);
     createFormData.append('radius', data.radius);
+    createFormData.append('type', data.type);
 
     // Image is optional
     if(data.image && data.image.path)

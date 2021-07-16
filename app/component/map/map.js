@@ -25,7 +25,12 @@ import { HeaderHeightContext } from '@react-navigation/stack';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 
-import { AppManager, DataManager, HeaderManager, LocationManager } from '../../manager';
+import {  AppManager,
+          DataManager,
+          HeaderManager,
+          LocationManager,
+          NotificationManager
+        } from '../../manager';
 import SubmitField from './submitField';
 import CreateAlertButtons from './createAlertButtons';
 import CreateMap from './createMap';
@@ -56,6 +61,7 @@ export default class Map extends Component
   // Managers
   _dataMgr = null;
   _headerMgr = null;
+  _notificationMgr = null;
   // Refs
   // _mapViewRef = null;
   _bottomSheetRef = null;
@@ -86,15 +92,17 @@ export default class Map extends Component
     console.log('\tMap()');
     this._dataMgr = DataManager.GetInstance();
     this._headerMgr = HeaderManager.GetInstance();
+    this._notificationMgr = NotificationManager.GetInstance();
 
     this.state =
     {
       radius: RADIUS_SIZE,
       note: '',
       image: null,
+      type: null,
       submitIsEnabled: true,
       menuIsOpen: false,
-      choosingLocation: false,
+      choosingLocation: true, // Display map by default
       imageModal:
       {
         image: null,
@@ -154,7 +162,6 @@ export default class Map extends Component
           this._bottomSheetRef.current.hide();
           console.log('change it here') //666
           await this.getLocation();
-
         }
       }
       else if(side === 'right')
@@ -176,10 +183,13 @@ export default class Map extends Component
         {
           await this.getLocation();
         }
-
-        await this.loadData();
+        else
+        {
+          await this.loadData();
+        }
       }
-      else {
+      else
+      {
         console.log('component map being set to notifcation location')
         await this.loadData();
       }
@@ -217,11 +227,16 @@ export default class Map extends Component
 
   getLocation = async() =>
   {
+    console.log('\tMap.getLocation()');
     await this._dataMgr.execute(await new GetLocationCommand(
     {
       updateMasterState: (state) => this.setState(state),
       setLoading: (isLoading) => this.props.updateMasterState({ isLoading: isLoading }),
-      dataVersion: this.state.dataVersion
+      dataVersion: this.state.dataVersion,
+      successCb: () =>
+      {
+        this.loadData();
+      }
     }));
   }
 
@@ -277,6 +292,7 @@ export default class Map extends Component
             note: this.state.note,
             radius: this.state.radius,
             image: image,
+            type: this.state.type._id.toString(),
           },
           dataVersion: this.state.dataVersion
         }));
@@ -284,7 +300,7 @@ export default class Map extends Component
 
         if(dataSet)
         {
-          this.setState({ note: '', radius: RADIUS_SIZE, choosingLocation: false, image: null }, () =>
+          this.setState({ note: '', radius: RADIUS_SIZE, /*choosingLocation: false,*/ image: null }, () =>
           {
             this._bottomSheetRef.current.hide();
             this._headerMgr.setIsCreateMode(false);
@@ -311,7 +327,7 @@ export default class Map extends Component
             }}
             radius={geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { MARKER_DEFAULT_COLOR }
+            strokeColor = { geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
@@ -320,7 +336,7 @@ export default class Map extends Component
               latitude: geofenceArea.location.coordinates[1],
               longitude: geofenceArea.location.coordinates[0]
             }}
-            pinColor={MARKER_DEFAULT_COLOR}
+            pinColor={geofenceArea.type.color}
           >
             <Callout
               tooltip={true}
@@ -388,25 +404,36 @@ export default class Map extends Component
   // This is the floating action button
   renderAlertMenu2 = () =>
   {
+    const geofenceAreaTypes = this._notificationMgr.getGeofenceAreaTypes();
+    console.log(geofenceAreaTypes);
+
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
-        <ActionButton.Item
-          buttonColor={MARKER_DEFAULT_COLOR}
-          textContainerStyle={styles.fabItemContainerStyle}
-          textStyle={styles.fabItemStyle}
-          title="New Alert"
-          size={40}
-          onPress={() =>
-          {
-            this._bottomSheetRef.current.show();
-            this._headerMgr.setIsCreateMode(true);
-          }}
-        >
-          <Icon
-            name="notifications-active"
-            style={styles.createBtn2}
-          />
-        </ActionButton.Item>
+        {geofenceAreaTypes &&
+        geofenceAreaTypes.map( (geofenceAreaType, i) =>
+        {
+          return (
+            <ActionButton.Item
+              key={`action-btn-${i}`}
+              buttonColor={geofenceAreaType.color}
+              textContainerStyle={styles.fabItemContainerStyle}
+              textStyle={styles.fabItemStyle}
+              title={`New ${geofenceAreaType.label}`}
+              size={40}
+              onPress={() =>
+              {
+                this._bottomSheetRef.current.show();
+                this._headerMgr.setIsCreateMode(true);
+                this.setState({ type: geofenceAreaType });
+              }}
+            >
+              <Icon
+                name={geofenceAreaType.iconName}
+                style={styles.createBtn2}
+              />
+            </ActionButton.Item>
+          )
+        })}
       </ActionButton>
     );
   }
@@ -447,7 +474,7 @@ export default class Map extends Component
 
           // this will force the marker to always be re-centered.
           // this.setState({ userLatDelta: region.latitudeDelta, userLngDelta: region.longitudeDelta })
-   
+
           // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
           //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
           //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
@@ -464,14 +491,14 @@ export default class Map extends Component
         }}
 
         // if there is an alert data, we show the map there, otherewise we show the map at the users location
-        region={(this.props.geofenceArea) ? 
+        region={(this.props.geofenceArea) ?
         {
           latitude: this.props.geofenceArea.location.coordinates[1],
           longitude: this.props.geofenceArea.location.coordinates[0],
           latitudeDelta: DEFAULT_LAT_DELTA, // force the marker to be zoomed in
           longitudeDelta: DEFAULT_LNG_DELTA,
         }
-        : 
+        :
         {
           latitude: locationData.userLocation.latitude,
           longitude: locationData.userLocation.longitude,
@@ -508,7 +535,7 @@ export default class Map extends Component
             }}
             radius={this.props.geofenceArea.radius}
             strokeWidth = { 5 }
-            strokeColor = { MARKER_DEFAULT_COLOR }
+            strokeColor = { this.props.geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
           />
           <Marker
@@ -518,7 +545,7 @@ export default class Map extends Component
               longitude: this.props.geofenceArea.location.coordinates[0]
             }}
             description={this.props.geofenceArea.note}
-            pinColor={MARKER_DEFAULT_COLOR}
+            pinColor={this.props.geofenceArea.type.color}
           >
             <Callout
               tooltip={true}
@@ -606,13 +633,14 @@ export default class Map extends Component
 
   renderCreateMap = () =>
   {
+    console.log(this.state.type);
     return (
       <CreateMap
         //ref={this._componentRef}
         updateMasterState={(state) => this.setState(state)}
         showAlert={this.props.showAlert}
         navigation={this.props.navigation}
-        markerColor={MARKER_DEFAULT_COLOR}
+        markerColor={this.state.type ? this.state.type.color : MARKER_DEFAULT_COLOR}
       />
     );
   }
@@ -762,7 +790,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.plainGray5
   },
   fabItemContainerStyle: {
-    backgroundColor: MARKER_DEFAULT_COLOR,  
+    backgroundColor: MARKER_DEFAULT_COLOR,
   },
   fabItemStyle: {
     backgroundColor: MARKER_DEFAULT_COLOR,

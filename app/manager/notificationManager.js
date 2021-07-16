@@ -8,7 +8,12 @@ export default class NotificationManager
 
   // User's notifications
   #notifications = [];
+  // Observers for notifications changes
   #observers = [];
+  // Event subscriptions this user has
+  #eventSubscriptions = [];
+  // Geofence area types
+  #geofenceAreaTypes = [];
 
   /**
     Singleton accessor
@@ -59,6 +64,8 @@ export default class NotificationManager
       console.log(`[NotificationManager.init] notifications found for token ${apiToken}: ${ JSON.stringify(response.data.results) }`);
 
       this.#notifications = response.data.results;
+      this.#eventSubscriptions = response.data.eventSubscriptions;
+      this.#geofenceAreaTypes = response.data.geofenceAreaTypes;
       return true;
     }
     catch(err)
@@ -77,6 +84,22 @@ export default class NotificationManager
   }
 
   /**
+    Get event subscriptions
+  */
+  getEventSubscriptions()
+  {
+    return this.#eventSubscriptions;
+  }
+
+  /**
+    Get geofence area types
+  */
+  getGeofenceAreaTypes()
+  {
+    return this.#geofenceAreaTypes;
+  }
+
+  /**
     Set notifications
     @param  {Array.<Notification>}  notifications   Notifications
   */
@@ -84,6 +107,15 @@ export default class NotificationManager
   {
     this.#notifications = notifications;
     this.dataReloaded();
+  }
+
+  /**
+    Set event subscriptions
+    @param  {Array.<EventSubscription>}  eventSubscriptions   Event subscriptions
+  */
+  setEventSubscriptions(eventSubscriptions)
+  {
+    this.#eventSubscriptions = eventSubscriptions;
   }
 
   /**

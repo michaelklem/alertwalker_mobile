@@ -5,7 +5,7 @@ import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA} from '../../constant/App'
 
 
 
-export async function GetLocationCommand({ updateMasterState, dataVersion, setLoading })
+export async function GetLocationCommand({ updateMasterState, dataVersion, setLoading, successCb })
 {
   return new Command(async(dataStore, showAlert) =>
   {
@@ -43,7 +43,7 @@ export async function GetLocationCommand({ updateMasterState, dataVersion, setLo
             }
           };
           dataStore.set('location', data);
-
+          successCb ? successCb() : '';
           updateMasterState ? updateMasterState({ dataVersion: dataVersion + 1 }) : '';
           setLoading(false);
         },
