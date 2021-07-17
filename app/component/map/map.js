@@ -404,9 +404,18 @@ export default class Map extends Component
   // This is the floating action button
   renderAlertMenu2 = () =>
   {
-    const geofenceAreaTypes = this._notificationMgr.getGeofenceAreaTypes();
+    let geofenceAreaTypes = this._notificationMgr.getGeofenceAreaTypes();
     console.log(geofenceAreaTypes);
 
+    // for now just show the original alert type 
+    let useSecondAlertType = AppManager.GetInstance().getUseSecondAlertType()
+    if (useSecondAlertType === 'false') {
+      // only use the first alert which is the original one
+      geofenceAreaTypes = geofenceAreaTypes.filter(function( element, index ) {
+        return index === 0
+      })
+    }
+    
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
         {geofenceAreaTypes &&

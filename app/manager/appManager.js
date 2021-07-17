@@ -44,6 +44,7 @@ export default class AppManager
       longitudeDelta: DEFAULT_LNG_DELTA
     };
 
+    #_useSecondAlertType = false;
 
     // Singleton
     /**
@@ -127,7 +128,7 @@ export default class AppManager
         this.#_guestAccessAllowed = response.data.guestAccessAllowed;
         this.#_frontendUrl = response.data.frontendUrl;
         this.#_thirdPartyAccounts = response.data.thirdPartyAccounts;
-        
+        this.#_useSecondAlertType = response.data.useSecondAlertType;
         // ignoring this response from the server for now as I stated it here.
         // this.#_mapCreateDelta = JSON.parse(response.data.mapCreateDelta);
         //this.#_mapCreateRadius = response.data.mapCreateRadius;
@@ -189,6 +190,11 @@ export default class AppManager
     getMapCreateDelta = () =>
     {
       return this.#_mapCreateDelta;
+    }
+    
+    getUseSecondAlertType = () =>
+    {
+      return this.#_useSecondAlertType;
     }
 
     processFormInputsForPage = (pageName) =>

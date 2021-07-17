@@ -56,7 +56,7 @@ export default class CreateMap extends Component
   constructor(props)
   {
     super(props);
-    console.log('\t CreateMap() constructor');
+    console.log('\t CreateMap() constructor props: ' + JSON.stringify(props));
     this._dataMgr = DataManager.GetInstance();
     this._headerMgr = HeaderManager.GetInstance();
 
@@ -183,6 +183,7 @@ export default class CreateMap extends Component
   renderMapView = (data, locationData) =>
   {
     console.log(' createMap renderMapView called ' + JSON.stringify(locationData) );
+    console.log(' createMap renderMapView props ' + JSON.stringify(this.props) );
     return (
       <MapView
         // ref={this._mapViewRef}

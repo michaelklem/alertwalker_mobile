@@ -11,7 +11,7 @@ import VersionNumber from 'react-native-version-number';
 import { NotificationsPage } from '../../page/main/notifications';
 import { SettingsPage } from '../../page/main/settings';
 
-import { OauthManager } from '../../manager';
+import { AppManager, OauthManager } from '../../manager';
 import { ImageButton } from '../../component/imageButton';
 import { HomePage } from '../../page/main/home';
 
@@ -90,6 +90,9 @@ export default class DrawerContainer extends Component
 
   render()
   {
+    // using this to prevent showing ui for notification settings
+    let useSecondAlertType = AppManager.GetInstance().getUseSecondAlertType()
+
     return (
       <Drawer.Navigator
         initialRouteName='home'
@@ -124,17 +127,20 @@ export default class DrawerContainer extends Component
                         user={this.props.user}
                       />}
         </Drawer.Screen>
-        <Drawer.Screen
-          name='Notification preferences'
-          drawerLabel='Notification preferences'
-        >
-          {(props) => <SettingsPage {...props}
-                        ref={this.props.activeScreenRef}
-                        deepLink={this.props.deepLink}
-                        showAlert={this.props.showAlert}
-                        user={this.props.user}
-                      />}
-        </Drawer.Screen>
+
+        {useSecondAlertType === 'true' &&
+          <Drawer.Screen
+            name='Notification preferences'
+            drawerLabel='Notification preferences'
+          >
+            {(props) => <SettingsPage {...props}
+                          ref={this.props.activeScreenRef}
+                          deepLink={this.props.deepLink}
+                          showAlert={this.props.showAlert}
+                          user={this.props.user}
+                        />}
+          </Drawer.Screen>
+        }
       </Drawer.Navigator>
     );
   }
