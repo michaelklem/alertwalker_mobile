@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  PermissionsAndroid,
   View,
 } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
@@ -16,6 +17,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { MyButton } from '../myButton';
 import { AppText, Colors, DateTime, Images, Styles } from '../../constant';
 import {MARKER_DEFAULT_COLOR} from '../../constant/App'
+
 
 /*
   Component used to merge all 3 buttons into a single row.
@@ -52,37 +54,41 @@ const CreateAlertButtons = ({ updateMasterState,
 
         <View style={styles.container}>
           <TouchableHighlight
-            onPress={() =>
+            onPress={async () =>
             {
+              console.log('xxxxxlaunching camera')
               onPress2();
-              ImagePicker.launchCamera(
-                {
-                  mediaType: 'image',
-                  includeBase64: false,
-                  storageOptions:
+              let allowed = await requestCameraPermission();
+              if (allowed) {
+                ImagePicker.launchCamera(
                   {
-                    skipBackup: true,
-                    path: 'images',
+                    mediaType: 'image',
+                    includeBase64: false,
+                    storageOptions:
+                    {
+                      skipBackup: true,
+                      path: 'images',
+                    },
                   },
-                },
-                (response) =>
-                {
-                  if(response.didCancel)
+                  (response) =>
                   {
-                    return;
-                  }
-                  if(response.error)
-                  {
-                    showAlert('Error', response.error.toString());
-                    return;
-                  }
-                  else
-                  {
-                    console.log(response);
-                    updateMasterState(response);
-                  }
-                },
-              )
+                    if(response.didCancel)
+                    {
+                      return;
+                    }
+                    if(response.error)
+                    {
+                      showAlert('Error', response.error.toString());
+                      return;
+                    }
+                    else
+                    {
+                      console.log(response);
+                      updateMasterState(response);
+                    }
+                  },
+                )
+              }
             }}
             >
             <View style={styles.button}>
@@ -164,6 +170,34 @@ const CreateAlertButtons = ({ updateMasterState,
   )
 }
 
+
+
+const requestCameraPermission = async () => {
+  let canDo = false
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: "App Camera Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Camera permission given");
+      canDo = true
+    } else {
+      console.log("Camera permission denied");
+
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+
+  return canDo
+}
 
 const h100 = Math.round(Dimensions.get('window').height * 0.1282);
 const h64 = Math.round(Dimensions.get('window').height * 0.075);
