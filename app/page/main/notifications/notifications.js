@@ -34,6 +34,7 @@ export default class Notifications extends Component
     super(props);
 
     this._notificationMgr = NotificationManager.GetInstance();
+    this._unsubscribe = null;
 
     this.state =
     {
@@ -41,14 +42,20 @@ export default class Notifications extends Component
       notifications: this._notificationMgr.getNotifications()
     };
 
-    props.navigation.addListener('focus', async() =>
+
+    // called when the user revisits the notifications screen
+    this._unsubscribe = props.navigation.addListener('focus', async() =>
     {
       if(this._isMounted !== true)
       {
+
         this._isMounted = true;
       }
       else
       {
+        // this seems unneccessary as we already load the notifications from the constructor
+        // leaving in for now just in case.
+        // also, assuming any new notifications are already added from the dataReloaded function below.
         this.setState({ isLoading: true });
         const token = await AsyncStorage.getItem('token');
         await this._notificationMgr.init(token);
@@ -71,6 +78,7 @@ export default class Notifications extends Component
   componentWillUnmount()
   {
     this._notificationMgr.removeObserver('notifications');
+    if (this._unsubscribe !== null) {this._unsubscribe()}
   }
 
   // Called from notification manager when notifications change

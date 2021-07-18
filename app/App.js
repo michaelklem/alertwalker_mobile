@@ -281,7 +281,7 @@ export default class App extends Component
 
   onPushNotification = (notification) =>
   {
-    console.log('App.onPushNotification() notification: ' + JSON.stringify(notification) );
+    console.log('***App.onPushNotification() notification: ' + JSON.stringify(notification) );
     //this.showAlert("Success", "Push notification was received!");
 
     try
@@ -320,6 +320,10 @@ export default class App extends Component
       if(isUserInteraction)
       {
         this._notificationManager.readNotification(({_id: deeplink }));
+      }
+ 
+      if (isForeground){
+        console.log('***App.onPushNotification() notification in foreground: ' + JSON.stringify(notification) );  
       }
       // If app is foreground show toast pop up
       /*if(isForeground)

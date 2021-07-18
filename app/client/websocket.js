@@ -206,6 +206,7 @@ export default class WebsocketClient
     // Notification from server
     else if(msg.type === 'notification')
     {
+      console.log('***[websocket] onMessage notification : ' + JSON.stringify(nmsg.otification) );  
       NotificationManager.GetInstance().newNotification(msg.notification);
     }
     // Geofence area

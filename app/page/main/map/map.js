@@ -29,6 +29,7 @@ export default class MapPage extends Component
   {
     console.log('Main Map()');
     super(props);
+    this._unsubscribe = null;
 
     this.state =
     {
@@ -41,7 +42,7 @@ export default class MapPage extends Component
     // Refresh data
     // this appears to only get called when we click on 
     // a previously received alert to render the map for that alert
-    props.navigation.addListener('focus', () =>
+    this._unsubscribe = props.navigation.addListener('focus', () =>
     {
       if(this.props.route.params && this.props.route.params.geofenceArea)
       {
@@ -54,6 +55,11 @@ export default class MapPage extends Component
   async componentDidMount()
   {
 
+  }
+
+  componentWillUnmount()
+  {
+    if (this._unsubscribe !== null) {this._unsubscribe()}
   }
 
 

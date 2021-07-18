@@ -35,6 +35,7 @@ export default class Home extends Component
     // Get components on page
     this._manager = AppManager.GetInstance();
     const components = this._manager.getComponentsForPage('home');
+    this._unsubscribe = null;
 
     this.state =
     {
@@ -43,7 +44,7 @@ export default class Home extends Component
     };
 
     // Refresh data
-    props.navigation.addListener('focus', () =>
+    this._unsubscribe = props.navigation.addListener('focus', () =>
     {
       if(this._isMounted !== true)
       {
@@ -59,6 +60,11 @@ export default class Home extends Component
     });
 
     this._componentRef = React.createRef();
+  }
+
+  componentWillUnmount()
+  {
+    if (this._unsubscribe !== null) {this._unsubscribe()}
   }
 
 

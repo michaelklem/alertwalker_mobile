@@ -7,11 +7,11 @@ buildscript {
 
         buildToolsVersion = "28.0.3"
         minSdkVersion = 24
-        compileSdkVersion = 29
-        targetSdkVersion = 29
+        compileSdkVersion = 30
+        targetSdkVersion = 30
 
         // Only using Android Support libraries
-        supportLibVersion = "29.0.0"
+        supportLibVersion = "30.0.0"
 
         playServicesVersion = "17.0.0" // com.google.android.gms:play-services-maps (https://developers.google.com/android/guides/releases) used for react-native-maps
         androidMapsUtilsVersion = "2.2.0" // https://mvnrepository.com/artifact/com.google.maps.android/android-maps-utils used for react-native-maps

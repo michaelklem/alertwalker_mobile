@@ -29,12 +29,6 @@ const Layout1 = ({  isLoading,
 {
   return (
       <>
-        {isLoading &&
-          <View style={styles.noNotificationsContainer}>
-            <Text style={styles.top}>{'Loading alerts...'}</Text>
-          </View>        
-        }
-        
         {notifications.length === 0 &&
           <View style={styles.noNotificationsContainer}>
             <Text style={styles.top}>{'No alerts have been received yet.'}</Text>
