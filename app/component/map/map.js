@@ -573,6 +573,8 @@ export default class Map extends Component
               }}
             >
               <Text style={styles.description}>{this.props.geofenceArea.note}</Text>
+              {this.props.geofenceArea.image &&
+              <Text style={styles.subDescription}>{('(tap to view image)')}</Text>}
             </Callout>
           </Marker>
         </View>}
