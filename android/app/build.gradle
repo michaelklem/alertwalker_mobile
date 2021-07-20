@@ -3,6 +3,9 @@ apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
+android.buildTypes.release.ndk.debugSymbolLevel = 'SYMBOL_TABLE'
+
+
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -132,8 +135,8 @@ android {
         applicationId "com.alertwalker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 42
-        versionName "42.0"
+        versionCode 45
+        versionName "45.0"
         multiDexEnabled true
     }
 
@@ -171,9 +174,19 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.release
+
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
             minifyEnabled false
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
             shrinkResources false
-            // minifyEnabled enableProguardInReleaseBuilds
+
+            
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             ndk {
                 debugSymbolLevel 'SYMBOL_TABLE'

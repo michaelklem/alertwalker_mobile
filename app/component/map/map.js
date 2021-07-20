@@ -613,26 +613,29 @@ export default class Map extends Component
             }}
             showAlert={this.props.showAlert}
           />
-          <CreateAlertButtons
-            onPress1={() =>
-            {
-              console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
-              Keyboard.dismiss();
-              this.setState({ choosingLocation: !this.state.choosingLocation });
-            }}
-            isShowingLocation={this.state.choosingLocation}
-            location={locationData.alertLocation}
-            onPress2={() =>
-            {
-              Keyboard.dismiss();
-            }}
-            updateMasterState={(val) =>
-            {
-              this.setState({ image: val });
-            }}
-            showAlert={this.props.showAlert}
-          />
-
+          
+          {/* Disabling the use of images for initial beta testing */}
+          { false && 
+            <CreateAlertButtons
+              onPress1={() =>
+              {
+                console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
+                Keyboard.dismiss();
+                this.setState({ choosingLocation: !this.state.choosingLocation });
+              }}
+              isShowingLocation={this.state.choosingLocation}
+              location={locationData.alertLocation}
+              onPress2={() =>
+              {
+                Keyboard.dismiss();
+              }}
+              updateMasterState={(val) =>
+              {
+                this.setState({ image: val });
+              }}
+              showAlert={this.props.showAlert}
+            />
+          } 
 
           {/* Choose location map view */}
           {this.state.choosingLocation &&

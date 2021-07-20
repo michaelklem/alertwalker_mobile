@@ -56,7 +56,6 @@ const CreateAlertButtons = ({ updateMasterState,
           <TouchableHighlight
             onPress={async () =>
             {
-              console.log('xxxxxlaunching camera')
               onPress2();
               let allowed = await requestCameraPermission();
               if (allowed) {

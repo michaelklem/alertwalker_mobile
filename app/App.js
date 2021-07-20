@@ -108,7 +108,7 @@ export default class App extends Component
 
     await this.init();
   }
-
+  
   componentWillUnmount()
   {
     // Remove deep link listern
@@ -118,92 +118,105 @@ export default class App extends Component
   // Fetch the token from storage then navigate to our appropriate place
   init = async () =>
   {
-    // Load session
-    this._appMgr = await AppManager.GetInstanceAsync();
-    const userToken = await AsyncStorage.getItem('token');
-    let user = await AsyncStorage.getItem('user');
-    user = JSON.parse(user);
-    const smsVerificationRequired = await AsyncStorage.getItem('smsVerificationRequired');
-    const inviteCodeRequired = await AsyncStorage.getItem('inviteCodeRequired');
+    try {
+      // Load session
+      console.log('eeeeeeee init called')
+      this._appMgr = await AppManager.GetInstanceAsync();
+      const userToken = await AsyncStorage.getItem('token');
+      let user = await AsyncStorage.getItem('user');
+      user = JSON.parse(user);
+      const smsVerificationRequired = await AsyncStorage.getItem('smsVerificationRequired');
+      const inviteCodeRequired = await AsyncStorage.getItem('inviteCodeRequired');
 
-    let activeStack = ((userToken && smsVerificationRequired === 'false' && inviteCodeRequired === 'false') ? 'main' : 'auth');
+      let activeStack = ((userToken && smsVerificationRequired === 'false' && inviteCodeRequired === 'false') ? 'main' : 'auth');
 
-    let initialRouteName = this.state.initialRouteName;
-    if(user && user.firstName === '' && activeStack === 'main')
-    {
-      initialRouteName = 'settings';
-    }
-    else if(user && activeStack === 'auth' && inviteCodeRequired === 'true')
-    {
-      initialRouteName = 'welcome';
-    }
-    else if(!user && activeStack === 'auth')
-    {
-      initialRouteName = 'login';
-    }
-
-    this.setState(
-    {
-      activeStack: activeStack,
-      initialRouteName: initialRouteName,
-      user: user,
-      isLoading: true,
-    });
-
-    // Initialize data store
-    await this._dataManager.initDataStore(userToken);
-
-    if(user)
-    {
-      console.log('User:' + JSON.stringify(user) );
-      // Broke this out so we don't have to wait for it
-      //await this._dataManager.execute(await new LoadCalendarEventsCommand());
-      LocationManager.GetInstanceA(userToken);
-    }
-
-    // Setup push notification handler
-    this._pushManager = await PushManager.GetInstance(this.onPushRegister, this.onPushNotification);
-
-    /*PushManager.ScheduleNotification({
-      message: 'Calendar event occurring in 30 minutes',
-      date: new Date(),
-      id: '123',
-      delaySeconds: 10,
-    });*/
-
-    // Setup oauthManager handlers
-    this._oauthManager = OauthManager.GetInstance();
-    this._oauthManager.setAlertHandler(this.showAlert);
-    this._oauthManager.setGlobalStateHandler(this.updateGlobalState);
-
-    // Notification manager
-    this._notificationManager = await NotificationManager.GetInstanceA(userToken);
-    this._notificationManager.addObserver(this, 'app');
-
-    // TODO: Make a cookie manager wrapper around AsyncStorage so we can have observers notified when something changed
-
-    // Websockets handle system notifications and chats
-    this._websocketClient = await WebsocketClient.GetInstanceA(userToken);
-
-    this.setState({ isLoading: false, dataStoreInitialized: true }, () =>
-    {
-      // Handle deep link
-      if(this.state.deepLink !== null)
+      let initialRouteName = this.state.initialRouteName;
+      if(user && user.firstName === '' && activeStack === 'main')
       {
-        if(this.state.deepLink.calendarEventId)
-        {
-          // Wait a second for stacks to update
-          setTimeout(() =>
-          {
-            RootNavigation.navigate('calendar', { _id: this.state.deepLink.calendarEventId });
-          }, 1500);
-        }
-        else
-        {
-          this._notificationManager.readNotification(({_id: this.state.deepLink }));
-        }
+        initialRouteName = 'settings';
       }
-    });
+      else if(user && activeStack === 'auth' && inviteCodeRequired === 'true')
+      {
+        initialRouteName = 'welcome';
+      }
+      else if(!user && activeStack === 'auth')
+      {
+        initialRouteName = 'login';
+      }
+
+      this.setState(
+      {
+        activeStack: activeStack,
+        initialRouteName: initialRouteName,
+        user: user,
+        isLoading: true,
+      });
+
+      // Initialize data store
+      await this._dataManager.initDataStore(userToken);
+
+      if(user)
+      {
+        console.log('User:' + JSON.stringify(user) );
+        // Broke this out so we don't have to wait for it
+        //await this._dataManager.execute(await new LoadCalendarEventsCommand());
+        LocationManager.GetInstanceA(userToken);
+      }
+
+      // Setup push notification handler
+      this._pushManager = await PushManager.GetInstance(this.onPushRegister, this.onPushNotification);
+
+      /*PushManager.ScheduleNotification({
+        message: 'Calendar event occurring in 30 minutes',
+        date: new Date(),
+        id: '123',
+        delaySeconds: 10,
+      });*/
+
+      // Setup oauthManager handlers
+      this._oauthManager = OauthManager.GetInstance();
+      this._oauthManager.setAlertHandler(this.showAlert);
+      this._oauthManager.setGlobalStateHandler(this.updateGlobalState);
+
+      // Notification manager
+      this._notificationManager = await NotificationManager.GetInstanceA(userToken);
+      this._notificationManager.addObserver(this, 'app');
+
+      // TODO: Make a cookie manager wrapper around AsyncStorage so we can have observers notified when something changed
+
+      // Websockets handle system notifications and chats
+      this._websocketClient = await WebsocketClient.GetInstanceA(userToken);
+
+      this.setState({ isLoading: false, dataStoreInitialized: true }, () =>
+      {
+        // Handle deep link
+        if(this.state.deepLink !== null)
+        {
+          if(this.state.deepLink.calendarEventId)
+          {
+            // Wait a second for stacks to update
+            setTimeout(() =>
+            {
+              RootNavigation.navigate('calendar', { _id: this.state.deepLink.calendarEventId });
+            }, 1500);
+          }
+          else
+          {
+            this._notificationManager.readNotification(({_id: this.state.deepLink }));
+          }
+        }
+      });
+    }
+    catch(err){
+      // handle start up errors and retry when the ok button is pressed.
+      console.log('[App.init] Error: ' + err.message)
+
+      let msg = err.message
+      if (err.message.toLowerCase().indexOf('network error') !== -1) {
+        msg = 'Please check your internet connection.'
+      }
+      this.showAlert('An error prevented the application from starting:', msg, this.init);
+    }
   }
 
 
@@ -275,7 +288,7 @@ export default class App extends Component
     catch(err)
     {
       this.setState({ isLoading: false  });
-      this.showAlert('[App.onPushRegister] Error', 'An error has occurred, please try again or contact support.\nError: 1 ' + err, 'danger');
+      this.showAlert('[App.onPushRegister] Error', 'An error has occurred, please try again or contact support.\nError: 1 ' + err);
     }
   }
 
