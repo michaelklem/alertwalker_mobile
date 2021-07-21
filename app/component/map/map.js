@@ -408,13 +408,13 @@ export default class Map extends Component
     console.log(geofenceAreaTypes);
 
     // for now just show the original alert type 
-    let useSecondAlertType = AppManager.GetInstance().getUseSecondAlertType()
-    if (useSecondAlertType === 'false') {
-      // only use the first alert which is the original one
-      geofenceAreaTypes = geofenceAreaTypes.filter(function( element, index ) {
-        return index === 0
-      })
-    }
+    // let useSecondAlertType = AppManager.GetInstance().getUseSecondAlertType()
+    // if (useSecondAlertType === 'false') {
+    //   // only use the first alert which is the original one
+    //   geofenceAreaTypes = geofenceAreaTypes.filter(function( element, index ) {
+    //     return index === 0
+    //   })
+    // }
     
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
@@ -677,13 +677,13 @@ export default class Map extends Component
 
   render()
   {
-    console.log('\t Component Map.render()');
+    console.log('\t [Component Map] render');
     const data = this._dataMgr.getData('geofenceAreas');
     const locationData = this._dataMgr.getData('location');
 
     // console.log('   window dimensions: ' + Dimensions.get('window'));
-    console.log('   locationData: ' + JSON.stringify(locationData) );
-    console.log('   geofence data: ' + JSON.stringify(data) );
+    console.log('\t [Component Map] render   locationData: ' + JSON.stringify(locationData) );
+    console.log('\t [Component Map] render   geofence data: ' + JSON.stringify(data) );
 
     return (
     <HeaderHeightContext.Consumer>
