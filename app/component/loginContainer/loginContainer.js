@@ -150,8 +150,6 @@ export default class LoginContainer extends Component
     } catch (error) {
       console.log('[loginContainer.login] error: ' + error + ' stack: ' + error.stack)
       
-      this.props.showAlert("Error","logging in error: " + error.message)
-
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
