@@ -19,7 +19,6 @@ import { isPointWithinRadius } from 'geolib';
 import { StackActions } from '@react-navigation/native';
 import MapView, { AnimatedRegion, Callout, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { HeaderHeightContext } from '@react-navigation/stack';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -63,6 +62,7 @@ export default class Map extends Component
   _headerMgr = null;
   _notificationMgr = null;
   // Refs
+  _createMapRef = null;
   // _mapViewRef = null;
   _bottomSheetRef = null;
   // Keyboard related
@@ -118,6 +118,7 @@ export default class Map extends Component
 
     // this._mapViewRef = React.createRef();
     this._bottomSheetRef = React.createRef();
+    this._createMapRef = React.createRef();
   }
 
   async componentWillUnmount()
@@ -407,7 +408,7 @@ export default class Map extends Component
     let geofenceAreaTypes = this._notificationMgr.getGeofenceAreaTypes();
     console.log(geofenceAreaTypes);
 
-    // for now just show the original alert type 
+    // for now just show the original alert type
     // let useSecondAlertType = AppManager.GetInstance().getUseSecondAlertType()
     // if (useSecondAlertType === 'false') {
     //   // only use the first alert which is the original one
@@ -415,7 +416,7 @@ export default class Map extends Component
     //     return index === 0
     //   })
     // }
-    
+
     return (
       <ActionButton buttonColor={MARKER_DEFAULT_COLOR}>
         {geofenceAreaTypes &&
@@ -429,10 +430,11 @@ export default class Map extends Component
               textStyle={styles.fabItemStyle}
               title={`New ${geofenceAreaType.label}`}
               size={40}
-              onPress={() =>
+              onPress={async() =>
               {
                 this._bottomSheetRef.current.show();
                 this._headerMgr.setIsCreateMode(true);
+                await this._createMapRef.current.getLocation();
                 this.setState({ type: geofenceAreaType });
               }}
             >
@@ -613,9 +615,9 @@ export default class Map extends Component
             }}
             showAlert={this.props.showAlert}
           />
-          
+
           {/* Disabling the use of images for initial beta testing */}
-          { false && 
+          { false &&
             <CreateAlertButtons
               onPress1={() =>
               {
@@ -635,7 +637,7 @@ export default class Map extends Component
               }}
               showAlert={this.props.showAlert}
             />
-          } 
+          }
 
           {/* Choose location map view */}
           {this.state.choosingLocation &&
@@ -650,7 +652,7 @@ export default class Map extends Component
     console.log(this.state.type);
     return (
       <CreateMap
-        //ref={this._componentRef}
+        ref={this._createMapRef}
         updateMasterState={(state) => this.setState(state)}
         showAlert={this.props.showAlert}
         navigation={this.props.navigation}

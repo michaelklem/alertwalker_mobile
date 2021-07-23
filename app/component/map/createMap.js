@@ -41,7 +41,7 @@ export default class CreateMap extends Component
   _headerMgr = null;
   // Refs
   // _mapViewRef = null;
-  // _createMarkerRef = null;
+   _createMarkerRef = null;
   // Keyboard related
   _keyboardIsShowing = false;
   _keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
@@ -70,7 +70,7 @@ export default class CreateMap extends Component
     };
 
     // this._mapViewRef = React.createRef();
-    // this._createMarkerRef = React.createRef();
+     this._createMarkerRef = React.createRef();
   }
 
   async componentWillUnmount()
@@ -177,6 +177,17 @@ export default class CreateMap extends Component
     }*/
 
 
+  }
+
+  // MARK: - Update events
+  componentDidUpdate(prevProps, prevState)
+  {
+    // Redraw marker when color changes
+    if(prevProps.markerColor !== this.props.markerColor)
+    {
+      this._createMarkerRef.current.redraw();
+      console.log('Redraw for color change');
+    }
   }
 
   // MARK: - Renders
@@ -289,7 +300,9 @@ export default class CreateMap extends Component
         {/* Movable create marker */}
         {(locationData && locationData.alertLocation) &&
         <Marker
-          // ref={this._createMarkerRef}
+          ref={this._createMarkerRef}
+          /* Have to change key to force an update on this component, something weird with the component code itself */
+          key={`marker-${this.props.markerColor}`}
           draggable
           coordinate={locationData.alertLocation}
           onDragEnd={async(e) =>
