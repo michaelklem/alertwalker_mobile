@@ -320,7 +320,7 @@ export default class Map extends Component
       {
         return (
         <View key={`geofencearea-${geofenceArea._id.toString()}`}>
-          <Circle
+          {/* <Circle
             center={
             {
               latitude: geofenceArea.location.coordinates[1],
@@ -330,7 +330,7 @@ export default class Map extends Component
             strokeWidth = { 5 }
             strokeColor = { geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
-          />
+          /> */}
           <Marker
             coordinate={
             {
@@ -538,7 +538,7 @@ export default class Map extends Component
         {/* Show one location (for notification) */}
         {this.props.geofenceArea &&
         <View>
-          <Circle
+          {/* <Circle
             center={
             {
               latitude: this.props.geofenceArea.location.coordinates[1],
@@ -548,7 +548,7 @@ export default class Map extends Component
             strokeWidth = { 5 }
             strokeColor = { this.props.geofenceArea.type.color }
             fillColor = { 'rgba(230,238,255,0.5)' }
-          />
+          /> */}
           <Marker
             coordinate={
             {
