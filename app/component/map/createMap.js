@@ -28,7 +28,7 @@ import SubmitField from './submitField';
 import { ImageButton } from '../imageButton';
 import { Colors } from '../../constant';
 import { GetLocationCommand, SetLocationCommand } from '../../command/location';
-import {MARKER_DEFAULT_COLOR} from '../../constant/App'
+import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA, MARKER_DEFAULT_COLOR} from '../../constant/App'
 
 // MARK: - Constants
 const RADIUS_SIZE = 500;
@@ -195,6 +195,10 @@ export default class CreateMap extends Component
   {
     console.log(' createMap renderMapView called ' + JSON.stringify(locationData) );
     console.log(' createMap renderMapView props ' + JSON.stringify(this.props) );
+    console.log('xxxxxx locationData.userLocation.longitude: ' + locationData.userLocation.longitude)
+    console.log('xxxxxx locationData.userLocation.latitude: ' + locationData.userLocation.latitude)
+    console.log('xxxxxx locationData.userLocation.latitudeDelta: ' + locationData.userLocation.latitudeDelta)
+    console.log('xxxxxx locationData.userLocation.longitudeDelta: ' + locationData.userLocation.longitudeDelta)
     return (
       <MapView
         // ref={this._mapViewRef}
@@ -207,39 +211,39 @@ export default class CreateMap extends Component
             Keyboard.dismiss();
           }
         }}
-        onRegionChangeComplete={async(region, isGesture) =>
-        {
-          // console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
-          // console.log('Create Map.onRegionChangeComplete() new userLocation: ' + JSON.stringify(locationData.userLocation) );
-          // console.log('Create Map.onRegionChangeComplete() new alertLocation: ' + JSON.stringify(locationData.alertLocation) );
-
-          // console.log('Create Map.onRegionChangeComplete()');
-          //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
-          //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
-          //console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
-          // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
-          //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
-          //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
-          //     region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
-          // {
-          //     console.log('   CreateMap MapView SetLocationCommand')
-          //   await this._dataMgr.execute(await new SetLocationCommand({
-          //     newLocation: region,
-          //     updateMasterState: (state) => this.setState(state),
-          //     dataVersion: this.state.dataVersion,
-          //     type: 'map',
-          //   }));
-          // }
-        }}
-       initialRegion={locationData.alertLocation}
-        // we want to center the map on the user's location
-        // region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        // onRegionChangeComplete={async(region, isGesture) =>
         // {
-        //   latitude: locationData.userLocation.latitude,
-        //   longitude: locationData.userLocation.longitude,
-        //   latitudeDelta: 0.006, // force the marker to be zoomed in
-        //   longitudeDelta: 0.006
+        //   console.log('Create Map.onRegionChangeComplete() new region: ' + JSON.stringify(region) );
+        //   console.log('Create Map.onRegionChangeComplete() new userLocation: ' + JSON.stringify(locationData.userLocation) );
+        //   console.log('Create Map.onRegionChangeComplete() new alertLocation: ' + JSON.stringify(locationData.alertLocation) );
+
+        //   // console.log('Create Map.onRegionChangeComplete()');
+        //   //console.log(region.latitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitude.toFixed(this._threshold));
+        //   //console.log(region.longitude.toFixed(this._threshold) + ' == ' + locationData.mapLocation.longitude.toFixed(this._threshold));
+        //   //console.log(region.latitudeDelta.toFixed(this._threshold) + ' == ' + locationData.mapLocation.latitudeDelta.toFixed(this._threshold));
+        //   // if( region.latitude.toFixed(this._threshold) !== locationData.mapLocation.latitude.toFixed(this._threshold) ||
+        //   //     region.longitude.toFixed(this._threshold) !== locationData.mapLocation.longitude.toFixed(this._threshold) ||
+        //   //     region.latitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.latitudeDelta.toFixed(this._threshold) ||
+        //   //     region.longitudeDelta.toFixed(this._threshold) !== locationData.mapLocation.longitudeDelta.toFixed(this._threshold))
+        //   // {
+        //   //     console.log('   CreateMap MapView SetLocationCommand')
+        //   //   await this._dataMgr.execute(await new SetLocationCommand({
+        //   //     newLocation: region,
+        //   //     updateMasterState: (state) => this.setState(state),
+        //   //     dataVersion: this.state.dataVersion,
+        //   //     type: 'map',
+        //   //   }));
+        //   // }
         // }}
+      //  initialRegion={locationData.alertLocation}
+        // we want to center the map on the user's location
+        region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        {
+          latitude: locationData.userLocation.latitude,
+          longitude: locationData.userLocation.longitude,
+          latitudeDelta: DEFAULT_LAT_DELTA,
+          longitudeDelta: DEFAULT_LNG_DELTA
+        }}
 
         // initialRegion={(locationData && locationData.alertLocation && locationData.alertLocation.longitudeDelta) ? locationData.alertLocation :
         // {
@@ -261,16 +265,7 @@ export default class CreateMap extends Component
         pitchEnabled={this._isMapMovable}
       >
 
-        { /* Create marker bounds (Disabled this for now, instead will restrict map view itself )*/}
-        {false &&
-        (locationData && locationData.userLocation) &&
-        <Circle
-          center={locationData.userLocation}
-          radius={this.state.mapCreateRadius}
-          strokeWidth={5}
-          strokeColor={'#E74C3C'}
-          fillColor={'rgba(231, 76, 60,0.5)'}
-        />}
+
 
         {/* Create marker moveable circle */}
         {(locationData && locationData.alertLocation) &&
@@ -279,7 +274,7 @@ export default class CreateMap extends Component
           radius={this.state.radius}
           onRegionChangeComplete={async(e) =>
           {
-            console.log('Circle.onRegionChangeComplete()');
+            // console.log('Circle.onRegionChangeComplete()');
             // await this._dataMgr.execute(await new SetLocationCommand({
             //   newLocation:
             //   {
@@ -292,7 +287,7 @@ export default class CreateMap extends Component
             // }));
             // return true;
           }}
-          strokeWidth = { 5 }
+          strokeWidth = { 3 }
           strokeColor = { this.props.markerColor }
           fillColor = { 'rgba(230,238,255,0.5)' }
         />}
@@ -307,7 +302,7 @@ export default class CreateMap extends Component
           coordinate={locationData.alertLocation}
           onDragEnd={async(e) =>
           {
-            console.log('OnMarkerDragEnd()');
+            // console.log('OnMarkerDragEnd()');
             /*if(!isPointWithinRadius(e.nativeEvent.coordinate, locationData.userLocation, this.state.mapCreateRadius))
             {
               console.log('Resetting marker');
