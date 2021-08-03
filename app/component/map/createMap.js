@@ -237,10 +237,10 @@ export default class CreateMap extends Component
         // }}
       //  initialRegion={locationData.alertLocation}
         // we want to center the map on the user's location
-        region={(locationData && locationData.userLocation && locationData.userLocation.longitudeDelta) ? locationData.userLocation :
+        region={(locationData && locationData.alertLocation && locationData.alertLocation.longitudeDelta) ? locationData.alertLocation :
         {
-          latitude: locationData.userLocation.latitude,
-          longitude: locationData.userLocation.longitude,
+          latitude: locationData.alertLocation.latitude,
+          longitude: locationData.alertLocation.longitude,
           latitudeDelta: DEFAULT_LAT_DELTA,
           longitudeDelta: DEFAULT_LNG_DELTA
         }}
