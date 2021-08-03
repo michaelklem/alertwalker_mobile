@@ -120,7 +120,6 @@ export default class App extends Component
   {
     try {
       // Load session
-      console.log('eeeeeeee init called')
       this._appMgr = await AppManager.GetInstanceAsync();
       const userToken = await AsyncStorage.getItem('token');
       let user = await AsyncStorage.getItem('user');

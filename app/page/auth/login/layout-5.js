@@ -62,7 +62,7 @@ const Layout5 = ({isLoading,
 
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Image
-            source={require('../../../asset/alertwalkerlogo-circle.png')}
+            source={require('../../../asset/splash_screen.png')}
             style={styles.userPhotoImg}
           />
         </View>
@@ -94,9 +94,7 @@ const styles = StyleSheet.create({
     fontSize: h20,
   },
   userPhotoImg: {
-    width: Math.round(Dimensions.get('window').width * 0.43),
-    height: Math.round(Dimensions.get('window').height * 0.2),
-    borderRadius: Math.round(Dimensions.get('window').width * 0.43) / 2,
+    // width: Math.round(Dimensions.get('window').width * 0.43),
     alignSelf: 'center',
     justifyContent: 'center',
     resizeMode: 'contain',

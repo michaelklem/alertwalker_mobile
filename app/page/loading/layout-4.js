@@ -24,7 +24,7 @@ const Layout4 = () =>
     >
       <View style={styles.centered}>
         <Image
-          source={require('../../asset/alertwalkerlogo-circle.png')}
+          source={require('../../asset/splash_screen.png')}
           style={[styles.logo, {marginTop: 'auto'}]}
         />
       </View>
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: Math.round(Dimensions.get('window').width * 0.4),
-    height: Math.round(Dimensions.get('window').height * 0.23),
+    // width: Math.round(Dimensions.get('window').width * 0.4),
+    // height: Math.round(Dimensions.get('window').height * 0.23),
     alignSelf: 'center',
     resizeMode: 'contain',
   },
