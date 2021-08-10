@@ -29,7 +29,7 @@ const SubmitField = ({  note,
       style={[styles.commentTextField, {textAlignVertical: 'center'}]}
       underlineColorAndroid='transparent'
       onChangeText={(val) => updateMasterState('note', val)}
-      placeholder={'Message'}
+      placeholder={'Alert Message'}
       multiline={true}
       numberOfLines={3}
       autoCorrect={true}

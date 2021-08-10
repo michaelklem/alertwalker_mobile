@@ -616,9 +616,7 @@ export default class Map extends Component
             showAlert={this.props.showAlert}
           />
 
-          {/* Disabling the use of images for initial beta testing */}
-          { false &&
-            <CreateAlertButtons
+          {<CreateAlertButtons
               onPress1={() =>
               {
                 console.log(`[Debug] Current location: ${JSON.stringify(locationData.alertLocation)}` )
