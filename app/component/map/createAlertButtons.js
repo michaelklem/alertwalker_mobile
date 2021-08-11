@@ -82,7 +82,7 @@ const CreateAlertButtons = ({ updateMasterState,
                     }
                     else
                     {
-                      console.log(response);
+                      console.log('[ImagePicker.launchCamera] response: ' + response);
                       updateMasterState(response);
                     }
                   },
@@ -116,13 +116,9 @@ const CreateAlertButtons = ({ updateMasterState,
               onPress2();
               ImagePicker.launchImageLibrary(
                 {
-                  mediaType: 'image',
-                  includeBase64: false,
-                  storageOptions:
-                  {
-                    skipBackup: true,
-                    path: 'images',
-                  },
+                  mediaType: 'photo',
+                  maxWidth: 824,
+                  maxHeight: 1320,
                 },
                 (response) =>
                 {
@@ -137,7 +133,7 @@ const CreateAlertButtons = ({ updateMasterState,
                   }
                   else
                   {
-                    console.log(response);
+                    console.log('[ImagePicker.launchImageLibrary] response: ' + response);
                     updateMasterState(response);
                   }
                 },

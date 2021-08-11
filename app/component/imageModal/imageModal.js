@@ -19,6 +19,8 @@ const ImageModal = ({ imageSrc,
                     }) =>
 {
   console.log('ImageModal: ' + imageSrc);
+  // console.log('xxxxxxx ' + Math.round(Dimensions.get('window').width * 0.8))
+  // console.log('xxxxxxx ' + Math.round(Dimensions.get('window').width * 0.5))
   return (
     <Modal
       animationType={'slide'}
