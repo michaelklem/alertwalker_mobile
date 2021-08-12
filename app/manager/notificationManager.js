@@ -6,8 +6,12 @@ export default class NotificationManager
 {
   static #instance = null;
 
-  // User's notifications
+  // User's received notifications
   #notifications = [];
+
+  // User's created notifications
+  #myNotifications = [];
+
   // Observers for notifications changes
   #observers = [];
   // Event subscriptions this user has
@@ -50,6 +54,7 @@ export default class NotificationManager
     if(!apiToken)
     {
       this.#notifications = [];
+      this.#myNotifications = [];
       return;
     }
     try
@@ -66,6 +71,7 @@ export default class NotificationManager
       this.#notifications = response.data.results;
       this.#eventSubscriptions = response.data.eventSubscriptions;
       this.#geofenceAreaTypes = response.data.geofenceAreaTypes;
+      // this.#myNotifications = response.data.myNotifications;
       return true;
     }
     catch(err)
@@ -81,6 +87,38 @@ export default class NotificationManager
   getNotifications()
   {
     return this.#notifications;
+  }
+
+  async getMyNotifications(apiToken)
+    {
+    console.log('\t\tNotificationManager.getMyNotifications()');
+    if(!apiToken)
+    {
+      this.#myNotifications = [];
+      return;
+    }
+
+    try
+    {
+      var response = await ApiRequest.sendRequest("post", {}, "notification/myAlerts", apiToken);
+      if(response.data.error !== null)
+      {
+        console.error('[NotificationManager.getMyNotifications] error: ' + response.data.error);
+        return false;
+      }
+      
+      console.log(`[NotificationManager.getMyNotifications] notifications found for token ${apiToken}: ${ JSON.stringify(response.data.results) }`);
+
+      this.#myNotifications = response.data.results;
+      // this.#eventSubscriptions = response.data.eventSubscriptions;
+      // this.#geofenceAreaTypes = response.data.geofenceAreaTypes;
+    }
+    catch(err)
+    {
+      console.log('NotificationManager.getMyNotifications error2: ' + err + '\nError stack: ' + err.stack);
+    }
+
+    return this.#myNotifications
   }
 
   /**
@@ -106,6 +144,12 @@ export default class NotificationManager
   setNotifications(notifications)
   {
     this.#notifications = notifications;
+    this.dataReloaded();
+  }
+
+  setMyNotifications(notifications)
+  {
+    this.#myNotifications = notifications;
     this.dataReloaded();
   }
 
@@ -327,7 +371,7 @@ export default class NotificationManager
   */
   readNotification = async (notification) =>
 	{
-		console.log('NotificationManager.readNotification()');
+		console.log('NotificationManager.readNotification() ' + JSON.stringify(notification));
 		try
 		{
       const params =

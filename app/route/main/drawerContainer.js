@@ -8,6 +8,7 @@ import Animated from 'react-native-reanimated';
 import AsyncStorage from '@react-native-community/async-storage';
 import VersionNumber from 'react-native-version-number';
 
+import { MyAlerts } from '../../page/main/my_alerts';
 import { NotificationsPage } from '../../page/main/notifications';
 import { SettingsPage } from '../../page/main/settings';
 
@@ -116,11 +117,24 @@ export default class DrawerContainer extends Component
                         user={this.props.user}
                       />}
         </Drawer.Screen>
+        
         <Drawer.Screen
           name='Previously received alerts'
           drawerLabel='Notifications'
         >
           {(props) => <NotificationsPage {...props}
+                        ref={this.props.activeScreenRef}
+                        deepLink={this.props.deepLink}
+                        showAlert={this.props.showAlert}
+                        user={this.props.user}
+                      />}
+        </Drawer.Screen>
+
+        <Drawer.Screen
+          name='My alerts'
+          drawerLabel='MyAlerts'
+        >
+          {(props) => <MyAlerts {...props}
                         ref={this.props.activeScreenRef}
                         deepLink={this.props.deepLink}
                         showAlert={this.props.showAlert}
