@@ -15,9 +15,14 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-
 import {AppText, Colors, Images, Styles} from '../../../constant';
+import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA, MARKER_DEFAULT_COLOR} from '../../../constant/App'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCog } from '@fortawesome/free-solid-svg-icons'
+
+// sticky header 
+// https://reactnativeforyou.com/how-to-make-header-of-flatlist-sticky-in-react-native/
+
 
 const Layout1 = ({  isLoading,
                     user,
@@ -27,24 +32,58 @@ const Layout1 = ({  isLoading,
                     renderNotification,
                   }) =>
 {
+  const onPress = () => console.log('sdfsdfgdfgdgddgdfgdfg');
+
+  const h20 = Math.round(Dimensions.get('window').height * 0.0256);
+
+  function leftBtnNavigation(){
+    console.log('sdfsdf')
+    // navigation.navigate('settings', { shouldPop: true });
+  };
+
+  function header (){
+    return(
+      <View style={styles.headerStyle}>
+
+        <Text style={styles.titleStyle}>My Alerts</Text>
+
+        <TouchableOpacity 
+          style={styles.touchable}
+          onPress={onPress}
+        >
+          <FontAwesomeIcon
+            style={styles.cogStyle}
+            color={'white'}
+            icon={ faCog }
+            size={h20}
+          />
+        </TouchableOpacity>
+
+      </View>
+      );
+  }
+
   return (
       <>
         {notifications.length === 0 &&
-          <View style={styles.noNotificationsContainer}>
-            <Text style={styles.top}>{'No alerts have been received yet.'}</Text>
-          </View>
+          <SafeAreaView style={styles.noNotificationsContainer}>
+            <Text style={styles.top}>{'No alerts have been created yet.'}</Text>
+          </SafeAreaView>
         }
 
         {notifications.length > 0 &&  
-          <KeyboardAvoidingView style={styles.innerContainer}>
-            <KeyboardAwareFlatList
+          <SafeAreaView 
+            style={styles.innerContainer}
+            >
+            <FlatList
+              ListHeaderComponent={header}
+              stickyHeaderIndices={[0]}
               data={notifications}
               numColumns={1}
-              scrollEnabled={true}
               keyExtractor={item => item._id.toString()}
               renderItem={(item, index) => renderNotification(item.item, index)}
             />
-          </KeyboardAvoidingView>
+          </SafeAreaView>
         }
     </>
   );
@@ -80,6 +119,24 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
 
+  headerStyle: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 40,
+    width: '100%',
+    backgroundColor: MARKER_DEFAULT_COLOR,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleStyle: {
+    color: 'white',
+    fontSize:20
+  },
+  cogStyle: {
+  },
+  touchable: {
+    left:'300%',
+  }
 });
 
 export default Layout1;

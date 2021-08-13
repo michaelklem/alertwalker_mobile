@@ -140,7 +140,6 @@ export default class Notifications extends Component
           key={`groups-post-touch-${index}`}
           onPress={()=>
           {
-            // this._notificationMgr.readNotification(item);
             RootNavigation.navigate('map', { geofenceArea: item });
           }}
         >
