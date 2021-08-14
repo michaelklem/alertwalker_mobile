@@ -14,13 +14,39 @@ import {
 import { Colors, Images } from '../../constant';
 import { ImageButton } from '../imageButton';
 import { DataManager, NotificationManager } from '../../manager';
+import { RadioButton } from '../radioButton';
 
 const FilterModal = ({ imageSrc,
                       onClose,
                     }) =>
 {
 
+  const PROP = [
+    {
+      key: 'samsung',
+      text: 'Samsung',
+    },
+    {
+      key: 'apple',
+      text: 'Apple',
+    },
+    {
+      key: 'motorola',
+      text: 'Motorola',
+    },
+    {
+      key: 'lenovo',
+      text: 'Lenovo',
+    },
+  ];
+
+
   const geofenceAreaTypes = NotificationManager.GetInstance().getGeofenceAreaTypes();
+
+  let alertTypeOptions = []
+  geofenceAreaTypes.map( (alertType, i) =>
+    alertTypeOptions.push({key:alertType.label, text: alertType.label})
+  )
 
   const modalHeader=(
       <View style={styles.modalHeader}>
@@ -42,18 +68,17 @@ const FilterModal = ({ imageSrc,
     <View>
       <Text style={styles.filterSectionTitle}>Event Types</Text>
 
-      {geofenceAreaTypes.map( (alertType, i) =>
-        <Text style={styles.filterSelectionName}>
-          {alertType.label}
-        </Text>
-      )}
+      <RadioButton PROP={alertTypeOptions} />
+
     </View>
   )
 
   const modalBody=(
     <ScrollView style={styles.modalBody}>
 
-      {alertTypes}
+      <View style={styles.buttonContainer}>
+        {alertTypes}
+      </View>
 
     </ScrollView>
   )
@@ -101,6 +126,8 @@ const FilterModal = ({ imageSrc,
 const sideMargins = Math.round(Dimensions.get('window').width * 0.044);
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+  },
   safeAreaContainer: {
     width: '100%',
     height: '100%',
@@ -197,7 +224,7 @@ const styles = StyleSheet.create({
   },
 
   filterSectionTitle: {
-    fontSize:20,
+    fontSize:24,
     fontWeight:'bold',
   },
 
