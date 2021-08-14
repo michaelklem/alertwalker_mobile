@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -19,6 +19,7 @@ import {AppText, Colors, Images, Styles} from '../../../constant';
 import {DEFAULT_LAT_DELTA, DEFAULT_LNG_DELTA, MARKER_DEFAULT_COLOR} from '../../../constant/App'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
+import { FilterModal } from '../../../component/myAlertsFilter';
 
 // sticky header 
 // https://reactnativeforyou.com/how-to-make-header-of-flatlist-sticky-in-react-native/
@@ -32,7 +33,20 @@ const Layout1 = ({  isLoading,
                     renderNotification,
                   }) =>
 {
-  const onPress = () => console.log('sdfsdfgdfgdgddgdfgdfg');
+  const [modalVisible, setModalVisible] = useState(false);
+
+
+  function renderImageModal()
+  {
+    return (
+      <FilterModal
+        onClose={() =>
+        {
+          setModalVisible(!modalVisible)
+        }}
+      />
+    );
+  }
 
   const h20 = Math.round(Dimensions.get('window').height * 0.0256);
 
@@ -45,11 +59,15 @@ const Layout1 = ({  isLoading,
     return(
       <View style={styles.headerStyle}>
 
+      {/* Image modal */}
+      {modalVisible &&
+        renderImageModal()}
+
         <Text style={styles.titleStyle}>My Alerts</Text>
 
         <TouchableOpacity 
           style={styles.touchable}
-          onPress={onPress}
+          onPress={() => setModalVisible(!modalVisible)}
         >
           <FontAwesomeIcon
             style={styles.cogStyle}

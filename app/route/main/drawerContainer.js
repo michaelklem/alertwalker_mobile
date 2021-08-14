@@ -142,7 +142,7 @@ export default class DrawerContainer extends Component
                       />}
         </Drawer.Screen>
 
-        {useSecondAlertType === 'true' &&
+        {
           <Drawer.Screen
             name='Notification preferences'
             drawerLabel='Notification preferences'
