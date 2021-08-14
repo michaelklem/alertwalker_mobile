@@ -21,8 +21,17 @@ const FilterModal = ({ imageSrc,
 
   const modalHeader=(
       <View style={styles.modalHeader}>
-        <Text style={styles.title}>Delete Your Account</Text>
-        <View style={styles.divider}></View>
+        <TouchableOpacity
+          onPress={onClose}>
+          <Text style={styles.title}>Cancel</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.headerTitle}>Filters</Text>
+  
+        <TouchableOpacity 
+          onPress={onClose}>
+          <Text style={styles.title}>Reset</Text>
+        </TouchableOpacity>
       </View>
   )
 
@@ -34,16 +43,10 @@ const FilterModal = ({ imageSrc,
 
   const modalFooter=(
     <View style={styles.modalFooter}>
-      <View style={styles.divider}></View>
-      <View style={{flexDirection:"row-reverse",margin:10}}>
-        <TouchableOpacity style={{...styles.actions,backgroundColor:"#db2828"}} 
-          onPress={() => {
-            setModalVisible(!modalVisible);
-          }}>
-          <Text style={styles.actionText}>No</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{...styles.actions,backgroundColor:"#21ba45"}}>
-          <Text style={styles.actionText}>Yes</Text>
+      <View style={styles.modalFooterContainer}>
+        <TouchableOpacity style={styles.applyButton} 
+          onPress={onClose}>
+          <Text style={styles.actionText}>Apply</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -114,19 +117,26 @@ const styles = StyleSheet.create({
     borderRadius:5
   },
   modalHeader:{
-    
+    flexDirection:'row',
+    justifyContent:'space-around',
+    borderColor:'#333',
+    borderBottomWidth:1
   },
   title:{
+    fontSize:20,
+    padding:10,
+    color:"#000",
+  },  
+  headerTitle:{
     fontWeight:"bold",
     fontSize:20,
-    padding:15,
+    padding:10,
     color:"#000",
-    width:'100%',
   },
   divider:{
     width:"100%",
     height:1,
-    backgroundColor:"lightgray"
+    backgroundColor:"#333"
   },
   modalBody:{
     width:"100%",
@@ -135,7 +145,24 @@ const styles = StyleSheet.create({
     paddingHorizontal:10
   },
   modalFooter:{
+    borderColor:'#333',
+    borderTopWidth:1,
   },
+  modalFooterContainer: {
+    width:'100%',
+    marginTop:4,
+    marginBottom:4,
+    marginLeft:0,
+    marginRight:0,
+  },
+
+  applyButton: {
+    backgroundColor: Colors.alertWalkerOrange,
+    marginLeft:10,
+    marginRight:10,
+    borderRadius:4,
+ },
+
   actions:{
     borderRadius:5,
     marginHorizontal:10,
@@ -143,73 +170,14 @@ const styles = StyleSheet.create({
     paddingHorizontal:20
   },
   actionText:{
-    color:"#fff"
+    color:"#fff",
+    fontWeight:'bold',
+    fontSize:20,
+    alignSelf:'center',
+    textAlignVertical:'center',
+    height:50,
+
   }
 });
-
-// const height18 = Math.round(Dimensions.get('window').height * 0.0230769);
-// const height14 = Math.round(Dimensions.get('window').height * 0.01794);
-
-// const sideMargins = Math.round(Dimensions.get('window').width * 0.044);
-// const styles = StyleSheet.create({
-//   container: {
-//     width: '100%',
-//     height: '100%',
-//     position: 'absolute',
-//     backgroundColor: Colors.black,
-//     opacity: 0.98,
-//   },
-//   contentContainer: {
-//     marginTop: sideMargins,
-//     flexDirection: 'column',
-//     flex: 1,
-//   },
-//   closeBtn: {
-//     width: Math.round(Dimensions.get('window').width * 0.1),
-//     height: Math.round(Dimensions.get('window').width * 0.1),
-//     marginRight: sideMargins,
-//     resizeMode: 'contain',
-//     alignSelf: 'baseline',
-//   },
-//   row: {
-//     flexDirection: 'row',
-//     width: '100%'
-//   },
-//   titleRow: {
-//     flexDirection: 'row',
-//     width: '100%',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     height: Math.round(Dimensions.get('window').height * 0.098),
-//   },
-//   entry: {
-//     height: Math.round(Dimensions.get('window').height * 0.098),
-//     justifyContent: 'flex-start',
-//     alignItems: 'center',
-//     flexDirection: 'row',
-//     width: '100%',
-//   },
-//   title: {
-//     fontFamily: 'Arial',
-//     fontSize: height14,
-//     textAlign: 'left',
-//     color: Colors.white,
-//     marginLeft: sideMargins,
-//   },
-//   bottomBorder: {
-//     borderBottomWidth: 1,
-//     borderBottomColor: Colors.white,
-//     width: '100%',
-//     opacity: 0.2,
-//   },
-//   image: {
-//     width: Math.round(Dimensions.get('window').width * 0.8),
-//     height: Math.round(Dimensions.get('window').height * 0.5),
-//     overflow: 'visible',
-//     resizeMode: 'cover',
-//     marginLeft: '10%',
-//     backgroundColor: Colors.white,
-//   },
-// });
 
 export default FilterModal;

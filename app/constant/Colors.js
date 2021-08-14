@@ -98,4 +98,6 @@ export default {
     lightSkyBlue: '#87CEFA'
   },
 
+
+  alertWalkerOrange:'#e19044'
 };
