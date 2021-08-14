@@ -36,7 +36,7 @@ const Layout1 = ({  isLoading,
   const [modalVisible, setModalVisible] = useState(false);
 
 
-  function renderImageModal()
+  function renderFilterModal()
   {
     return (
       <FilterModal
@@ -50,18 +50,10 @@ const Layout1 = ({  isLoading,
 
   const h20 = Math.round(Dimensions.get('window').height * 0.0256);
 
-  function leftBtnNavigation(){
-    console.log('sdfsdf')
-    // navigation.navigate('settings', { shouldPop: true });
-  };
-
   function header (){
     return(
       <View style={styles.headerStyle}>
-
-      {/* Image modal */}
-      {modalVisible &&
-        renderImageModal()}
+        {modalVisible && renderFilterModal()}
 
         <Text style={styles.titleStyle}>My Alerts</Text>
 
@@ -76,7 +68,6 @@ const Layout1 = ({  isLoading,
             size={h20}
           />
         </TouchableOpacity>
-
       </View>
       );
   }

@@ -27,9 +27,9 @@ const FilterModal = ({ imageSrc,
   )
 
   const modalBody=(
-    <ScrollView style={styles.modalBody}>
+    <View style={styles.modalBody}>
       <Text style={styles.bodyText}>Are you sure you want to delete your account ?</Text>
-    </ScrollView>
+    </View>
   )
 
   const modalFooter=(
@@ -59,42 +59,30 @@ const FilterModal = ({ imageSrc,
 
  const modal = (
     <Modal
-      animationType={'slide'}
-      transparent={false}
+      transparent={true}
       visible={true}
       onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
       }}>
       <View style={styles.modal}>
-        {modalContainer}
+        <View>
+          {modalContainer}
+        </View>
       </View>
     </Modal>
   )
 
   return (
-    <View style={styles.container}>
+<View style={styles.container}>
       
       {modal}
+
 
     </View>  )
 };
 
-const sideMargins = Math.round(Dimensions.get('window').width * 0.044);
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    backgroundColor: '#ccc',
-    opacity: 0.98,
-  },
-  contentContainer: {
-    marginTop: sideMargins,
-    flexDirection: 'column',
-    flex: 1,
-  },
-
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -102,13 +90,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modal:{
-    backgroundColor:"#ccc",
+    backgroundColor:"#00000099",
     flex:1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalContainer:{
-    backgroundColor:'#ccc',
+    backgroundColor:Colors.black,
     width:"100%",
     height: '100%',
     borderRadius:5
@@ -120,8 +108,7 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     fontSize:20,
     padding:15,
-    color:"#000",
-    width:'100%',
+    color:"#000"
   },
   divider:{
     width:"100%",
@@ -129,7 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor:"lightgray"
   },
   modalBody:{
-    width:"100%",
     backgroundColor:"#fff",
     paddingVertical:20,
     paddingHorizontal:10
