@@ -13,11 +13,14 @@ import {
 
 import { Colors, Images } from '../../constant';
 import { ImageButton } from '../imageButton';
+import { DataManager, NotificationManager } from '../../manager';
 
 const FilterModal = ({ imageSrc,
                       onClose,
                     }) =>
 {
+
+  const geofenceAreaTypes = NotificationManager.GetInstance().getGeofenceAreaTypes();
 
   const modalHeader=(
       <View style={styles.modalHeader}>
@@ -35,9 +38,23 @@ const FilterModal = ({ imageSrc,
       </View>
   )
 
+  const alertTypes = (
+    <View>
+      <Text style={styles.filterSectionTitle}>Event Types</Text>
+
+      {geofenceAreaTypes.map( (alertType, i) =>
+        <Text style={styles.filterSelectionName}>
+          {alertType.label}
+        </Text>
+      )}
+    </View>
+  )
+
   const modalBody=(
     <ScrollView style={styles.modalBody}>
-      <Text style={styles.bodyText}>Are you sure you want to delete your account ?</Text>
+
+      {alertTypes}
+
     </ScrollView>
   )
 
@@ -177,7 +194,18 @@ const styles = StyleSheet.create({
     textAlignVertical:'center',
     height:50,
 
-  }
+  },
+
+  filterSectionTitle: {
+    fontSize:20,
+    fontWeight:'bold',
+  },
+
+  filterSelectionName: {
+    fontSize:18,
+    lineHeight:40,  
+  },
+
 });
 
 export default FilterModal;
