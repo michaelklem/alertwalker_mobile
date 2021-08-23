@@ -191,7 +191,7 @@ export default class AppManager
     {
       return this.#_mapCreateDelta;
     }
-    
+
     getUseSecondAlertType = () =>
     {
       return this.#_useSecondAlertType;

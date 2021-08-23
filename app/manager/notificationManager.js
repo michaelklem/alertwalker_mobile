@@ -51,7 +51,7 @@ export default class NotificationManager
   async init(apiToken)
   {
     console.log('\t\tNotificationManager.init()');
-    if(!apiToken)
+    if(!apiToken && apiToken !== -1)
     {
       this.#notifications = [];
       this.#myNotifications = [];
@@ -59,13 +59,13 @@ export default class NotificationManager
     }
     try
     {
-      var response = await ApiRequest.sendRequest("post", {}, "notification/init", apiToken);
+      var response = await ApiRequest.sendRequest("post", {}, "notification/init");
       if(response.data.error !== null)
       {
         console.error('[NotificationManager.init] error: ' + response.data.error);
         return false;
       }
-      
+
       console.log(`[NotificationManager.init] notifications found for token ${apiToken}: ${ JSON.stringify(response.data.results) }`);
 
       this.#notifications = response.data.results;
@@ -106,7 +106,7 @@ export default class NotificationManager
         console.error('[NotificationManager.getMyNotifications] error: ' + response.data.error);
         return false;
       }
-      
+
       console.log(`[NotificationManager.getMyNotifications] notifications found for token ${apiToken}: ${ JSON.stringify(response.data.results) }`);
 
       this.#myNotifications = response.data.results;
@@ -157,9 +157,17 @@ export default class NotificationManager
     Set event subscriptions
     @param  {Array.<EventSubscription>}  eventSubscriptions   Event subscriptions
   */
-  setEventSubscriptions(eventSubscriptions)
+  async setEventSubscriptions(eventSubscriptions)
   {
     this.#eventSubscriptions = eventSubscriptions;
+
+    // Reload notifications to honor new event subscriptions
+    await this.init(-1);
+
+    // Notify observers
+    this.dataReloaded();
+
+    return true;
   }
 
   /**

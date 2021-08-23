@@ -119,6 +119,14 @@ export default class SettingsPage extends Component
                 dataVersion: this.state.dataVersion,
                 eventSubscriptions: this.state.eventSubscriptions,
               }));
+
+              /* Notify data manager observers that geofence areas dataset changed,
+                Because UpdateNotificationPreferencesCommand will also reload the geofence areas so the
+                new notification preferences take affect
+              */
+              this._dataMgr.dataSetUpdated('geofenceAreas');
+
+              this.props.showAlert('Success', 'Settings updated');
             }}
           >
             <Button
