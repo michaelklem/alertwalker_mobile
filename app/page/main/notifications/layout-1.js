@@ -35,14 +35,14 @@ const Layout1 = ({  isLoading,
           </View>
         }
 
-        {notifications.length > 0 &&  
+        {notifications.length > 0 &&
           <KeyboardAvoidingView style={styles.innerContainer}>
             <KeyboardAwareFlatList
               data={notifications}
               numColumns={1}
               scrollEnabled={true}
               keyExtractor={item => item._id.toString()}
-              renderItem={(item, index) => renderNotification(item.item, index)}
+              renderItem={({ item, index }) => renderNotification(item, index)}
             />
           </KeyboardAvoidingView>
         }

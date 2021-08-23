@@ -144,7 +144,7 @@ export default class Notifications extends Component
           <View style={[styles.conversationContainer, Styles.paper, { borderColor: Colors.red }, {borderWidth: item.status === 'unread' ? 1 : 0}]}>
             <View style={styles.conversationContent}>
               <Text align='left' style={styles.username}>
-                {titleText}
+                {`${index} - ${titleText}`}
               </Text>
               <Text align='left' style={styles.username}>
                 {`${formatDateOnly(new Date(item.createdOn))} ${formatAMPM(new Date(item.createdOn))}`}
