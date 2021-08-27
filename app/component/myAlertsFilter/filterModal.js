@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -14,39 +14,25 @@ import {
 import { Colors, Images } from '../../constant';
 import { ImageButton } from '../imageButton';
 import { DataManager, NotificationManager } from '../../manager';
-import { RadioButton } from '../radioButton';
+// import { RadioButton } from '../radioButton';
+import RadioButtonRN from 'radio-buttons-react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 const FilterModal = ({ imageSrc,
                       onClose,
                     }) =>
 {
 
-  const PROP = [
-    {
-      key: 'samsung',
-      text: 'Samsung',
-    },
-    {
-      key: 'apple',
-      text: 'Apple',
-    },
-    {
-      key: 'motorola',
-      text: 'Motorola',
-    },
-    {
-      key: 'lenovo',
-      text: 'Lenovo',
-    },
-  ];
-
+  const [alertTypeFilter, setAlertTypeFilter] = useState(-1);
 
   const geofenceAreaTypes = NotificationManager.GetInstance().getGeofenceAreaTypes();
 
-  let alertTypeOptions = []
+  let alertTypeOptions = [{label: 'All Alerts'}]
   geofenceAreaTypes.map( (alertType, i) =>
-    alertTypeOptions.push({key:alertType.label, text: alertType.label})
+    alertTypeOptions.push({label: alertType.label})
   )
+  // this._renderRadioBtn = this._renderRadioBtn.bind(this);
 
   const modalHeader=(
       <View style={styles.modalHeader}>
@@ -64,12 +50,29 @@ const FilterModal = ({ imageSrc,
       </View>
   )
 
+  const renderRadioButtons = (
+      <RadioButtonRN
+        data={alertTypeOptions}
+        selectedBtn={(e) => setAlertTypeFilter(e)}  //this.setState({ res: e })}
+        activeColor={Colors.alertWalkerOrange}
+        icon={
+          <FontAwesomeIcon
+            icon={ faCheckCircle }
+            size={25}
+            color={Colors.alertWalkerOrange}
+          />
+        }
+      />
+  )
+  
   const alertTypes = (
     <View>
       <Text style={styles.filterSectionTitle}>Event Types</Text>
+      <Text style={styles.filterSectionTitle}>{alertTypeFilter.label}</Text>
 
-      <RadioButton PROP={alertTypeOptions} />
 
+      {/* <RadioButton PROP={alertTypeOptions} /> */}
+      {renderRadioButtons}
     </View>
   )
 
