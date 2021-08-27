@@ -42,7 +42,7 @@ const Layout1 = ({  isLoading,
               numColumns={1}
               scrollEnabled={true}
               keyExtractor={item => item._id.toString()}
-              renderItem={(item, index) => renderNotification(item.item, index)}
+              renderItem={({ item, index }) => renderNotification(item, index)}
             />
           </KeyboardAvoidingView>
         }

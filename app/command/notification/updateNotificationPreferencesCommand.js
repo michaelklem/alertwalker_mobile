@@ -1,5 +1,6 @@
 import ApiRequest from '../../helper/ApiRequest';
 import { NotificationManager } from '../../manager';
+import { LoadGeofenceAreasCommand } from '../geofence';
 import { Command } from '..';
 
 export async function UpdateNotificationPreferencesCommand({ updateMasterState, dataVersion, eventSubscriptions })
@@ -30,7 +31,12 @@ export async function UpdateNotificationPreferencesCommand({ updateMasterState, 
         return;
       }
 
-      NotificationManager.GetInstance().setEventSubscriptions(response.data.results);
+      await NotificationManager.GetInstance().setEventSubscriptions(response.data.results);
+
+      // When changing notification preferences we need to reload the geofence areas
+      const loadGeofenceAreasCommand = await new LoadGeofenceAreasCommand({ updateMasterState: null, dataVersion: null });
+      await loadGeofenceAreasCommand.execute(dataStore, showAlert);
+
       updateMasterState ? updateMasterState({
         isLoading: false,
         dataVersion: dataVersion + 1,
