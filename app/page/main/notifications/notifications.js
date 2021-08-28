@@ -131,8 +131,11 @@ export default class Notifications extends Component
 
   renderNotification = (item, index) =>
   {
-    //console.log('Notification: ' + JSON.stringify(item) );
-    const titleText = `${item.body} (${item.type.label})`;
+    // console.log('Notification: ' + JSON.stringify(item) );
+    
+    const alertType = (typeof item.type === 'undefined') ? '' : ` (${item.type.label})`
+    const alertColor = (typeof item.type === 'undefined') ? '#333' : item.type.color
+    const titleText = `${item.body}${alertType}`;
     return (
         <TouchableOpacity
           key={`groups-post-touch-${index}`}
@@ -141,7 +144,7 @@ export default class Notifications extends Component
             this._notificationMgr.readNotification(item);
           }}
         >
-          <View style={[styles.conversationContainer, Styles.paper, { borderColor: item.type.color, borderWidth:1 }]}>
+          <View style={[styles.conversationContainer, Styles.paper, { borderColor: alertColor, borderWidth:1 }]}>
             <View style={styles.conversationContent}>
               <Text align='left' style={styles.username}>
                 {`${index+1} - ${titleText}`}

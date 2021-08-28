@@ -133,7 +133,7 @@ export default class Notifications extends Component
 
   renderNotification = (item, index) =>
   {
-    //console.log('Notification: ' + JSON.stringify(item) );
+    // console.log('Notification: ' + JSON.stringify(item) );
     const titleText = `${item.note} (${item.type.label})`;
     return (
         <TouchableOpacity
