@@ -429,7 +429,7 @@ export default class NotificationManager
       }
       else if(response.data.results.type === 'geofencearea')
       {
-        console.log('going to show the alert ' + JSON.stringify(response.data.results.document))
+        //console.log('going to show the alert ' + JSON.stringify(response.data.results.document))
         RootNavigation.navigate('map', { geofenceArea: response.data.results.document });
       }
 		}

@@ -119,7 +119,7 @@ export default class DrawerContainer extends Component
         </Drawer.Screen>
         
         <Drawer.Screen
-          name='Previously received alerts'
+          name='Received Alerts'
           drawerLabel='Notifications'
         >
           {(props) => <NotificationsPage {...props}
@@ -130,22 +130,10 @@ export default class DrawerContainer extends Component
                       />}
         </Drawer.Screen>
 
-        <Drawer.Screen
-          name='My alerts'
-          drawerLabel='MyAlerts'
-        >
-          {(props) => <MyAlerts {...props}
-                        ref={this.props.activeScreenRef}
-                        deepLink={this.props.deepLink}
-                        showAlert={this.props.showAlert}
-                        user={this.props.user}
-                      />}
-        </Drawer.Screen>
-
         {useSecondAlertType === 'true' &&
           <Drawer.Screen
-            name='Notification preferences'
-            drawerLabel='Notification preferences'
+            name='Alert preferences'
+            drawerLabel='Alert preferences'
           >
             {(props) => <SettingsPage {...props}
                           ref={this.props.activeScreenRef}
@@ -155,6 +143,18 @@ export default class DrawerContainer extends Component
                         />}
           </Drawer.Screen>
         }
+
+        <Drawer.Screen
+          name='My Alerts'
+          drawerLabel='MyAlerts'
+        >
+          {(props) => <MyAlerts {...props}
+                        ref={this.props.activeScreenRef}
+                        deepLink={this.props.deepLink}
+                        showAlert={this.props.showAlert}
+                        user={this.props.user}
+                      />}
+        </Drawer.Screen>        
       </Drawer.Navigator>
     );
   }

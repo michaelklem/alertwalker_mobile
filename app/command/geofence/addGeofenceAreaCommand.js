@@ -43,9 +43,9 @@ export async function AddGeofenceAreaCommand({  updateMasterState,
 
     try
     {
-      console.log('\t\t AddGeofenceAreaCommand.sendRequest ...');
+      //console.log('\t\t AddGeofenceAreaCommand.sendRequest ...');
       let response = await ApiRequest.sendRequest("post", createFormData, 'data/create');
-      console.log('\t\t AddGeofenceAreaCommand.sendRequest response: ' + JSON.stringify(response.data));
+      //console.log('\t\t AddGeofenceAreaCommand.sendRequest response: ' + JSON.stringify(response.data));
 
       if(response.data.error !== null)
       {
@@ -75,7 +75,6 @@ export async function AddGeofenceAreaCommand({  updateMasterState,
       setLoading ? setLoading(false) : '';
       updateDataVersion ? updateDataVersion(dataVersion + 1) : '';
 
-      // showAlert('', 'Alert created successfully');
       ToastAndroid.showWithGravity("Alert created successfully.", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
 
 

@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -126,7 +127,7 @@ export default class SettingsPage extends Component
               */
               this._dataMgr.dataSetUpdated('geofenceAreas');
 
-              this.props.showAlert('Success', 'Settings updated');
+              ToastAndroid.showWithGravity("Settings updated", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
             }}
           >
             <Button

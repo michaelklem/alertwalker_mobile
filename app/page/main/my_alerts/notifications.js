@@ -133,8 +133,8 @@ export default class Notifications extends Component
 
   renderNotification = (item, index) =>
   {
-    // console.log('Notification: ' + item);
-    let titleText = item.note;
+    //console.log('Notification: ' + JSON.stringify(item) );
+    const titleText = `${item.note} (${item.type.label})`;
     return (
         <TouchableOpacity
           key={`groups-post-touch-${index}`}
@@ -144,10 +144,10 @@ export default class Notifications extends Component
             RootNavigation.navigate('map', { geofenceArea: item });
           }}
         >
-          <View style={[styles.conversationContainer, Styles.paper, { borderColor: Colors.red }, {borderWidth: item.status === 'unread' ? 1 : 0}]}>
+          <View style={[styles.conversationContainer, Styles.paper, { borderColor: item.type.color, borderWidth:1 }]}>
             <View style={styles.conversationContent}>
               <Text align='left' style={styles.username}>
-                {titleText}
+                {`${index+1} - ${titleText}`}
               </Text>
               <Text align='left' style={styles.username}>
                 {`${formatDateOnly(new Date(item.createdOn))} ${formatAMPM(new Date(item.createdOn))}`}

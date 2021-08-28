@@ -14,11 +14,13 @@ export function formatAMPM(date)
 
 export function formatDateOnly(date)
 {
+  const monthNames = [ "January", "February", "March", "April", "May", "June", 
+                       "July", "August", "September", "October", "November", "December" ]
   date = new Date(date);
   var day = date.getDate();
-  var month = ("0" + (date.getMonth() + 1)).slice(-2);
+  var month = monthNames[ date.getMonth() ];
   var year = date.getFullYear();
-  var strTime = month + ' ' + day + ' ' + year;
+  var strTime = `${month} ${day}, ${year}`;
   return strTime;
 }
 
